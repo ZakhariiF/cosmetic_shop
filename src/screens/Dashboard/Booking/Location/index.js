@@ -168,6 +168,7 @@ const Location = ({navigation}) => {
           onSearch={() => searchFilterFunction()}
           onChangeText={(e) => setSearch(e)}
           searchVal={searchVal}
+          locationData={arrayHolder}
         />
       ) : null}
 

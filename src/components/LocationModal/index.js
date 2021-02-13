@@ -41,7 +41,7 @@ import {types} from 'screens/Dashboard/Booking/ducks';
 // import Location from 'screens/Dashboard/Booking/Location';
 
 const LocationModal = forwardRef((props, ref) => {
-  const {selectedIndex, onSearch, onChangeText, searchVal} = props;
+  const {selectedIndex, onSearch, onChangeText, searchVal, locationData} = props;
   const dispatch = useDispatch();
   const routes = useNavigationState((state) => state.routes);
   const searchRef = useRef(null);
@@ -86,6 +86,12 @@ const LocationModal = forwardRef((props, ref) => {
       Keyboard.removeListener('keyboardDidShow', _keyboardDidShow);
     };
   }, []);
+
+  useEffect(() => {
+    if (favStore) {
+      setFavItem(favStore);
+    }
+  }, [favStore]);
 
   const _keyboardDidShow = () => {
     if (currentRoute === 'Notes') return;
@@ -222,7 +228,7 @@ const LocationModal = forwardRef((props, ref) => {
               data={
                 activeTab == 0
                   ? data
-                  : data.filter((e) => e.bookerLocationId == favItem)
+                  : (locationData || data).filter((e) => e.bookerLocationId == favItem)
                 // miles
               }
               contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}
