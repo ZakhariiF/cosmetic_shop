@@ -17,6 +17,7 @@ import rootStyle from 'rootStyle';
 import {useSelector} from 'react-redux';
 import {reset} from 'navigation/RootNavigation';
 import {get} from 'lodash';
+import {openMaps} from 'utils';
 
 const Confirmation = () => {
   const totalGuests = useSelector((state) => state.booking.totalGuests);
@@ -41,15 +42,23 @@ const Confirmation = () => {
                 Some last minute notes will go here lorem ipsum dolor
                 consectuer.
               </Text>
-
-              <View style={styles.locContainer}>
-                <Text style={styles.loc}>
-                  {get(selectedLocation, 'title', '')}
-                </Text>
-                <TouchableOpacity>
-                  <Image source={Images.loc} />
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() =>
+                  openMaps(
+                    get(selectedLocation, 'title', ''),
+                    get(selectedLocation, 'contact.coordinates[0]'),
+                    get(selectedLocation, 'contact.coordinates[1]'),
+                  )
+                }>
+                <View style={styles.locContainer}>
+                  <Text style={styles.loc}>
+                    {get(selectedLocation, 'title', '')}
+                  </Text>
+                  <TouchableOpacity>
+                    <Image source={Images.loc} />
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
             </>
           )}
           ListFooterComponent={() => (

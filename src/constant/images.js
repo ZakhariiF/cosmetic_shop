@@ -1,5 +1,6 @@
 export default {
   bg: require('../assets/images/bg.png'),
+  blowout: require('../assets/images/blowout.png'),
   welcome_logo: require('../assets/images/welcome_logo.png'),
   google: require('../assets/images/google.png'),
   fb: require('../assets/images/fb.png'),

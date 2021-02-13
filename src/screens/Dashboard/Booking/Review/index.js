@@ -25,7 +25,7 @@ import {
 } from '../thunks';
 import Indicator from 'components/Indicator';
 import {getAppointments} from 'screens/Dashboard/thunks';
-import { cancelItinerary, cancelAppt } from 'services';
+import {cancelItinerary, cancelAppt} from 'services';
 
 const Review = ({navigation, route}) => {
   const [isChecked, setChecked] = useState(false);
@@ -41,8 +41,7 @@ const Review = ({navigation, route}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const [estimateTotal, setTotal] = useState(0);
   const [isAddon, setisAddOn] = useState(false);
-
-  console.log('TotalGuests:', totalGuests);
+  const [showCancel, setShowCancel] = useState(false);
 
   useEffect(() => {
     calculateTotal();
@@ -74,13 +73,19 @@ const Review = ({navigation, route}) => {
   };
 
   const bookAppt = () => {
-
-    const startTime = get(totalGuests, '[0].date.time.startDateTime', '')
-    const timezone = get(totalGuests, '[0].date.time.timezone', '')
-    const endTime = moment(startTime).add(get(totalGuests, '[0].services.TotalDuration', 45), 'minutes').utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ')
+    const startTime = get(totalGuests, '[0].date.time.startDateTime', '');
+    const timezone = get(totalGuests, '[0].date.time.timezone', '');
+    const endTime = moment(startTime)
+      .add(get(totalGuests, '[0].services.TotalDuration', 45), 'minutes')
+      .utcOffset(timezone)
+      .format('YYYY-MM-DDTHH:mm:ssZ');
 
     let obj = {
-      AppointmentDateOffset: get(totalGuests, '[0].date.time.startDateTime', ''),
+      AppointmentDateOffset: get(
+        totalGuests,
+        '[0].date.time.startDateTime',
+        '',
+      ),
       AppointmentTreatmentDTOs: [
         {
           EmployeeID: get(totalGuests, '[0].employees', ''),
@@ -96,7 +101,7 @@ const Review = ({navigation, route}) => {
         Email: get(userInfo, 'profile.email', ''),
         HomePhone: get(userInfo, 'profile.mobilePhone', ''),
         ID: get(userInfo, 'profile.bookerId', ''),
-        SendEmail: true
+        SendEmail: true,
       },
       // AppointmentPayment: {
       //   CouponCode: get(promoInfo, 'CouponCode', ''),
@@ -104,7 +109,7 @@ const Review = ({navigation, route}) => {
       ResourceTypeID: 1,
       LocationID: get(selectedLocation, 'bookerLocationId', ''),
       // LocationID:'1639',
-      Notes: route.params.Notes || ''
+      Notes: route.params.Notes || '',
     };
 
     console.log('apt obj>>>>>', obj);
@@ -120,11 +125,14 @@ const Review = ({navigation, route}) => {
   };
 
   const guestList = () => {
-    const guestData = []
+    const guestData = [];
     for (let i = 0; i < totalGuests.length; i++) {
       const startTime = totalGuests[i]?.date.time.startDateTime;
       const timezone = totalGuests[i]?.date.time.timezone;
-      const endTime = moment(startTime).add(totalGuests[i]?.services.TotalDuration, 'minutes').utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ')
+      const endTime = moment(startTime)
+        .add(totalGuests[i]?.services.TotalDuration, 'minutes')
+        .utcOffset(timezone)
+        .format('YYYY-MM-DDTHH:mm:ssZ');
       const guestObj = {
         EmployeeID: totalGuests[i]?.employees,
         RoomID: totalGuests[i]?.rooms,
@@ -138,11 +146,14 @@ const Review = ({navigation, route}) => {
           HomePhone: get(userInfo, 'profile.mobilePhone', ''),
           ID: get(userInfo, 'profile.bookerId', ''),
         },
-        AppointmentNotes: totalGuests[i].extension && totalGuests[i].extension.name === 'Yes' ? `Extensions added. ${route.params.Notes || ''}` : route.params.Notes || '',
+        AppointmentNotes:
+          totalGuests[i].extension && totalGuests[i].extension.name === 'Yes'
+            ? `Extensions added. ${route.params.Notes || ''}`
+            : route.params.Notes || '',
       };
       guestData.push(guestObj);
     }
-    return guestData
+    return guestData;
   };
 
   const bookApptGuest = () => {
@@ -174,13 +185,16 @@ const Review = ({navigation, route}) => {
     } else {
       bookApptGuest();
     }
-
   };
 
   const onApply = (code) => {
     dispatch(
       applyPromoCode(get(selectedLocation, 'bookerLocationId', ''), code),
     );
+  };
+
+  const onToggleCancel = () => {
+    setShowCancel(!showCancel);
   };
 
   // console.log('selectedLocation', selectedLocation);
@@ -278,9 +292,9 @@ const Review = ({navigation, route}) => {
 
             {totalGuests.length > 1 ? (
               <Text style={styles.titleText}>
-                {moment(get(totalGuests, '[0].date.time.startDateTime')).utcOffset(get(totalGuests, '[0].date.time.timezone')).format(
-                  'MMMM DD, YYYY',
-                )}
+                {moment(get(totalGuests, '[0].date.time.startDateTime'))
+                  .utcOffset(get(totalGuests, '[0].date.time.timezone'))
+                  .format('MMMM DD, YYYY')}
               </Text>
             ) : null}
 
@@ -292,14 +306,21 @@ const Review = ({navigation, route}) => {
                       {get(e, 'userType')}
                     </Text>
                     <Text style={styles.titleText}>
-                      {moment(e.date.time.startDateTime).utcOffset(e.date.time.timezone).format('h:mm a')}
+                      {moment(e.date.time.startDateTime)
+                        .utcOffset(e.date.time.timezone)
+                        .format('h:mm a')}
                     </Text>
                   </View>
                 </>
               ) : (
                 <Text key={i} style={styles.titleText}>
-                  {moment(e.date.time.startDateTime).utcOffset(e.date.time.timezone).format('MMMM DD, YYYY')} at{' '}
-                  {moment(e.date.time.startDateTime).utcOffset(e.date.time.timezone).format('h:mm a')}
+                  {moment(e.date.time.startDateTime)
+                    .utcOffset(e.date.time.timezone)
+                    .format('MMMM DD, YYYY')}{' '}
+                  at{' '}
+                  {moment(e.date.time.startDateTime)
+                    .utcOffset(e.date.time.timezone)
+                    .format('h:mm a')}
                 </Text>
               ),
             )}
@@ -318,19 +339,33 @@ const Review = ({navigation, route}) => {
               ${estimateTotal - get(promoInfo, 'DiscountAmount', 0)}
             </Text>
           </View>
+          <TouchableOpacity onPress={onToggleCancel}>
+            <View style={styles.cancelContainer}>
+              {showCancel ? (
+                <Entypo
+                  name="circle-with-minus"
+                  color={Colors.header_title}
+                  size={20}
+                />
+              ) : (
+                <Entypo
+                  name="circle-with-plus"
+                  color={Colors.header_title}
+                  size={20}
+                />
+              )}
 
-          <View style={styles.cancelContainer}>
-            <Entypo
-              name="circle-with-minus"
-              color={Colors.header_title}
-              size={20}
-            />
-            <Text style={styles.cancelText}>Cancellation & No-Show Policy</Text>
-          </View>
+              <Text style={styles.cancelText}>
+                Cancellation & No-Show Policy
+              </Text>
+            </View>
+            {
+              showCancel && <Text style={styles.notice}>
+                You may cancel up to 2 hours before the start of your appointment. By entering your credit card information, you agree to accept a $20 cancellation fee if you cancel within 2 hours of the start of your appointment or do not show up. For group appointments of six or less, your card will be charged for any in the party who cancel within 2 hours or do not show up.
+              </Text>
+            }
 
-          <Text style={styles.notice}>
-            You may cancel up to 2 hours before the start of your appointment...
-          </Text>
+          </TouchableOpacity>
 
           <CheckBox
             isChecked={isChecked}

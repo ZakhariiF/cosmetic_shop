@@ -10,7 +10,7 @@ const AppointmentItem = ({
   item,
   onEdit,
   onCancel,
-  locationData
+  locationData,
 }) => {
   const locationId = get(item.appointment, 'Room.LocationID', 0)
 

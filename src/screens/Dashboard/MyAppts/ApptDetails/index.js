@@ -20,7 +20,7 @@ import {setIsEdit, setmemberCount} from '../../Booking/thunks';
 import Indicator from 'components/Indicator';
 import {Colors} from 'constant';
 import {cancelAppointment} from '../../thunks';
-import {isValidEmail, openMaps} from 'utils';
+import {openMaps} from 'utils';
 import {getAppointments} from '../../thunks';
 
 const ApptDetails = ({route, navigation}) => {

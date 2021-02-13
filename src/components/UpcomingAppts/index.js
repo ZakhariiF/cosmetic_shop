@@ -43,7 +43,7 @@ const UpcomingAppts = ({data, navigation, locationData}) => {
           {get(item, 'appointment.AppointmentTreatments', []).map((service) => (
             <View style={styles.clock}>
               <View style={styles.box}>
-                <Image source={Images.home_clock} resizeMode="contain" />
+                <Image source={Images.clock} resizeMode="contain" style={styles.icon} />
                 <View>
                   <Text style={styles.infoText}>
                     {startTime.format('hh:mm a')}
@@ -52,7 +52,7 @@ const UpcomingAppts = ({data, navigation, locationData}) => {
                 </View>
               </View>
               <View style={styles.box}>
-                <Image source={Images.home_cal} resizeMode="contain" />
+                <Image source={Images.calendar} resizeMode="contain" style={styles.icon} />
                 <View>
                   <Text style={styles.infoText}>
                     {startTime.format('DD / MM')}
@@ -69,9 +69,9 @@ const UpcomingAppts = ({data, navigation, locationData}) => {
                   {/* <Text style={styles.bottomText}>in 6 days</Text> */}
                 </View>
               </View>
-              <View style={[styles.box, {justifyContent: 'flex-start'}]}>
-                <Image source={Images.service} resizeMode="contain" />
-                <View style={{top: '15%'}}>
+              <View style={[styles.box]}>
+                <Image source={Images.blowout} resizeMode="contain" style={styles.icon} />
+                <View>
                   <Text style={styles.infoText} numberOfLines={2}>
                     {get(service, 'TreatmentName', 'Blowout')}
                   </Text>
