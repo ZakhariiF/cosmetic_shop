@@ -110,7 +110,13 @@ const ApptDetails = ({route, navigation}) => {
         </View>
         <ScrollView>
           <TouchableOpacity
-            onPress={() => openMaps()}
+            onPress={
+              () => openMaps(
+                get(location, 'title'),
+                get(location, 'contact.coordinates[0]'),
+                get(location, 'contact.coordinates[1]'),
+              )
+            }
             style={styles.locContainer}>
             <View style={styles.flexContainer}>
               <Text style={styles.headerText}>Location</Text>
@@ -121,7 +127,7 @@ const ApptDetails = ({route, navigation}) => {
               )}
             </View>
             <Text style={styles.titleText}>
-              Drybar Huntington Beach in Pacific City
+              {get(location, 'title')}
             </Text>
           </TouchableOpacity>
 

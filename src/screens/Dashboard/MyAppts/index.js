@@ -5,15 +5,14 @@ import rootStyle from 'rootStyle';
 import AppointmentItem from './AppointmentItem';
 import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
-import { useQuery } from '@apollo/client';
+import {useQuery} from '@apollo/client';
 import Indicator from 'components/Indicator';
-import {cancelAppointment, getAppointments} from '../thunks';
+import {cancelAppointment, getAppointments, cancelItinerary} from '../thunks';
 import {setIsEdit, setLocation, setmemberCount} from '../Booking/thunks';
 import moment from 'moment';
 import {get} from 'lodash';
 import EmptyContainer from 'components/EmptyContainer';
-import {storeCollectionQuery} from 'constant/query'
-import { cancelItinerary } from 'services';
+import {storeCollectionQuery} from 'constant/query';
 
 const MyAppts = ({navigation}) => {
   const dispatch = useDispatch();
@@ -23,7 +22,7 @@ const MyAppts = ({navigation}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
 
   const LOCATION_QUERY = storeCollectionQuery();
-  const { data: locationData, error, loading } = useQuery(LOCATION_QUERY);
+  const {data: locationData, error, loading} = useQuery(LOCATION_QUERY);
 
   useEffect(() => {
     getAppts();
@@ -33,48 +32,56 @@ const MyAppts = ({navigation}) => {
     dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
 
   const onEdit = (item, location) => {
-    let tempArr = get(item, 'appointment.AppointmentTreatments', []).map((service, index) => {
-      const timezone = moment().utcOffset(service.StartDateTimeOffset).utcOffset()
-      const startTime = moment(service.StartDateTimeOffset).utcOffset(timezone)
-      const endTime = moment(service.EndDateTimeOffset).utcOffset(timezone)
-      return {
-        userType: index === 0 ? 'Me' : `Guest ${index}`,
-        date: {
-          date: moment(service.StartDateTimeOffset).format(''),
-          time: {
-            startTime: startTime.format('YYYY-MM-DDTHH:mm:ssZ'),
-            endTime: endTime.format('YYYY-MM-DDTHH:mm:ssZ'),
-            timezone
+    let tempArr = get(item, 'appointment.AppointmentTreatments', []).map(
+      (service, index) => {
+        const timezone = moment()
+          .utcOffset(service.StartDateTimeOffset)
+          .utcOffset();
+        const startTime = moment(service.StartDateTimeOffset).utcOffset(
+          timezone,
+        );
+        const endTime = moment(service.EndDateTimeOffset).utcOffset(timezone);
+        return {
+          userType: index === 0 ? 'Me' : `Guest ${index}`,
+          date: {
+            date: moment(service.StartDateTimeOffset).format(''),
+            time: {
+              startTime: startTime.format('YYYY-MM-DDTHH:mm:ssZ'),
+              endTime: endTime.format('YYYY-MM-DDTHH:mm:ssZ'),
+              timezone,
+            },
           },
-        },
-        rooms: service.RoomID,
-        employees: service.EmployeeID,
-        services: {
-          Name: service.TreatmentName,
-          Price: {Amount: get(service, 'TagPrice.Amount')},
-          ...service
-        },
-        customer: item.Customer,
-      }
-    });
+          rooms: service.RoomID,
+          employees: service.EmployeeID,
+          services: {
+            Name: service.TreatmentName,
+            Price: {Amount: get(service, 'TagPrice.Amount')},
+            ...service,
+          },
+          customer: item.Customer,
+        };
+      },
+    );
 
-    dispatch(setLocation(location))
+    dispatch(setLocation(location));
 
     dispatch(setmemberCount(tempArr));
-    dispatch(setIsEdit({
-      group: item.groupID,
-      appointment: item.appointment.ID,
-      oldLocation: location.bookerLocationId
-    }));
+    dispatch(
+      setIsEdit({
+        group: item.groupID,
+        appointment: item.appointment.ID,
+        oldLocation: location.bookerLocationId,
+      }),
+    );
 
     navigation.navigate('Book', {screen: 'Services'});
   };
 
-  const onCancel = (item) => {
-    if (!item.group) {
+  const onCancel = (item, location) => {
+    if (!item.groupID) {
       dispatch(cancelAppointment(item.appointment.ID));
     } else {
-      dispatch(cancelItinerary(item.group, item.oldLocation));
+      dispatch(cancelItinerary(item.groupID, location.bookerLocationId));
     }
   };
 
@@ -94,7 +101,8 @@ const MyAppts = ({navigation}) => {
                 // scrollEnabled={false}
                 data={data.sort(
                   (a, b) =>
-                    new Date(b.appointment.DateBookedOffset) - new Date(a.appointment.DateBookedOffset),
+                    new Date(b.appointment.DateBookedOffset) -
+                    new Date(a.appointment.DateBookedOffset),
                 )}
                 renderItem={({item}) => (
                   <AppointmentItem

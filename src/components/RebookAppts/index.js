@@ -6,7 +6,11 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import rootStyle from 'rootStyle';
 import {openMaps} from 'utils';
 
-const RebookAppts = ({item, onRebook}) => {
+const RebookAppts = ({item, onRebook, locationData}) => {
+  const locationId = get(item.appointment, 'Room.LocationID', 0)
+
+  const location = get(locationData, 'storeCollection.items', []).find(l => l.bookerLocationId === locationId)
+
   return (
     <View style={styles.container}>
       <Text style={styles.upcoming}>REBOOK LAST APPOINTMENT?</Text>
@@ -33,7 +37,7 @@ const RebookAppts = ({item, onRebook}) => {
       <Button
         name="Rebook"
         containerStyle={{marginTop: 30}}
-        onButtonPress={() => onRebook(item)}
+        onButtonPress={() => onRebook(item, location)}
       />
     </View>
   );

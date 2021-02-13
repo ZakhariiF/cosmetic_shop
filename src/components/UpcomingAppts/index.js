@@ -14,13 +14,20 @@ import rootStyle from 'rootStyle';
 import {openMaps} from 'utils';
 import moment from 'moment';
 
-const UpcomingAppts = ({data, navigation}) => {
+const UpcomingAppts = ({data, navigation, locationData}) => {
   const [today, setToday] = useState(false);
 
   const renderAppts = ({item}) => {
+    const timezone = moment()
+      .utcOffset(get(item.appointment, 'StartDateTimeOffset'))
+      .utcOffset();
+    const startTime = moment(
+      get(item.appointment, 'StartDateTimeOffset'),
+    ).utcOffset(timezone);
 
-    const timezone = moment().utcOffset(get(item.appointment, 'StartDateTimeOffset')).utcOffset()
-    const startTime = moment(get(item.appointment, 'StartDateTimeOffset')).utcOffset(timezone)
+    const locationId = get(item, 'appointment.Customer.LocationID');
+
+    const location = get(locationData, 'storeCollection.items', []).find(l => l.bookerLocationId === locationId);
 
     return (
       <View style={{marginVertical: 10}}>
@@ -32,62 +39,49 @@ const UpcomingAppts = ({data, navigation}) => {
               'Drybar Huntington Beach in Pacific City',
             )}
           </Text>
-          <View style={styles.clock}>
-            <View style={styles.box}>
-              <Image source={Images.home_clock} resizeMode="contain" />
-              <View>
-                <Text style={styles.infoText}>
-                  {startTime.format('hh:mm a')}
-                </Text>
-                <Text style={styles.bottomText}></Text>
-              </View>
-            </View>
-            <View style={styles.box}>
-              <Image source={Images.home_cal} resizeMode="contain" />
-              <View>
-                <Text style={styles.infoText}>
-                  {startTime.format('DD / MM')}
-                </Text>
-                {/* {new Date().getDate() -
-                  moment(get(item.appointment, 'StartDateTimeOffset', '')).date() >
-                1 ? (
-                  <Text style={styles.bottomText}>
-                    In{' '}
-                    {new Date().getDate() -
-                      moment(get(item.appointment, 'StartDateTimeOffset', '')).date()}{' '}
-                    days
-                  </Text>
-                ) : (
-                  new Date().getDate() -
-                    moment(get(item.appointment, 'StartDateTimeOffset', '')).date() ==
-                    0 && <Text style={styles.bottomText}>Today</Text>
-                )} */}
-                {!today ? (
-                  <Text style={styles.bottomText}>
-                    {' '}
-                    In{' '}
-                    {startTime.diff(new Date(), 'days')}{' '}
-                    days
-                  </Text>
-                ) : (
-                  <Text style={styles.bottomText}>Today</Text>
-                )}
-                {/* <Text style={styles.bottomText}>in 6 days</Text> */}
-              </View>
-            </View>
 
-            <View style={[styles.box, {justifyContent: 'flex-start'}]}>
-              <Image source={Images.service} resizeMode="contain" />
-              <View style={{top: '15%'}}>
-                <Text style={styles.infoText} numberOfLines={2}>
-                  {get(item.appointment, 'services.Name', 'Blowout')}
-                </Text>
-                <Text style={styles.bottomText}>
-                  {get(item.appointment, 'addons', []).length} add ons
-                </Text>
+          {get(item, 'appointment.AppointmentTreatments', []).map((service) => (
+            <View style={styles.clock}>
+              <View style={styles.box}>
+                <Image source={Images.home_clock} resizeMode="contain" />
+                <View>
+                  <Text style={styles.infoText}>
+                    {startTime.format('hh:mm a')}
+                  </Text>
+                  <Text style={styles.bottomText} />
+                </View>
+              </View>
+              <View style={styles.box}>
+                <Image source={Images.home_cal} resizeMode="contain" />
+                <View>
+                  <Text style={styles.infoText}>
+                    {startTime.format('DD / MM')}
+                  </Text>
+
+                  {!today ? (
+                    <Text style={styles.bottomText}>
+                      {' '}
+                      In {startTime.diff(new Date(), 'days')} days
+                    </Text>
+                  ) : (
+                    <Text style={styles.bottomText}>Today</Text>
+                  )}
+                  {/* <Text style={styles.bottomText}>in 6 days</Text> */}
+                </View>
+              </View>
+              <View style={[styles.box, {justifyContent: 'flex-start'}]}>
+                <Image source={Images.service} resizeMode="contain" />
+                <View style={{top: '15%'}}>
+                  <Text style={styles.infoText} numberOfLines={2}>
+                    {get(service, 'TreatmentName', 'Blowout')}
+                  </Text>
+                  <Text style={styles.bottomText}>
+                    {get(item, 'appointment.AddOnItems', []).length} add ons
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
+          ))}
         </View>
 
         <View style={styles.bottomContainer}>
@@ -103,7 +97,13 @@ const UpcomingAppts = ({data, navigation}) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.editButton}
-            onPress={() => openMaps(get(item.appointment, 'Customer.LocationName'))}>
+            onPress={() =>
+              openMaps(
+                get(item.appointment, 'Customer.LocationName'),
+                get(location, 'contact.coordinates[0]'),
+                get(location, 'contact.coordinates[1]'),
+              )
+            }>
             <Text style={styles.editText}>Get Directions</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -248,7 +248,8 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   infoContainer: {
-    height: 200,
+    minHeight: 100,
+    maxHeight: 700,
     backgroundColor: Colors.white,
     borderTopWidth: 1,
     borderTopColor: Colors.seprator,

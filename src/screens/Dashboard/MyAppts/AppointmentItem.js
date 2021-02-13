@@ -56,7 +56,7 @@ const AppointmentItem = ({
             {!past && (
               <TouchableOpacity
                 style={styles.cancelContainer}
-                onPress={() => onCancel(item)}>
+                onPress={() => onCancel(item, location)}>
                 <Text style={[styles.editText, {color: Colors.header_title}]}>
                   Cancel
                 </Text>
@@ -72,7 +72,7 @@ const AppointmentItem = ({
             }
           </Text>
           <View style={styles.bottomContainer}>
-            <View>
+            <View style={{maxWidth: '75%'}}>
               {
                 get(item, 'appointment.AppointmentTreatments', []).map((service) => (
                   <Text style={styles.details}>

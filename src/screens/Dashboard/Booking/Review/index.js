@@ -164,9 +164,9 @@ const Review = ({navigation, route}) => {
 
   const editAppt = async () => {
     if (!fromEdit.group) {
-      await cancelAppt(fromEdit.appointment)
+      await cancelAppt(fromEdit.appointment);
     } else {
-      await cancelItinerary(fromEdit.group, fromEdit.oldLocation)
+      await cancelItinerary(fromEdit.group, fromEdit.oldLocation);
     }
 
     if (totalGuests.length === 1) {

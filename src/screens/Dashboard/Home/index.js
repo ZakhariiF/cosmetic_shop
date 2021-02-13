@@ -23,7 +23,7 @@ import {get} from 'lodash';
 import {getCustomerInfo} from 'screens/Auth/thunks';
 import {greetings} from 'utils';
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
-import {getLocations, setIsEdit, setmemberCount} from '../Booking/thunks';
+import { getLocations, setIsEdit, setLocation, setmemberCount } from "../Booking/thunks";
 import moment from 'moment';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
@@ -98,31 +98,38 @@ const Home = ({navigation}) => {
     console.log("Request Permission Result", permisson);
   }
 
-  const onRebook = (item) => {
-    let tempArr = [
-      {
-        userType: 'Me',
-        date: {
-          date: moment(item.DateBookedOffset).format(''),
-          time: {
-            open: get(
-              item.AppointmentTreatments,
-              '[0].Treatment.StartDateTimeOffset',
-            ),
-            close: get(item, 'AppointmentTreatments[0].EndDateTimeOffset'),
+  const onRebook = (item, location) => {
+    let tempArr = get(item, 'appointment.AppointmentTreatments', []).map(
+      (service, index) => {
+        const timezone = moment()
+          .utcOffset(service.StartDateTimeOffset)
+          .utcOffset();
+        const startTime = moment(service.StartDateTimeOffset).utcOffset(
+          timezone,
+        );
+        const endTime = moment(service.EndDateTimeOffset).utcOffset(timezone);
+        return {
+          userType: index === 0 ? 'Me' : `Guest ${index}`,
+          date: {
+            date: moment(service.StartDateTimeOffset).format(''),
+            time: {
+              startTime: startTime.format('YYYY-MM-DDTHH:mm:ssZ'),
+              endTime: endTime.format('YYYY-MM-DDTHH:mm:ssZ'),
+              timezone,
+            },
           },
-        },
-        rooms: {roomId: item.Room.ID},
-        employees: {employeeId: item.Employee.ID},
-        services: {
-          Name: item.TreatmentName,
-          Price: {Amount: get(item, 'PreOrderFinalTotal.Amount')},
-          ...get(item, 'AppointmentTreatments[0]', {}),
-        },
-        customer: item.Customer,
+          rooms: service.RoomID,
+          employees: service.EmployeeID,
+          services: {
+            Name: service.TreatmentName,
+            Price: {Amount: get(service, 'TagPrice.Amount')},
+            ...service,
+          },
+          customer: item.Customer,
+        };
       },
-    ];
-
+    );
+    dispatch(setLocation(location));
     dispatch(setmemberCount(tempArr));
     dispatch(setIsEdit(true));
 
@@ -141,10 +148,10 @@ const Home = ({navigation}) => {
             Hi {get(userInfo, 'profile.firstName', 'Emily')}, {greetings()}
           </Text>
 
-          <UpcomingAppts data={upcomingAppt} navigation={navigation} />
+          <UpcomingAppts data={upcomingAppt} navigation={navigation} locationData={data} />
 
           {pastAppt.length ? (
-            <RebookAppts item={pastAppt[0]} onRebook={onRebook} />
+            <RebookAppts item={pastAppt[0]} onRebook={onRebook} locationData={data} />
           ) : null}
 
           <Text
