@@ -1,0 +1,23 @@
+export default {
+  primary: '#54575A',
+  white: '#ffffff',
+  bg: '#F9F9F9',
+  header_title: '#42413D',
+  light_gray: '#989898',
+  input_color: '#979797',
+  input_text: '#42413D',
+  seprator: '#D1D1D1',
+  black: '#000',
+  checkBox: '#54575A',
+  yellow: '#FFDD30',
+  dimGray: '#E5E5E5',
+  edit_text: '#231F20',
+  card_border: '#CACACA',
+  dashed: '#BDBDBD',
+  transparent: 'rgba(0, 0, 0, 0.5)',
+  empty: '#55585B',
+  darkGrey: 'rgba(196, 196, 196, 0.3)',
+  modal_bg: 'rgba(77, 77, 77, 0.5)',
+  light_brown: '#767676',
+  dim_gray:"#E2E2E2"
+};

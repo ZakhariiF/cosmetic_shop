@@ -1,0 +1,289 @@
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import Header from 'components/Header/Header';
+import {Colors, Fonts, Images} from 'constant';
+import rootStyle from 'rootStyle';
+import {useDispatch, useSelector} from 'react-redux';
+import {getAddons, setExtensionType, setmemberCount} from '../thunks';
+import GuestTab from 'components/GuestTab';
+import BookingTab from 'components/BookingTab';
+import LocationModal from 'components/LocationModal';
+import Extensions from '../Extensions';
+import {get} from 'lodash';
+import Indicator from 'components/Indicator';
+import ServiceInfoModal from 'components/ServiceInfoModal';
+
+const Addons = ({navigation}) => {
+  const [isVisible, setVisible] = useState(false);
+  const dispatch = useDispatch();
+  const totalGuests = useSelector((state) => state.booking.totalGuests);
+  const activeTab = useSelector((state) => state.booking.activeGuestTab);
+  const isExtension = useSelector((state) => state.booking.isExtension);
+  // const data = useSelector((state) => state.booking.addons);
+  const isLoading = useSelector((state) => state.booking.addonsLoading);
+
+  const [totalAddon, setTotaladdons] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [infoItem, setinfoItem] = useState({});
+
+  // useEffect(() => {
+  //   getData();
+  // }, [activeTab]);
+
+  // useEffect(() => {
+  //   calculateAddon();
+  // }, [totalGuests]);
+
+  // const getData = () => {
+  //   let serviceId = get(totalGuests[activeTab], 'services.ID');
+  //   dispatch(getAddons(serviceId));
+  // };
+
+  // const calculateAddon = () => {
+  //   let addonARR = totalGuests[activeTab].addons || [];
+  //   let totalPrice = addonARR.reduce(
+  //     (acc, e) => acc + get(e, 'Price.Amount', 0),
+  //     0,
+  //   );
+  //   setTotaladdons(addonARR.length);
+  //   setTotalPrice(totalPrice);
+  // };
+
+  const isExist = (item) => {
+    let isActive = false;
+
+    if (totalGuests[activeTab].addons && totalGuests[activeTab].addons.length) {
+      totalGuests[activeTab].addons.forEach((element) => {
+        if (element.ID === item.ID) isActive = true;
+      });
+    }
+
+    return isActive;
+  };
+
+  const addonPress = (item, index) => {
+    let tempArr = [...totalGuests];
+
+    if (!tempArr[activeTab].addons) tempArr[activeTab].addons = [];
+
+    if (isExist(item)) {
+      let addonARR = tempArr[activeTab].addons;
+      addonARR = addonARR.filter((e) => e.ID !== item.ID);
+      tempArr[activeTab].addons = addonARR;
+    } else {
+      tempArr[activeTab].addons.push(item);
+    }
+
+    dispatch(setmemberCount(tempArr));
+  };
+
+  const onBackPress = () => {
+    // if (isExtension) {
+    //   dispatch(setExtensionType(false));
+    // } else {
+      navigation.goBack();
+    // }
+  };
+
+  const onNext = () => {
+    // if (!isExtension) {
+    //   dispatch(setExtensionType(true));
+    // } else {
+      navigation.navigate('DateTime');
+    //   dispatch(setExtensionType(false));
+    // }
+  };
+
+  // console.log('data>>', data);
+
+  return (
+    <View style={rootStyle.container}>
+      <BookingTab />
+      <View style={rootStyle.sizeBox} />
+      <Header
+        title={
+          isExtension && totalGuests.length > 1
+            ? 'DO YOU OR ANY OF YOUR \n GUESTS HAVE EXTENSIONS?'
+            : isExtension
+            ? 'DO YOU HAVE EXTENSIONS?'
+            : 'ADD-ONS'
+        }
+        safeBackColor={Colors.bg}
+        isNext
+        onNext={onNext}
+        onBackPress={onBackPress}
+      />
+
+      <Extensions navigation={navigation} onSkip={onNext} />
+      {/* {isExtension ? (
+      ) : (
+        <View style={rootStyle.innerContainer}>
+          {totalGuests.length > 1 ? (
+            <Text style={styles.selectedaddOns}>Add one or add many</Text>
+          ) : totalAddon ? (
+            <Text style={styles.selectedaddOns}>
+              You selected <Text style={styles.selectedText}>{totalAddon}</Text>{' '}
+              add ons for a total of ${totalPrice}
+            </Text>
+          ) : (
+            <TouchableOpacity
+              style={styles.skipContainer}
+              onPress={() => {
+                navigation.navigate('DateTime');
+                dispatch(setExtensionType(false));
+              }}>
+              <Text style={styles.skip}>Skip Add-ons</Text>
+            </TouchableOpacity>
+          )}
+
+          {totalGuests.length > 1 ? (
+            <View style={{marginTop: 20}}>
+              <GuestTab routeName="addons" />
+            </View>
+          ) : null}
+          <FlatList
+            style={{marginTop: 20, marginBottom: '20%'}}
+            data={data}
+            renderItem={(e) => (
+              <AddonItem
+                {...e}
+                totalGuests={totalGuests}
+                onAddon={addonPress}
+                active={true}
+                onInfoPress={(itemz) => {
+                  setVisible(true);
+                  setinfoItem(itemz);
+                }}
+              />
+            )}
+            keyExtractor={(_, index) => index.toString()}
+          />
+        </View>
+      )} */}
+
+      <LocationModal />
+
+      {isVisible && (
+        <ServiceInfoModal
+          visible={isVisible}
+          item={infoItem}
+          onRequestClose={() => setVisible(false)}
+        />
+      )}
+
+      {isLoading && !isExtension ? <Indicator /> : null}
+    </View>
+  );
+};
+
+export default Addons;
+
+const AddonItem = ({
+  item,
+  index,
+  totalGuests,
+  onAddon,
+  active,
+  onInfoPress,
+}) => {
+  return (
+    <View style={styles.listContainer}>
+      <TouchableOpacity
+        onPress={() => onInfoPress(item)}
+        hitSlop={{top: 10, bottom: 10, right: 10, left: 10}}>
+        <Image source={Images.notice} />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.listButton, rootStyle.shadow]}
+        onPress={() => onAddon(item, index)}>
+        <View style={{flex: 1, paddingRight: 15}}>
+          <Text style={styles.itemName}>{item.Name}</Text>
+          <Text style={styles.itemDesc}>
+            Brightens, adds shine & removes dullness.
+          </Text>
+
+          <Text style={styles.price}>${get(item, 'Price.Amount', 0)}</Text>
+        </View>
+
+        <View
+          style={[styles.circle, active && {backgroundColor: Colors.primary}]}>
+          <Image source={Images.tick} />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  selectedaddOns: {
+    fontSize: 15,
+    color: Colors.header_title,
+    fontFamily: Fonts.AvenirNextRegular,
+    alignSelf: 'center',
+  },
+  selectedText: {
+    fontFamily: Fonts.AvenirNextBold,
+  },
+  listContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  listButton: {
+    width: '89%',
+    backgroundColor: Colors.white,
+    padding: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  itemName: {
+    fontSize: 18,
+    fontFamily: Fonts.AvenirNextRegular,
+    color: Colors.header_title,
+  },
+  itemDesc: {
+    fontSize: 15,
+    color: Colors.header_title,
+    fontFamily: Fonts.AvenirNextRegular,
+    marginTop: 3,
+  },
+  circle: {
+    height: 26,
+    width: 26,
+    borderWidth: 1,
+    borderColor: Colors.header_title,
+    borderRadius: 26 / 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  price: {
+    fontFamily: Fonts.AvenirNextMedium,
+    fontSize: 18,
+    color: Colors.header_title,
+    marginTop: 2,
+  },
+  skipContainer: {
+    width: '85%',
+    borderWidth: 1,
+    borderColor: Colors.dimGray,
+    height: 63,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+    marginLeft: '11%',
+  },
+  skip: {
+    ...rootStyle.commonText,
+    fontSize: 18,
+  },
+});
