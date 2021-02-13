@@ -42,6 +42,8 @@ const Review = ({navigation, route}) => {
   const [estimateTotal, setTotal] = useState(0);
   const [isAddon, setisAddOn] = useState(false);
 
+  console.log('TotalGuests:', totalGuests);
+
   useEffect(() => {
     calculateTotal();
     checkAddonData();
@@ -166,7 +168,13 @@ const Review = ({navigation, route}) => {
     } else {
       await cancelItinerary(fromEdit.group, fromEdit.oldLocation)
     }
-    bookAppt()
+
+    if (totalGuests.length === 1) {
+      bookAppt();
+    } else {
+      bookApptGuest();
+    }
+
   };
 
   const onApply = (code) => {
@@ -175,7 +183,6 @@ const Review = ({navigation, route}) => {
     );
   };
 
-  console.log('totalGuests>>>', totalGuests);
   // console.log('selectedLocation', selectedLocation);
   // console.log('CouponCode', promoInfo);
 

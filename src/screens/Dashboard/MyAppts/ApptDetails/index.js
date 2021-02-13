@@ -30,39 +30,43 @@ const ApptDetails = ({route, navigation}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
 
   const {
-    params: {past, item},
+    params: {past, item, location},
   } = route;
 
+  const timezone = moment().utcOffset(get(item, 'appointment.StartDateTimeOffset')).utcOffset();
+  const services = get(item, 'appointment.AppointmentTreatments', [])
   const onEdit = () => {
-    let tempArr = [
-      {
-        userType: 'Me',
-        date: {
-          date: moment(item.DateBookedOffset).format(''),
-          time: {
-            open: get(
-              item.AppointmentTreatments,
-              '[0].Treatment.StartDateTimeOffset',
-            ),
-            close: get(item, 'AppointmentTreatments[0].EndDateTimeOffset'),
-          },
+    let tempArr = services.map((service, idx) => ({
+      userType: idx === 0 ? 'Me' : 'Guest ' + idx,
+      date: {
+        date: moment(get(service, 'StartDateTimeOffset')).format(''),
+        time: {
+          startTime: get(service, 'StartDateTimeOffset'),
+          endTime: get(service, 'EndDateTimeOffset'),
+          timezone: moment().utcOffset(get(service, 'StartDateTimeOffset')).utcOffset()
         },
-
-        rooms: {roomId: item.Room.ID},
-        employees: {employeeId: item.Employee.ID},
-
-        services: {
-          Name: item.TreatmentName,
-          Price: {Amount: get(item, 'PreOrderFinalTotal.Amount')},
-          ...get(item, 'AppointmentTreatments[0]', {}),
-        },
-        customer: item.Customer,
       },
-    ];
+
+      rooms: {roomId: get(service, 'RoomID')},
+      employees: {employeeId: get(service, 'EmployeeID')},
+
+      services: {
+        Name: get(service, 'TreatmentName'),
+        Price: {Amount: get(service, 'Treatment.Price.Amount')},
+        ...service,
+      },
+      customer: item.Customer,
+    }));
 
     dispatch(setmemberCount(tempArr));
-    dispatch(setIsEdit(true));
-    navigation.navigate('Book', {screen: 'Review'});
+    dispatch(
+      setIsEdit({
+        group: item.groupID,
+        appointment: item.appointment.ID,
+        oldLocation: location.bookerLocationId
+      })
+    );
+    navigation.navigate('Book', {screen: 'Services'});
   };
 
   const onCancel = () => {
@@ -122,16 +126,25 @@ const ApptDetails = ({route, navigation}) => {
           </TouchableOpacity>
 
           <View style={styles.boxContainer}>
-            <Text style={styles.headerText}>Service</Text>
-            <Text style={styles.titleText}>
-              {get(item, 'TreatmentName')}{' '}
-              <Text style={styles.price}>
-                (${get(item, 'PreOrderFinalTotal.Amount')})
-              </Text>
+            <Text style={styles.headerText}>
+              {
+                services.length > 1 ? 'Services' : 'Service'
+              }
             </Text>
+            {
+              services.map((service) => (
+                <Text style={styles.titleText}>
+                  {get(service, 'TreatmentName')}{' '}
+                  <Text style={styles.price}>
+                    (${get(service, 'Treatment.Price.Amount')})
+                  </Text>
+                </Text>
+              ))
+            }
+
           </View>
 
-          {get(item, 'AddOnItems').length ? (
+          {get(item, 'appointment.AddOnItems', []).length ? (
             <View style={styles.boxContainer}>
               <Text style={styles.headerText}>Add-ons</Text>
               <Text style={styles.titleText}>
@@ -146,7 +159,9 @@ const ApptDetails = ({route, navigation}) => {
           <View style={styles.boxContainer}>
             <Text style={styles.headerText}>Date & Time</Text>
             <Text style={styles.titleText}>
-              {moment(item.StartDateTimeOffset).format('MMMM DD YYYY, h:mma')}
+              {
+                moment(item.appointment.StartDateTimeOffset).utcOffset(timezone).format('MMMM DD YYYY, h:mma')
+              }
             </Text>
           </View>
 
@@ -162,7 +177,7 @@ const ApptDetails = ({route, navigation}) => {
               {!past ? 'Estimated Total *' : 'Total'}
             </Text>
             <Text style={[styles.headerText, styles.price, {fontSize: 18}]}>
-              ${get(item, 'FinalTotal.Amount')}
+              ${get(item, 'appointment.FinalTotal.Amount')}
             </Text>
           </View>
 

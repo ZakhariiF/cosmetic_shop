@@ -33,7 +33,7 @@ const MyAppts = ({navigation}) => {
     dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
 
   const onEdit = (item, location) => {
-    let tempArr = item.appointment.AppointmentTreatments.map((service, index) => {
+    let tempArr = get(item, 'appointment.AppointmentTreatments', []).map((service, index) => {
       const timezone = moment().utcOffset(service.StartDateTimeOffset).utcOffset()
       const startTime = moment(service.StartDateTimeOffset).utcOffset(timezone)
       const endTime = moment(service.EndDateTimeOffset).utcOffset(timezone)
@@ -88,15 +88,15 @@ const MyAppts = ({navigation}) => {
           }
           nestedScrollEnabled>
           {data.length ? (
-            <>
+            <View>
               <Text style={styles.upcomingText}>Upcoming</Text>
               <FlatList
-                scrollEnabled={false}
+                // scrollEnabled={false}
                 data={data.sort(
                   (a, b) =>
                     new Date(b.appointment.DateBookedOffset) - new Date(a.appointment.DateBookedOffset),
                 )}
-                renderItem={({item, index}) => (
+                renderItem={({item}) => (
                   <AppointmentItem
                     navigation={navigation}
                     item={item}
@@ -107,7 +107,7 @@ const MyAppts = ({navigation}) => {
                 )}
                 keyExtractor={(_, index) => index.toString()}
               />
-            </>
+            </View>
           ) : null}
 
           {pastAppt.length ? (
@@ -125,6 +125,7 @@ const MyAppts = ({navigation}) => {
                     navigation={navigation}
                     item={item}
                     onEdit={onEdit}
+                    locationData={locationData}
                   />
                 )}
                 keyExtractor={(_, index) => index.toString()}

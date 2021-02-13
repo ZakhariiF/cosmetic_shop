@@ -18,8 +18,6 @@ const AppointmentItem = ({
 
   return (
     <View style={styles.container}>
-      {/* Date  */}
-
       <View
         style={[
           styles.dateContainer,
@@ -38,8 +36,6 @@ const AppointmentItem = ({
           {moment(get(item.appointment, 'DateBookedOffset')).format('hh:mm a')}
         </Text>
       </View>
-      {/*  */}
-
       <View style={styles.infoContainer}>
         <View style={{flexDirection: 'row'}}>
           <View style={{flex: 1}}>
@@ -70,11 +66,23 @@ const AppointmentItem = ({
         </View>
 
         <View style={{marginTop: past ? 12 : 0}}>
-          <Text style={styles.locationText}>Service</Text>
+          <Text style={styles.locationText}>
+            {
+              get(item, 'appointment.AppointmentTreatments', []).length > 1 ? 'Services' : 'Service'
+            }
+          </Text>
           <View style={styles.bottomContainer}>
-            <Text style={styles.details}>{get(item.appointment, 'TreatmentName', '')}</Text>
+            <View>
+              {
+                get(item, 'appointment.AppointmentTreatments', []).map((service) => (
+                  <Text style={styles.details}>
+                    {get(service, 'TreatmentName', '')} (${get(service, 'Treatment.Price.Amount')})
+                  </Text>
+                ))
+              }
+            </View>
             <Text
-              onPress={() => navigation.navigate('ApptDetails', {past, item})}
+              onPress={() => navigation.navigate('ApptDetails', {past, item, location})}
               style={[styles.details, {textDecorationLine: 'underline'}]}>
               View Details
             </Text>
@@ -90,9 +98,9 @@ export default AppointmentItem;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginVertical: 5,
     borderRadius: 4,
-    height: 160,
+    minHeight: 100,
+    maxHeight: 300
   },
   dateContainer: {
     width: '25%',
@@ -107,7 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: Colors.header_title,
     fontFamily: Fonts.AvenirNextMedium,
-    marginVertical: 2,
+    marginBottom: 2,
   },
   infoContainer: {
     backgroundColor: Colors.white,
