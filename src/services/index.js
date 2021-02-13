@@ -1,10 +1,7 @@
 import axios from 'axios';
 import config from 'constant/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  refreshTokens,
-  getUserFromIdToken
-} from '@okta/okta-react-native';
+import {refreshTokens, getUserFromIdToken} from '@okta/okta-react-native';
 const checkStatus = (status) => status >= 200 && status < 300;
 
 const client = axios.create({
@@ -17,74 +14,69 @@ const client = axios.create({
 });
 
 client.interceptors.request.use(async (requestConfig) => {
-
   if (requestConfig.url.includes('/booker/')) {
+    let tokenData = await AsyncStorage.getItem('token');
 
-      let tokenData = await AsyncStorage.getItem('token')
+    try {
+      // tokenData = JSON.parse(tokenData)
 
-      try {
-          // tokenData = JSON.parse(tokenData)
+      // const today = new Date().getTime()
+      // const time = tokenData.time
 
-          // const today = new Date().getTime()
-          // const time = tokenData.time
+      // console.log('Token Expires:', today, time, today - time, tokenData.token.expires_in * 1000)
 
-          // console.log('Token Expires:', today, time, today - time, tokenData.token.expires_in * 1000)
+      // if (today - time >= 3600 * 1000) {
+      //   const params = new URLSearchParams();
+      //   params.append('grant_type', 'refresh_token');
+      //   params.append('redirect_uri', config.redirectUri);
+      //   params.append('scope', 'openid profile offline_access');
+      //   params.append('refresh_token', tokenData.token.refresh_token);
+      //   // params.append('client_id', config.clientId);
 
-          // if (today - time >= 3600 * 1000) {
-          //   const params = new URLSearchParams();
-          //   params.append('grant_type', 'refresh_token');
-          //   params.append('redirect_uri', config.redirectUri);
-          //   params.append('scope', 'openid profile offline_access');
-          //   params.append('refresh_token', tokenData.token.refresh_token);
-          //   // params.append('client_id', config.clientId);
+      //   console.log('Refresh Token Params:', params)
 
-          //   console.log('Refresh Token Params:', params)
+      //   const {data: newToken} = await axios.post(`${config.issuer}/oauth2/default/v1/token`, params, {
+      //     headers: {
+      //       Authorization: `Basic ${tokenData.token.id_token}`,
+      //     }
+      //   })
 
-          //   const {data: newToken} = await axios.post(`${config.issuer}/oauth2/default/v1/token`, params, {
-          //     headers: {
-          //       Authorization: `Basic ${tokenData.token.id_token}`,
-          //     }
-          //   })
+      //   console.log('New Token:', newToken)
 
-          //   console.log('New Token:', newToken)
+      //   tokenData = {
+      //     token: newToken,
+      //     nonce: tokenData.nonce,
+      //     time: new Date().getTime()
+      //   }
 
-          //   tokenData = {
-          //     token: newToken,
-          //     nonce: tokenData.nonce,
-          //     time: new Date().getTime()
-          //   }
+      //   AsyncStorage.setItem('token', JSON.stringify(tokenData))
+      // }
+      const tokens = await refreshTokens();
 
-          //   AsyncStorage.setItem('token', JSON.stringify(tokenData))
-          // }
-          const tokens = await refreshTokens();
-
-          tokens['expires_in'] = 86400;
-          tokens['scope'] = 'offline_access openid profile'
-          tokens['token_type'] = "Bearer";
-          console.log("tokens from refreshtoken function", tokens);
-          tokenData = {
-            token: tokens,
-            time: new Date().getTime()
-          }
-          await AsyncStorage.setItem('token', JSON.stringify(tokenData));
-          console.log(JSON.stringify(tokenData));
-          if (tokenData.token && tokenData.token.id_token ) {
-            requestConfig.headers = {
-              ...requestConfig.headers,
-              Authorization: `Bearer ${tokenData.token.id_token}`,
-              clientId: config.clientId
-            }
-          }
-      } catch (e) {
-        console.log('Adding Header Issue:', e)
+      tokens.expires_in = 86400;
+      tokens.scope = 'offline_access openid profile';
+      tokens.token_type = 'Bearer';
+      console.log('tokens from refreshtoken function', tokens);
+      tokenData = {
+        token: tokens,
+        time: new Date().getTime(),
+      };
+      await AsyncStorage.setItem('token', JSON.stringify(tokenData));
+      console.log(JSON.stringify(tokenData));
+      if (tokenData.token && tokenData.token.id_token) {
+        requestConfig.headers = {
+          ...requestConfig.headers,
+          Authorization: `Bearer ${tokenData.token.id_token}`,
+          clientId: config.clientId,
+        };
       }
-
+    } catch (e) {
+      console.log('Adding Header Issue:', e);
+    }
   }
-
 
   return requestConfig;
 });
-
 
 client.interceptors.response.use(
   (response) => {

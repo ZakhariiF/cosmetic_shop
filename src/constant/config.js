@@ -23,6 +23,7 @@ export default {
     subDomain: 'drybar',
     apiKey: '2V0P-FHL0-E3OP-7HEW',
     genericPartyFormId: 'm639jay05gnt4z',
+    contactFormId: 'z1srujeu0vb2dvk',
   },
   googleMapAPIKey: 'AIzaSyBBho2G8GQkEwIBPeS4ph4cxM5_Ullfnws'
 };

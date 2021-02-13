@@ -19,5 +19,6 @@ export default {
   darkGrey: 'rgba(196, 196, 196, 0.3)',
   modal_bg: 'rgba(77, 77, 77, 0.5)',
   light_brown: '#767676',
-  dim_gray:"#E2E2E2"
+  dim_gray: '#E2E2E2',
+  error: 'rgba(189, 0, 0, 0.7)'
 };

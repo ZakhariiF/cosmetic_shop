@@ -25,6 +25,7 @@ const Input = ({
   multiline,
   containerStyle,
   labelStyle,
+  inputName,
 }) => {
   const input = useRef(null);
   const [hide, setHide] = useState(true);
@@ -47,6 +48,7 @@ const Input = ({
             keyboardType={keyboardType}
             autoCapitalize={autoCapitalize || 'none'}
             returnKeyType={returnKeyType}
+            name={inputName || name}
           />
           <Text
             onPress={() => {
@@ -77,6 +79,7 @@ const Input = ({
             keyboardType={keyboardType}
             autoCapitalize={autoCapitalize || 'none'}
             returnKeyType={returnKeyType}
+            name={inputName || name}
           />
           <TouchableOpacity
             style={styles.eyeIcon}
@@ -103,6 +106,7 @@ const Input = ({
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize || 'none'}
         returnKeyType={returnKeyType}
+        name={inputName || name}
       />
     </>
   );

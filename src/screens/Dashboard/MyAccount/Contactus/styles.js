@@ -108,4 +108,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     ...rootStyle.shadow,
   },
+  errorText: {
+    fontSize: 14,
+    color: Colors.error,
+    fontWeight: '400',
+  },
 });
