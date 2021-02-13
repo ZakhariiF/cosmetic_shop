@@ -191,7 +191,7 @@ const LocationModal = forwardRef((props, ref) => {
           <Text style={styles.title}>Select a Drybar Shop</Text>
 
           <View style={styles.innerContainer}>
-            {activeTab == 0 ? (
+            {activeTab === 0 ? (
               <SearchBar
                 ref={searchRef}
                 isButton={false}

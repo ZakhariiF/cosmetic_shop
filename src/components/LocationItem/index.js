@@ -100,18 +100,22 @@ const LocationItem = ({
             <Image source={Images.notice} />
             <Text style={styles.locName}>{get(item, 'title')}</Text>
           </View>
-
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => {
-              if (isViewMode) {
-                navigation.navigate('ShopDetail', {item, fromFindLoc});
-              } else onBook(item);
-            }}>
-            <Text style={styles.selectText}>
-              {isViewMode ? 'View Shop' : 'Book'}
-            </Text>
-          </TouchableOpacity>
+          {item.type === 'Drybar Shop' &&
+            get(item, 'settings.bookable', false) && (
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={() => {
+                  if (isViewMode) {
+                    navigation.navigate('ShopDetail', {item, fromFindLoc});
+                  } else {
+                    onBook(item);
+                  }
+                }}>
+                <Text style={styles.selectText}>
+                  {isViewMode ? 'View Shop' : 'Book'}
+                </Text>
+              </TouchableOpacity>
+            )}
         </View>
 
         <View style={[styles.flexContainer, {marginTop: 10}]}>
