@@ -299,7 +299,7 @@ export const findStoresFromPointWithTitle = (locationData, geolocatedPoints, sea
           return {
               ...location,
               distance: distanceFromCenter,
-          }
+          };
       })
       .filter((location) => location.distance < MAX_DISTANCE)
       .sort((location1, location2) => location1.distance < location2.distance ? -1 : 1)
@@ -308,4 +308,16 @@ export const findStoresFromPointWithTitle = (locationData, geolocatedPoints, sea
 
   return { data: storesByTitle.concat(storesByAddress.concat(filteredLocationData)) }
 
-}
+};
+
+export const mapGraphqlToNavigator = {
+  locator: 'FindLocation',
+  home: 'Home',
+  styles: 'Stylists',
+  services: 'Services',
+  addons: 'Addons',
+  barfly: 'BarflyMembership',
+  'my account': 'MyAccount',
+  booking: 'Book',
+};
+

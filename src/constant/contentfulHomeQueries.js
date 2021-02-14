@@ -119,38 +119,57 @@ const queryMarketingStyles = (marketingStylesId) =>
 
 const queryCard = (marketingCardId) => `{
     marketingCard(id: "${marketingCardId}") {
+       title
+       image {
         title
-        image {
-            desktopMedia {
-                url
-            }
-            mobileMedia {
-                url
-            }
+        alternateTitle
+        caption
+        description {
+            json
         }
+        desktopMedia {
+          url
+        }
+        mobileMedia {
+          url
+        }
+      }
+      settings
+      actionsCollection {
+        items {
+          style
+          linkToMobileSlug
+        }
+      }
     }
   }`;
 
 const queryProducts = (collectionId) =>
   `{
-     productCollection(where: {sys: {id: "${collectionId}"}}) {
-      items {
+      marketingProducts(id: "${collectionId}") {
         title
-        price
-        imagesCollection(limit: 3) {
+        productsCollection {
           items {
-            desktopMedia {
-              url
+            title
+            price
+            type
+            productId
+            imagesCollection(limit: 1) {
+              items {
+                desktopMedia {
+                  url
+                }
+                mobileMedia {
+                  url
+                }
+              }
             }
-            mobileMedia {
-              url
-            }
+            bestFor
+            serviceTime
           }
         }
-        bestFor
-        serviceTime
       }
-    }
+     
  }`;
 
 const querySocialInMarketingCollection = (marketingCollectionId) =>
