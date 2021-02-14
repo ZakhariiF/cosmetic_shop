@@ -13,7 +13,13 @@ import colors from 'constant/colors';
 import fonts from 'constant/fonts';
 import {get} from 'lodash';
 
-const StyleSwiper = ({title, imageSource, onBrowse, data}) => {
+const StyleSwiper = ({
+  title,
+  imageSource,
+  onBrowse,
+  data,
+  imgField = 'image',
+}) => {
   const [visible, setVisible] = useState(false);
   const [activeScreen, setActiveScreen] = useState(0);
 
@@ -49,13 +55,14 @@ const StyleSwiper = ({title, imageSource, onBrowse, data}) => {
             horizontal
             onMomentumScrollEnd={onScrollEnd}>
             {get(data, 'items', []).map((e, i) => {
+              const imgUrl = get(e, imgField);
               return (
                 <View key={i} style={styles.ladyIcon}>
                   <ImageBackground
                     key={i}
                     resizeMode="cover"
                     style={styles.imageContainer}
-                    source={e.image ? {uri: e.image} : imageSource}>
+                    source={ imgUrl ? {uri: imgUrl} : imageSource}>
                     <View style={styles.imageTitleContainer}>
                       <Text style={styles.imageTitleStyle}>
                         {get(e, 'title')}

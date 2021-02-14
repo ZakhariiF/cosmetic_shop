@@ -54,7 +54,7 @@ const CustomMapMarker = ({selected, item, navigation}) => {
               <View
                 onTouchStart={() => {
                   dispatch(setLocation(item));
-                  navigation.navigate('Coming');
+                  navigation.navigate('Book', {screen: 'Coming'});
                 }}
                 style={styles.buttonContainer}>
                 <Text style={styles.selectText}>Select</Text>
@@ -65,7 +65,13 @@ const CustomMapMarker = ({selected, item, navigation}) => {
         </View>
       ) : null}
       <Image
-        source={selected ? Images.gray_pin : Images.yellow_pin}
+        source={
+          selected
+            ? Images.gray_pin
+            : item.type === 'Retail Store'
+            ? Images.fav_marker
+            : Images.yellow_pin
+        }
         resizeMode="contain"
       />
     </View>

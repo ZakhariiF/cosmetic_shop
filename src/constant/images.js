@@ -33,6 +33,7 @@ export default {
   down_arrow: require('../assets/images/down_arrow.png'),
   gray_card: require('assets/images/gray_card.png'),
   gray_pin: require('assets/images/gray_pin.png'),
+  fav_marker: require('assets/images/carticon.png'),
   yellow_pin: require('assets/images/yellow_pin.png'),
   coin: require('assets/images/coin.png'),
   call: require('assets/images/call.png'),

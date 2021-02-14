@@ -21,7 +21,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {getCustomerInfo} from 'screens/Auth/thunks';
-import {greetings} from 'utils';
+import { greetings, mapGraphqlToNavigator } from "utils";
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
 import {
   getLocations,
@@ -174,41 +174,42 @@ const Home = ({navigation}) => {
             style={styles.historyText}>
             View Appointment History
           </Text>
-          <View style={styles.memberBlock}>
+
+          {/* <View style={styles.memberBlock}>
             <Image source={Images.barfly} />
-            <View style={{flex: 1, paddingLeft: 20}}>
+            <View style={{ flex: 1, paddingLeft: 20 }}>
               <Text style={styles.saveText}>Save 10% on your rebook with</Text>
               <Text
-                onPress={() => navigation.navigate('BarflyMembership')}
-                style={[styles.saveText, {textDecorationLine: 'underline'}]}>
+                onPress={() => navigation.navigate("BarflyMembership")}
+                style={[styles.saveText, { textDecorationLine: "underline" }]}>
                 Barfly Membership
               </Text>
             </View>
-          </View>
+          </View> */}
 
-          <View style={styles.mapBlock}>
+          {/*<View style={styles.mapBlock}>
             <Image source={Images.snazzy} />
             <View style={styles.locationBlock}>
               <Text style={styles.locText}>
-                Looking for the nearest {'\n'} Drybar Shop?
+                Looking for the nearest {"\n"} Drybar Shop?
               </Text>
 
               <TouchableOpacity
                 style={styles.locButton}
-                onPress={() => navigation.navigate('Book')}>
+                onPress={() => navigation.navigate("Book")}>
                 <Text style={styles.seeLocText}>See Locations</Text>
               </TouchableOpacity>
             </View>
-          </View>
-          <View style={styles.dotContainer}>
-            {/* <DottedView number={200} /> */}
+          </View> */}
+          {/* <View style={styles.dotContainer}>
+            <DottedView number={200} />
             <Image
               style={{marginTop: 40, alignSelf: 'center'}}
               resizeMode="contain"
               source={Images.mix}
             />
             <Text style={styles.shopText}>Shop Mixologist</Text>
-          </View>
+          </View> */}
 
           {homeData.map((item) => {
             if (item.marketingStyles) {
@@ -220,15 +221,35 @@ const Home = ({navigation}) => {
                   onBrowse={() =>
                     navigation.navigate('Account', {screen: 'AccountStyle'})
                   }
+                  imgField={'featuredImage.desktopMedia.url'}
+                />
+              );
+            } else if (item.marketingProducts) {
+              return (
+                <StyleSwiper
+                  title={item.marketingProducts.title}
+                  imageSource={Images.lady}
+                  data={item.marketingProducts.productsCollection}
+                  onBrowse={() =>
+                    navigation.navigate('Account', {screen: 'AccountStyle'})
+                  }
+                  imgField={'imagesCollection.items[0].mobileMedia.url'}
                 />
               );
             } else if (item.marketingCard) {
               const imgUrl =
                 get(item, 'marketingCard.image.mobileMedia.url') ||
                 get(item, 'marketingCard.image.desktopMedia.url');
-
+              let action = get(
+                item,
+                'marketingCard.actionsCollection.items[0].linkToMobileSlug',
+              );
+              if (action) {
+                action = mapGraphqlToNavigator[action];
+              }
+              let img = null;
               if (imgUrl) {
-                return (
+                img = (
                   <Image
                     source={{uri: imgUrl}}
                     resizeMode="contain"
@@ -236,10 +257,20 @@ const Home = ({navigation}) => {
                   />
                 );
               }
+              if (img && action) {
+                return (
+                  <TouchableOpacity onPress={() => navigation.navigate(action)}>
+                    {img}
+                  </TouchableOpacity>
+                );
+              }
+              if (img) {
+                return img;
+              }
             }
             return null;
           })}
-
+          {/*
           <TouchableWithoutFeedback
             onPress={() =>
               navigation.navigate('Account', {
@@ -275,7 +306,7 @@ const Home = ({navigation}) => {
             <Text style={{fontSize: 18, fontFamily: Fonts.AvenirNextRegular}}>
               Learn More
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
 

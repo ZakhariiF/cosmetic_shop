@@ -3,8 +3,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import MapView from 'react-native-maps';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
-import {findStoresFromPointWithTitle, isEmptyString} from 'utils';
-import {FlatList, View, StyleSheet, ScrollView} from 'react-native';
+import { findStoresFromPointWithTitle, isEmptyString, requestUserLocationLocation } from "utils";
+import { FlatList, View, StyleSheet, ScrollView, Dimensions } from "react-native";
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 import {Colors, Fonts} from 'constant';
@@ -19,6 +19,13 @@ import {types} from 'screens/Dashboard/Booking/ducks';
 import CustomMapMarker from 'components/CustomMapMarker';
 import {geolocateSearchLocation} from 'services/Google';
 import CheckBox from 'components/Checkbox';
+
+const window = Dimensions.get('window');
+const {width, height} = window;
+
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.01;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 var arrayHolder = [];
 
@@ -47,6 +54,29 @@ const FindLocation = ({navigation}) => {
   if (error) {
     // return AlertHelper.showError('Server error');
   }
+
+  const getUserLocation = async () => {
+    try {
+      const position = await requestUserLocationLocation();
+      const latitude = get(position, 'coords.latitude');
+      const longitude = get(position, 'coords.longitude');
+      setCoords({
+        latitude,
+        longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
+
+      searchFilterFunction();
+    } catch (e) {
+      console.log('Can not get the current user location');
+    }
+  };
+
+  useEffect(() => {
+    getUserLocation();
+
+  }, []);
 
   useEffect(() => {
     if (isEmptyString(searchVal)) {
@@ -89,6 +119,10 @@ const FindLocation = ({navigation}) => {
       arrayHolder,
       geolocatedPoints,
       searchVal,
+      {
+        lat: coords.latitude,
+        lng: coords.longitude,
+      },
     );
     setLocationItems(newData);
 

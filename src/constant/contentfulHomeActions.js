@@ -108,21 +108,30 @@ export const gqlLoadHome = async () => {
 
   let data = await doQuery(homeTopLevelQuery());
 
+  console.log(
+    'Home Sections:',
+    get(data, 'marketingSection.marketingComponentsCollection.items', []),
+  );
+
   let graphqlRequests = get(
     data,
     'marketingSection.marketingComponentsCollection.items',
     [],
-  ).map((item) => {
-    if (item.__typename === 'MarketingCard') {
-      return doQuery(queryCard(item.sys.id));
-    } else if (item.__typename === 'MarketingProducts') {
-      return doQuery(queryProducts(item.sys.id));
-    } else if (item.__typename === 'MarketingStyles') {
-      return doQuery(queryMarketingStyles(item.sys.id));
-    }
-  });
+  )
+    .filter((item) => !!item)
+    .map((item) => {
+      if (item.__typename === 'MarketingCard') {
+        return doQuery(queryCard(item.sys.id));
+      } else if (item.__typename === 'MarketingProducts') {
+        return doQuery(queryProducts(item.sys.id));
+      } else if (item.__typename === 'MarketingStyles') {
+        return doQuery(queryMarketingStyles(item.sys.id));
+      }
+    });
 
   homeSectionData = await Promise.all(graphqlRequests);
+
+  console.log('HomeSectionData:', homeSectionData);
 
   return homeSectionData;
 };
