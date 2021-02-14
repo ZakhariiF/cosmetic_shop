@@ -9,7 +9,10 @@ import {
   homeTopLevelQuery,
   querySocialInMarketingCollection,
   queryMarketingStyles,
+  queryCard,
+  queryProducts,
 } from './contentfulHomeQueries';
+import {get} from 'lodash';
 // import {doQuery, extractIdsFromSecondLevel, extractIdsFromTopLevel} from "../../state/utils/contentful";
 
 const parseMarketingCollectionWithMarketingCards = (data) => {
@@ -101,82 +104,25 @@ const parseSocialInMarketingCollection = (data) => {
 };
 
 export const gqlLoadHome = async () => {
-  let homeSectionData = {
-    hero: {},
-    ribbon: {},
-    theStyles: {},
-    promos: {},
-    offers: {},
-    social: {},
-  };
+  let homeSectionData = [];
 
   let data = await doQuery(homeTopLevelQuery());
 
-  console.log('homeTopLevelQuery:', data);
+  let graphqlRequests = get(
+    data,
+    'marketingSection.marketingComponentsCollection.items',
+    [],
+  ).map((item) => {
+    if (item.__typename === 'MarketingCard') {
+      return doQuery(queryCard(item.sys.id));
+    } else if (item.__typename === 'MarketingProducts') {
+      return doQuery(queryProducts(item.sys.id));
+    } else if (item.__typename === 'MarketingStyles') {
+      return doQuery(queryMarketingStyles(item.sys.id));
+    }
+  });
 
-  const firstLevelIds = extractIdsFromTopLevel(data.screenHomeCollection || {});
-
-  if (firstLevelIds.length > 0) {
-    // Load primary section
-    data = await doQuery(homeSecondLevelQuery(firstLevelIds[0]));
-    const primarySecondLevelIds = extractIdsFromSecondLevel(
-      data.marketingSection || {},
-    );
-
-    // Load hero section data
-    const heroData = parseMarketingCollectionWithMarketingCards(
-      await doQuery(
-        queryMarketingCardInMarketingCollection(primarySecondLevelIds[0]),
-      ),
-    );
-
-    // Load ribbon section data
-    const ribbonData = parseMarketingCollectionWithMarketingCards(
-      await doQuery(
-        queryMarketingCardInMarketingCollection(primarySecondLevelIds[1]),
-      ),
-    );
-
-    homeSectionData.hero = heroData;
-    homeSectionData.ribbon = ribbonData;
-  }
-
-  if (firstLevelIds.length > 1) {
-    // Load secondary section
-    data = await doQuery(homeSecondLevelQuery(firstLevelIds[1]));
-    const secondarySecondLevelIds = extractIdsFromSecondLevel(
-      data.marketingSection || {},
-    );
-
-    // Load the-the-styles section data
-    const theStylesData = parseMarketingStyles(
-      await doQuery(queryMarketingStyles(secondarySecondLevelIds[0])),
-    );
-
-    // Load promo section data
-    const promoData = parseMarketingCollectionWithMarketingCards(
-      await doQuery(
-        queryMarketingCardInMarketingCollection(secondarySecondLevelIds[1]),
-      ),
-    );
-
-    // Load offers section data
-    const offersData = parseMarketingCollectionWithMarketingCards(
-      await doQuery(
-        queryMarketingCardInMarketingCollection(secondarySecondLevelIds[2]),
-      ),
-    );
-
-    homeSectionData.theStyles = theStylesData;
-    homeSectionData.promos = promoData;
-    homeSectionData.offers = offersData;
-  }
-
-  if (firstLevelIds.length > 2) {
-    // Load instagram section
-    data = await doQuery(querySocialInMarketingCollection(firstLevelIds[2]));
-    homeSectionData.social = parseSocialInMarketingCollection(data);
-  }
+  homeSectionData = await Promise.all(graphqlRequests);
 
   return homeSectionData;
 };

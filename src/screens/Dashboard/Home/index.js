@@ -23,7 +23,12 @@ import {get} from 'lodash';
 import {getCustomerInfo} from 'screens/Auth/thunks';
 import {greetings} from 'utils';
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
-import { getLocations, setIsEdit, setLocation, setmemberCount } from "../Booking/thunks";
+import {
+  getLocations,
+  setIsEdit,
+  setLocation,
+  setmemberCount,
+} from '../Booking/thunks';
 import moment from 'moment';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
@@ -35,7 +40,7 @@ const Home = ({navigation}) => {
   const upcomingAppt = useSelector((state) => state.home.appointments);
   const pastAppt = useSelector((state) => state.home.pastAppt);
   const userInfo = useSelector((state) => state.auth.userInfo);
-  const [homeData, setHomeData] = useState({});
+  const [homeData, setHomeData] = useState([]);
   const [backpermission, setbackpermission] = useState(false);
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
@@ -43,7 +48,9 @@ const Home = ({navigation}) => {
   console.log('HOME SCREEN userinfo', userInfo);
 
   React.useMemo(() => {
-    if (loading || error) return null;
+    if (loading || error) {
+      return null;
+    }
 
     dispatch(getLocations(data.storeCollection.items));
     return data;
@@ -69,34 +76,34 @@ const Home = ({navigation}) => {
     } catch (error) {}
   };
   const hasRadarPermission = () => {
-    Radar.setUserId("00uca8ebhdc27qHNh1d6");
-    Radar.getPermissionsStatus().then(status => {
-    switch (status) {
-      case 'GRANTED_BACKGROUND':
-         console.log('GRANTED_BACKGROUND Permission granted');
-         setbackpermission(true);
-         break;
-      case 'GRANTED_FOREGROUND':
-        console.log('GRANTED_FOREGROUND Permission granted');
-        requestRadarPermission();
-        break;
-      case 'DENIED':
-        console.log('Radar Denied');
-        requestRadarPermission();
-        break;
-      case 'UNKNOWN':
-        console.log('UNKWOWN');
-        requestRadarPermission();
-        break;
-      default:
-         break;
-     }
-   })
-  }
-  requestRadarPermission = () => {
+    Radar.setUserId('00uca8ebhdc27qHNh1d6');
+    Radar.getPermissionsStatus().then((status) => {
+      switch (status) {
+        case 'GRANTED_BACKGROUND':
+          console.log('GRANTED_BACKGROUND Permission granted');
+          setbackpermission(true);
+          break;
+        case 'GRANTED_FOREGROUND':
+          console.log('GRANTED_FOREGROUND Permission granted');
+          requestRadarPermission();
+          break;
+        case 'DENIED':
+          console.log('Radar Denied');
+          requestRadarPermission();
+          break;
+        case 'UNKNOWN':
+          console.log('UNKWOWN');
+          requestRadarPermission();
+          break;
+        default:
+          break;
+      }
+    });
+  };
+  const requestRadarPermission = () => {
     let permisson = Radar.requestPermissions(true);
-    console.log("Request Permission Result", permisson);
-  }
+    console.log('Request Permission Result', permisson);
+  };
 
   const onRebook = (item, location) => {
     let tempArr = get(item, 'appointment.AppointmentTreatments', []).map(
@@ -148,10 +155,18 @@ const Home = ({navigation}) => {
             Hi {get(userInfo, 'profile.firstName', 'Emily')}, {greetings()}
           </Text>
 
-          <UpcomingAppts data={upcomingAppt} navigation={navigation} locationData={data} />
+          <UpcomingAppts
+            data={upcomingAppt}
+            navigation={navigation}
+            locationData={data}
+          />
 
           {pastAppt.length ? (
-            <RebookAppts item={pastAppt[0]} onRebook={onRebook} locationData={data} />
+            <RebookAppts
+              item={pastAppt[0]}
+              onRebook={onRebook}
+              locationData={data}
+            />
           ) : null}
 
           <Text
@@ -195,27 +210,35 @@ const Home = ({navigation}) => {
             <Text style={styles.shopText}>Shop Mixologist</Text>
           </View>
 
-          {get(homeData, 'theStyles') && (
-            <StyleSwiper
-              title="The Styles"
-              imageSource={Images.lady}
-              data={get(homeData, 'theStyles', {})}
-              onBrowse={() =>
-                navigation.navigate('Account', {screen: 'AccountStyle'})
-              }
-            />
-          )}
+          {homeData.map((item) => {
+            if (item.marketingStyles) {
+              return (
+                <StyleSwiper
+                  title={item.marketingStyles.title}
+                  imageSource={Images.lady}
+                  data={item.marketingStyles.stylesCollection}
+                  onBrowse={() =>
+                    navigation.navigate('Account', {screen: 'AccountStyle'})
+                  }
+                />
+              );
+            } else if (item.marketingCard) {
+              const imgUrl =
+                get(item, 'marketingCard.image.mobileMedia.url') ||
+                get(item, 'marketingCard.image.desktopMedia.url');
 
-          {/* <StyleSwiper
-            title="AddOns"
-            imageSource={Images.addons}
-            onBrowse={() =>
-              navigation.navigate('Account', {
-                screen: 'AccountAddon',
-                initial: false,
-              })
+              if (imgUrl) {
+                return (
+                  <Image
+                    source={{uri: imgUrl}}
+                    resizeMode="contain"
+                    style={styles.cardImage}
+                  />
+                );
+              }
             }
-          /> */}
+            return null;
+          })}
 
           <TouchableWithoutFeedback
             onPress={() =>

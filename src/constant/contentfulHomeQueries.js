@@ -1,18 +1,25 @@
-
 /**
  * Load screenHomeCollection and its children's id
  * @returns {DocumentNode}
  */
-const homeTopLevelQuery = () => (
-    `{
-      screenHomeCollection(where: {slug: "home"}) {
-        items {
+const homeTopLevelQuery = () =>
+  `{
+      marketingSection(id: "5YjyIexuoz8hWe7vkPbpTE") {
           title
-          slug
           marketingComponentsCollection {
             items {
               __typename
-              ... on MarketingSection {
+              ... on MarketingStyles {
+                sys {
+                  id
+                }
+              }
+              ... on MarketingProducts {
+                sys {
+                  id
+                }
+              }
+              ... on MarketingCard {
                 sys {
                   id
                 }
@@ -20,18 +27,17 @@ const homeTopLevelQuery = () => (
             }
           }
         }
-      }
+      
     }
-    `
-);
+    `;
 
 /**
  * Load second level ids
  * @param marketingSectionId
  * @returns {DocumentNode}
  */
-const homeSecondLevelQuery = (marketingSectionId) => (
-    `{
+const homeSecondLevelQuery = (marketingSectionId) =>
+  `{
       marketingSection(id: "${marketingSectionId}") {
         marketingComponentsCollection {
           items {
@@ -50,11 +56,10 @@ const homeSecondLevelQuery = (marketingSectionId) => (
         }
       }
     }
-    `
-);
+    `;
 
-const queryMarketingCardInMarketingCollection = (marketingCollectionId) => (
-    `{
+const queryMarketingCardInMarketingCollection = (marketingCollectionId) =>
+  `{
       marketingCollection(id: "${marketingCollectionId}") {
         title
         marketingComponentsCollection {
@@ -84,11 +89,10 @@ const queryMarketingCardInMarketingCollection = (marketingCollectionId) => (
         }
       }
     }
-    `
-);
+    `;
 
-const queryMarketingStyles = (marketingStylesId) => (
-    `{
+const queryMarketingStyles = (marketingStylesId) =>
+  `{
       marketingStyles(id: "${marketingStylesId}") {
         title
         subtitle
@@ -111,11 +115,46 @@ const queryMarketingStyles = (marketingStylesId) => (
         }
       }
     }
-    `
-);
+    `;
 
-const querySocialInMarketingCollection = (marketingCollectionId) => (
-    `{
+const queryCard = (marketingCardId) => `{
+    marketingCard(id: "${marketingCardId}") {
+        title
+        image {
+            desktopMedia {
+                url
+            }
+            mobileMedia {
+                url
+            }
+        }
+    }
+  }`;
+
+const queryProducts = (collectionId) =>
+  `{
+     productCollection(where: {sys: {id: "${collectionId}"}}) {
+      items {
+        title
+        price
+        imagesCollection(limit: 3) {
+          items {
+            desktopMedia {
+              url
+            }
+            mobileMedia {
+              url
+            }
+          }
+        }
+        bestFor
+        serviceTime
+      }
+    }
+ }`;
+
+const querySocialInMarketingCollection = (marketingCollectionId) =>
+  `{
       marketingSection(id: "${marketingCollectionId}") {
         marketingComponentsCollection {
           items {
@@ -128,13 +167,14 @@ const querySocialInMarketingCollection = (marketingCollectionId) => (
         }
       }
     }
-    `
-);
+    `;
 
 export {
-    homeTopLevelQuery,
-    homeSecondLevelQuery,
-    queryMarketingCardInMarketingCollection,
-    queryMarketingStyles,
-    querySocialInMarketingCollection
+  homeTopLevelQuery,
+  homeSecondLevelQuery,
+  queryMarketingCardInMarketingCollection,
+  queryMarketingStyles,
+  querySocialInMarketingCollection,
+  queryCard,
+  queryProducts,
 };

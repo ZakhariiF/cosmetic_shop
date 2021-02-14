@@ -10,7 +10,7 @@ export default StyleSheet.create({
     fontSize: 24,
     fontFamily: Fonts.AvenirNextMedium,
     color: Colors.header_title,
-    textAlign:'center'
+    textAlign: 'center',
   },
   historyText: {
     ...rootStyle.commonText,
@@ -119,5 +119,12 @@ export default StyleSheet.create({
     backgroundColor: colors.white,
     marginVertical: 15,
     ...rootStyle.shadow,
+  },
+  cardImage: {
+    width: '100%',
+    minHeight: 200,
+    alignSelf: 'center',
+    marginTop: 20,
+    marginBottom: 20,
   },
 });
