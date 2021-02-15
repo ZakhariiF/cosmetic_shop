@@ -35,6 +35,7 @@ const Review = ({navigation, route}) => {
   const isPromo = useSelector((state) => state.booking.isPromoLoad);
   const fromEdit = useSelector((state) => state.booking.fromEdit);
   const promoInfo = useSelector((state) => state.booking.promoData);
+  const extensionAddon = useSelector((state) => state.booking.extensionAddon);
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
@@ -80,21 +81,31 @@ const Review = ({navigation, route}) => {
       .utcOffset(timezone)
       .format('YYYY-MM-DDTHH:mm:ssZ');
 
+    const items = [{
+        EmployeeID: get(totalGuests, '[0].employees', ''),
+        StartTimeOffset: startTime,
+        EndTimeOffset: endTime,
+        TreatmentID: get(totalGuests, '[0].services.ID'),
+        RoomID: get(totalGuests, '[0].rooms'),
+    }];
+
+    if (totalGuests[0].extension && extensionAddon) {
+      items.push({
+        EmployeeID: get(totalGuests[0].extension, 'employees', ''),
+        StartTimeOffset: endTime,
+        EndTimeOffset: moment(endTime).add(extensionAddon.TotalDuration, 'minutes').utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
+        TreatmentID: extensionAddon.ID,
+        RoomID: get(totalGuests[0].extension, 'rooms'),
+      });
+    }
+
     let obj = {
       AppointmentDateOffset: get(
         totalGuests,
         '[0].date.time.startDateTime',
         '',
       ),
-      AppointmentTreatmentDTOs: [
-        {
-          EmployeeID: get(totalGuests, '[0].employees', ''),
-          StartTimeOffset: startTime,
-          EndTimeOffset: endTime,
-          TreatmentID: get(totalGuests, '[0].services.ID'),
-          RoomID: get(totalGuests, '[0].rooms'),
-        },
-      ],
+      AppointmentTreatmentDTOs: items,
       Customer: {
         FirstName: get(userInfo, 'profile.firstName', ''),
         LastName: get(userInfo, 'profile.lastName', ''),

@@ -252,7 +252,7 @@ const BookingReducer = (state = bookingIntialState, action) => {
         slotsInfo: slotArr,
         // slotsInfo: slotArray,
       };
-    
+
     case types.SET_EXTENSION_ADDON:
       return {
         ...state,
@@ -859,7 +859,7 @@ export const bookingActions = {
   getEmployeeSuccess: (payload, extensionData) => ({
     type: types.GET_EMPLOYEE_SUCCESS,
     payload,
-    extensionData
+    extensionData,
   }),
 
   getEmployeeError: () => ({

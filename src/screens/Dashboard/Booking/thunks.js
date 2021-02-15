@@ -113,7 +113,7 @@ export const createGuestAppointment = (obj) => async (dispatch) => {
         return dispatch(bookingActions.guestBookingSuccess(data));
       } else {
         AlertHelper.showError(get(res, 'ErrorMessage', 'Server Error'));
-        return dispatch(bookingActions.guestBookingError());  
+        return dispatch(bookingActions.guestBookingError());
       }
     } else {
       AlertHelper.showError(get(data, 'ErrorMessage', 'Server Error'));
@@ -277,7 +277,9 @@ export const getEmplyeesData = (objs, extensionObjs) => async (dispatch) => {
     const data = await Promise.all(objs.map((obj) => API.getEmployee(obj)));
     const extensionAddonData = extensionObjs.length ? await Promise.all(extensionObjs.map((obj) => API.getEmployee(obj))) : [];
     if (data) {
-      return dispatch(bookingActions.getEmployeeSuccess(data, extensionAddonData));
+      return dispatch(
+        bookingActions.getEmployeeSuccess(data, extensionAddonData),
+      );
     } else {
       AlertHelper.showError(get(data, 'ErrorMessage', 'Server Error'));
       return dispatch(bookingActions.getEmployeeError());

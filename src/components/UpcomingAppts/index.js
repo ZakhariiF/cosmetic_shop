@@ -40,7 +40,7 @@ const UpcomingAppts = ({data, navigation, locationData}) => {
             )}
           </Text>
 
-          {get(item, 'appointment.AppointmentTreatments', []).map((service) => (
+          {get(item, 'appointment.AppointmentTreatments', []).filter((service) => service.TreatmentName !== 'Extensions').map((service) => (
             <View style={styles.clock}>
               <View style={styles.box}>
                 <Image source={Images.clock} resizeMode="contain" style={styles.icon} />
@@ -90,7 +90,7 @@ const UpcomingAppts = ({data, navigation, locationData}) => {
             onPress={() =>
               navigation.navigate('My Appts', {
                 screen: 'ApptDetails',
-                params: {item, past: false},
+                params: {item, past: false, location},
               })
             }>
             <Text style={styles.editText}>Edit/Cancel</Text>
