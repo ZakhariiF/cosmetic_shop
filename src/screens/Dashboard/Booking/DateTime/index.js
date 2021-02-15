@@ -28,6 +28,7 @@ import DateModal from 'components/DateModal';
 import WeekDays from 'components/WeekDays';
 import {types} from '../ducks';
 import {AlertHelper} from 'utils/AlertHelper';
+import { current } from "@reduxjs/toolkit";
 
 const DateTime = ({navigation}) => {
   const dispatch = useDispatch();
@@ -138,24 +139,23 @@ const DateTime = ({navigation}) => {
 
   const onSlot = (dateItem) => {
     let tempArr = [...totalGuests];
-
     tempArr = tempArr.map((user) => ({
       ...user,
       date: {time: dateItem, date: selectedDate}
-    }))
+    }));
     const locationId = get(selectedLocation, 'bookerLocationId', '')
 
-    const usedEmployees = []
-    const extensionObjs = []
+    const usedEmployees = [];
+    const extensionObjs = [];
     const objs = tempArr.map((item, idx) => {
       const employeeIds = item.date.time.availabilityItems.filter(
         (avItem) => avItem.serviceId === item.services.ID && !usedEmployees.includes(avItem.employeeId)
-      ).map((item) => item.employeeId)
-      const employeeId = employeeIds.length > 0 ? employeeIds[0] : null
-      tempArr[idx].employees = employeeId
+      ).map((item) => item.employeeId);
+      const employeeId = employeeIds.length > 0 ? employeeIds[0] : null;
+      tempArr[idx].employees = employeeId;
 
       if (employeeId) {
-        usedEmployees.push(employeeId)
+        usedEmployees.push(employeeId);
       }
 
       if (item.extension && item.extension.name === 'Yes' && extensionAddon) {
@@ -163,8 +163,7 @@ const DateTime = ({navigation}) => {
           locationId,
           serviceId: extensionAddon.ID,
           startDateTime: moment(dateItem.startDateTime).add(item.services.TotalDuration, 'minutes').utcOffset(dateItem.timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
-          employeeId,
-        })
+        });
       }
 
       return {
@@ -172,25 +171,66 @@ const DateTime = ({navigation}) => {
         serviceId: item.services.ID,
         startDateTime: dateItem.startDateTime,
         employeeId,
-      }
-    })
+      };
+    });
 
     dispatch(getEmplyeesData(objs, extensionObjs)).then((response) => {
       if (response.type == types.GET_EMPLOYEE_SUCCESS) {
-        const usedRoomIds = []
+        const usedRoomIds = [];
         get(response, 'payload').forEach((item, idx) => {
           let rooms = get(item, 'rooms', []).filter(
             (e) => e.available === 'Yes' && !usedRoomIds.includes(e.roomId),
           );
           if (rooms.length) {
-            tempArr[idx].rooms = rooms[0].roomId
-            usedRoomIds.push(rooms[0].roomId)
+            tempArr[idx].rooms = rooms[0].roomId;
+            usedRoomIds.push(rooms[0].roomId);
           }
-        })
+        });
+
+        const extensionIdxs = tempArr.map((item, idx) => {
+          if (item.extension) {
+            return idx;
+          }
+          return -1;
+        }).filter((idx) => idx >= 0);
+
+        if (extensionIdxs.length) {
+
+          get(response, 'extensionData', []).map((item, idx) => {
+            if (extensionIdxs[idx] !== undefined) {
+              const currentItem = tempArr[extensionIdxs[idx]]
+              let extensionEmployee = item.employees.find(e => e.available === 'Yes' && e.employeeId === currentItem.employees);
+              if (!extensionEmployee) {
+                extensionEmployee = item.employees.find(e => e.available === 'Yes' && usedEmployees.includes(e.employeeId))
+              }
+              if (extensionEmployee) {
+                extensionEmployee = extensionEmployee.employeeId;
+                usedEmployees.push(extensionEmployee);
+              }
+
+              let extensionroom = item.rooms.find(e => e.available === 'Yes' && e.roomId === currentItem.rooms);
+              if (!extensionroom) {
+                extensionroom = item.rooms.find(e => e.available === 'Yes' && usedRoomIds.includes(e.rooms))
+              }
+
+              if (extensionroom) {
+                extensionroom = extensionroom.roomId;
+                usedRoomIds.push(extensionroom);
+              }
+
+              tempArr[extensionIdxs[idx]].extension = {
+                ...currentItem,
+                employee: extensionEmployee,
+                rooms: extensionroom,
+                serviceId: extensionAddon.ID,
+              };
+            }
+          })
+        }
 
         if (tempArr.find((o) => !o.rooms || !o.employees)) {
           AlertHelper.showError('Please choose another time slot');
-          return
+          return;
         }
         dispatch(setmemberCount(tempArr));
         onNext(tempArr);

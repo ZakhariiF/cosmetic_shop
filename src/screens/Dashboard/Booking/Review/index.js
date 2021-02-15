@@ -80,21 +80,27 @@ const Review = ({navigation, route}) => {
       .utcOffset(timezone)
       .format('YYYY-MM-DDTHH:mm:ssZ');
 
+    const items = [{
+      EmployeeID: get(totalGuests, '[0].employees', ''),
+      StartTimeOffset: startTime,
+      EndTimeOffset: endTime,
+      TreatmentID: get(totalGuests, '[0].services.ID'),
+      RoomID: get(totalGuests, '[0].rooms'),
+    }];
+
+    if (totalGuests.extension) {
+      items.push(({
+
+      }))
+    }
+
     let obj = {
       AppointmentDateOffset: get(
         totalGuests,
         '[0].date.time.startDateTime',
         '',
-      ),
-      AppointmentTreatmentDTOs: [
-        {
-          EmployeeID: get(totalGuests, '[0].employees', ''),
-          StartTimeOffset: startTime,
-          EndTimeOffset: endTime,
-          TreatmentID: get(totalGuests, '[0].services.ID'),
-          RoomID: get(totalGuests, '[0].rooms'),
-        },
-      ],
+      },
+      AppointmentTreatmentDTOs: items,
       Customer: {
         FirstName: get(userInfo, 'profile.firstName', ''),
         LastName: get(userInfo, 'profile.lastName', ''),
