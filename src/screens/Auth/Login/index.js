@@ -20,7 +20,8 @@ import {
   createConfig,
   signIn,
   signOut,
-  EventEmitter } from '@okta/okta-react-native';
+  EventEmitter
+} from '@okta/okta-react-native';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -29,10 +30,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
   const [hide, setHide] = useState(true);
-  const [email, setEmail] = useState('beakshy+2@gmail.com');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  const [password, setPassword] = useState('Contra123??');
+  const [email, setEmail] = useState('');
+
+  const [password, setPassword] = useState('');
   const isloading = useSelector((state) => state.auth.isLoading);
   const [loading, setLoading] = useState(false);
   const isValidate = !isValidEmail(email) || password.length < 6 ? true : false;

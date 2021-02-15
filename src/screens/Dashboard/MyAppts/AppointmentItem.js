@@ -12,9 +12,12 @@ const AppointmentItem = ({
   onCancel,
   locationData,
 }) => {
-  const locationId = get(item.appointment, 'Room.LocationID', 0)
+  const locationId = get(item.appointment, 'Room.LocationID', 0);
 
-  const location = get(locationData, 'storeCollection.items', []).find(l => l.bookerLocationId === locationId)
+  const location = get(locationData, 'storeCollection.items', []).find(l => l.bookerLocationId === locationId);
+
+  const timezone = moment().utcOffset(get(item, 'appointment.StartDateTimeOffset')).utcOffset();
+  const startTime = moment(get(item, 'appointment.StartDateTimeOffset')).utcOffset(timezone)
 
   return (
     <View style={styles.container}>
@@ -24,16 +27,16 @@ const AppointmentItem = ({
           past && {backgroundColor: Colors.dimGray},
         ]}>
         <Text style={styles.dateText}>
-          {moment(new Date(get(item.appointment, 'DateBookedOffset'))).format('MMM')}
+          {startTime.format('MMM')}
         </Text>
         <Text style={[styles.dateText, {fontFamily: Fonts.AvenirNextBold}]}>
-          {moment(item.appointment.DateBookedOffset).format('DD')}
+          {startTime.format('DD')}
         </Text>
         <Text style={styles.dateText}>
-          {new Date(get(item.appointment, 'DateBookedOffset')).getFullYear()}
+          {startTime.format('YYYY')}
         </Text>
         <Text style={[styles.dateText, {fontFamily: Fonts.AvenirNextRegular}]}>
-          {moment(get(item.appointment, 'DateBookedOffset')).format('hh:mm a')}
+          {startTime.format('hh:mm a')}
         </Text>
       </View>
       <View style={styles.infoContainer}>
@@ -74,7 +77,7 @@ const AppointmentItem = ({
           <View style={styles.bottomContainer}>
             <View style={{maxWidth: '75%'}}>
               {
-                get(item, 'appointment.AppointmentTreatments', []).map((service) => (
+                get(item, 'appointment.AppointmentTreatments', []).filter((service) => service.TreatmentName !== 'Extensions').map((service) => (
                   <Text style={styles.details}>
                     {get(service, 'TreatmentName', '')} (${get(service, 'Treatment.Price.Amount')})
                   </Text>

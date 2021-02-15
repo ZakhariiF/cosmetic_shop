@@ -28,7 +28,7 @@ const RebookAppts = ({item, onRebook, locationData}) => {
           onPress={openMaps}
           style={[styles.bottomContainer, {marginTop: 40}]}>
           <Text style={styles.location}>
-            Drybar Huntington Beach in Pacific City
+            {get(location, 'title')}
           </Text>
           <Image source={Images.loc} />
         </TouchableOpacity>

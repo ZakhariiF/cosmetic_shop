@@ -32,7 +32,9 @@ const MyAppts = ({navigation}) => {
     dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
 
   const onEdit = (item, location) => {
-    let tempArr = get(item, 'appointment.AppointmentTreatments', []).map(
+    let tempArr = get(item, 'appointment.AppointmentTreatments', [])
+      .filter((service) => service.TreatmentName !== 'Extensions')
+      .map(
       (service, index) => {
         const timezone = moment()
           .utcOffset(service.StartDateTimeOffset)

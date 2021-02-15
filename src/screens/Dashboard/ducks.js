@@ -25,7 +25,6 @@ export const homeIntialState = {
 const HomeReducer = (state = homeIntialState, action) => {
   switch (action.type) {
     //---- GET APPTS ------
-
     case types.GET_APPTS_REQUEST:
       return {
         ...state,
@@ -33,7 +32,6 @@ const HomeReducer = (state = homeIntialState, action) => {
       };
 
     case types.GET_APPTS_SUCCESS:
-      console.log('GET_APPTS_SUCCESS', action.payload)
       return {
         ...state,
         apptLoading: false,

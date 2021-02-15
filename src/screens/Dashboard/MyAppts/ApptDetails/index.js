@@ -16,7 +16,7 @@ import styles from './styles';
 import {get} from 'lodash';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
-import {setIsEdit, setmemberCount} from '../../Booking/thunks';
+import { setIsEdit, setLocation, setmemberCount } from "../../Booking/thunks";
 import Indicator from 'components/Indicator';
 import {Colors} from 'constant';
 import {cancelAppointment} from '../../thunks';
@@ -34,30 +34,30 @@ const ApptDetails = ({route, navigation}) => {
   } = route;
 
   const timezone = moment().utcOffset(get(item, 'appointment.StartDateTimeOffset')).utcOffset();
-  const services = get(item, 'appointment.AppointmentTreatments', [])
+  const services = get(item, 'appointment.AppointmentTreatments', []).filter((service) => service.TreatmentName !== 'Extensions')
   const onEdit = () => {
-    let tempArr = services.map((service, idx) => ({
-      userType: idx === 0 ? 'Me' : 'Guest ' + idx,
-      date: {
-        date: moment(get(service, 'StartDateTimeOffset')).format(''),
-        time: {
-          startTime: get(service, 'StartDateTimeOffset'),
-          endTime: get(service, 'EndDateTimeOffset'),
-          timezone: moment().utcOffset(get(service, 'StartDateTimeOffset')).utcOffset()
+    let tempArr = services
+      .map((service, idx) => ({
+        userType: idx === 0 ? 'Me' : 'Guest ' + idx,
+        date: {
+          date: moment(get(service, 'StartDateTimeOffset')).format(''),
+          time: {
+            startTime: get(service, 'StartDateTimeOffset'),
+            endTime: get(service, 'EndDateTimeOffset'),
+            timezone: moment().utcOffset(get(service, 'StartDateTimeOffset')).utcOffset()
+          },
         },
-      },
 
-      rooms: {roomId: get(service, 'RoomID')},
-      employees: {employeeId: get(service, 'EmployeeID')},
-
-      services: {
-        Name: get(service, 'TreatmentName'),
-        Price: {Amount: get(service, 'Treatment.Price.Amount')},
-        ...service,
-      },
-      customer: item.Customer,
-    }));
-
+        rooms: {roomId: get(service, 'RoomID')},
+        employees: {employeeId: get(service, 'EmployeeID')},
+        services: {
+          Name: get(service, 'TreatmentName'),
+          Price: {Amount: get(service, 'Treatment.Price.Amount')},
+          ...service,
+        },
+        customer: item.Customer,
+      }));
+    dispatch(setLocation(location));
     dispatch(setmemberCount(tempArr));
     dispatch(
       setIsEdit({

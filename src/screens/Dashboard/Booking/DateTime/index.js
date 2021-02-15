@@ -225,7 +225,7 @@ const DateTime = ({navigation}) => {
                 serviceId: extensionAddon.ID,
               };
             }
-          })
+          });
         }
 
         if (tempArr.find((o) => !o.rooms || !o.employees)) {
