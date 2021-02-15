@@ -89,7 +89,11 @@ const Review = ({navigation, route}) => {
         RoomID: get(totalGuests, '[0].rooms'),
     }];
 
-    if (totalGuests[0].extension && extensionAddon) {
+    if (
+      totalGuests[0].extension &&
+      totalGuests[0].extension.name === 'Yes' &&
+      extensionAddon
+    ) {
       items.push({
         EmployeeID: get(totalGuests[0].extension, 'employees', ''),
         StartTimeOffset: endTime,
