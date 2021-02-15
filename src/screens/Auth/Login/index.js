@@ -6,6 +6,7 @@ import Header from 'components/Header/Header';
 import Input from 'components/Input';
 import styles from './styles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import MParticle from 'react-native-mparticle';
 import SocialLogin from 'components/SocialLogin';
 import {Images} from 'constant';
 import configFile from 'constant/config';
@@ -61,6 +62,10 @@ const Login = ({navigation}) => {
 
 
   const onLogin = async () => {
+    MParticle.logEvent('User Attempts to Login', MParticle.EventType.Other, {
+      'Source Page': 'Login',
+    });
+
     if (Platform.OS == 'ios') {
       await createConfig({
         clientId: configFile.clientId,
@@ -70,25 +75,23 @@ const Login = ({navigation}) => {
         scopes: configFile.scopes,
         requireHardwareBackedKeyStore: false
       });
-      console.log({
-        clientId: configFile.clientId,
-        redirectUri: configFile.redirectUri,
-        endSessionRedirectUri: configFile.endSessionRedirectUri,
-        discoveryUri: configFile.discoveryUri,
-        scopes: configFile.scopes,
-        requireHardwareBackedKeyStore: false
-      });
+
       setLoading(true);
       signIn({username: email, password})
-      .then(token => {
-        console.log("Token from okta package***", token);
-        dispatch(_onlogin(token, email, password));
-        setLoading(false);
-      })
-      .catch(e => {
-        console.log(e);
-        setLoading(false);
-      })
+        .then(token => {
+
+          dispatch(_onlogin(token, email, password));
+          setLoading(false);
+        })
+        .catch(e => {
+          MParticle.logEvent('User fails to Login', MParticle.EventType.Other, {
+            'Source Page': 'Login',
+            'Error Details': JSON.stringify(e),
+            'Email': email,
+          });
+          console.log(e);
+          setLoading(false);
+        });
     } else {
       console.log("start logging in********************");
       dispatch(onlogin(email, password));

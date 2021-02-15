@@ -5,6 +5,8 @@
 #import <React/RCTRootView.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import "RNSplashScreen.h"
+#import <mParticle-Apple-SDK/mParticle.h>
+#import "mParticle.h"
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -25,6 +27,13 @@ static void InitializeFlipper(UIApplication *application) {
 }
 #endif
 
+static void InitializeMParticle(UIApplication *application) {
+  MParticleOptions *options = [MParticleOptions optionsWithKey:@"06b902ebd97f0d4bac36022c8798b365"
+                                                        secret:@"6otTKZ_0NSwLmLSWw7_6-mPAW1p9lTC3KFXIj09ibmIFQI6l8_rFrW_iVTtEAapk"];
+  [[MParticle sharedInstance] startWithOptions:options];
+
+}
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -33,6 +42,8 @@ static void InitializeFlipper(UIApplication *application) {
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
+  
+  InitializeMParticle(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge

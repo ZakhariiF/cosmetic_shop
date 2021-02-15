@@ -11,7 +11,8 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Colors, Fonts, Images} from 'constant';
 import colors from 'constant/colors';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import MParticle from 'react-native-mparticle';
 import rootStyle from 'rootStyle';
 
 const Header = ({
@@ -26,6 +27,9 @@ const Header = ({
   onSave,
 }) => {
   const navigation = useNavigation();
+
+  const route = useRoute();
+
   return (
     <>
       <SafeAreaView style={{backgroundColor: safeBackColor || Colors.white}} />
@@ -38,7 +42,12 @@ const Header = ({
           <MaterialIcons
             name="arrow-back-ios"
             size={25}
-            onPress={onBackPress ? onBackPress : () => navigation.goBack()}
+            onPress={onBackPress ? onBackPress : () => {
+              MParticle.logEvent('Back', MParticle.EventType.Navigation, {
+                'Source Page': route.name,
+              });
+              navigation.goBack();
+            }}
           />
         ) : (
           <View style={{width: 30}} />

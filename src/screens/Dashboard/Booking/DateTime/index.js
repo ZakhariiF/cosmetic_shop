@@ -29,6 +29,7 @@ import WeekDays from 'components/WeekDays';
 import {types} from '../ducks';
 import {AlertHelper} from 'utils/AlertHelper';
 import { current } from "@reduxjs/toolkit";
+import MParticle from "react-native-mparticle";
 
 const DateTime = ({navigation}) => {
   const dispatch = useDispatch();
@@ -138,6 +139,11 @@ const DateTime = ({navigation}) => {
   };
 
   const onSlot = (dateItem) => {
+    MParticle.logEvent('Select Time', MParticle.EventType.Other, {
+      'Source Page': 'Date Time Selection',
+      'Date': moment(selectedDate).utcOffset(dateItem.timezone).format('YYYY-MM-DD'),
+      'Time': moment(dateItem.startDateTime).utcOffset(dateItem.timezone).format('HH:mm:ss')
+    });
     let tempArr = [...totalGuests];
     tempArr = tempArr.map((user) => ({
       ...user,
@@ -261,7 +267,12 @@ const DateTime = ({navigation}) => {
     }
   };
 
-  console.log('Selected Date:', selectedDate, moment(selectedDate), moment(selectedDate).format('MMMM DD, YYYY'))
+  useEffect(() => {
+    MParticle.logEvent('Select Date', MParticle.EventType.Other, {
+      'Source Page': 'Date Time Selection',
+      'Date': moment(selectedDate).format('YYYY-MM-DD')
+    });
+  }, [selectedDate])
 
   return (
     <View style={rootStyle.container}>

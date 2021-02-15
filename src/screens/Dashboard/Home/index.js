@@ -9,6 +9,8 @@ import {
   RefreshControl,
   TouchableWithoutFeedback,
 } from 'react-native';
+import MParticle from 'react-native-mparticle';
+
 import rootStyle from 'rootStyle';
 import Authheader from 'components/Header/Authheader';
 import styles from './styles';
@@ -21,7 +23,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {getCustomerInfo} from 'screens/Auth/thunks';
-import { greetings, mapGraphqlToNavigator } from "utils";
+import {greetings, mapGraphqlToNavigator} from 'utils';
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
 import {
   getLocations,
@@ -106,8 +108,13 @@ const Home = ({navigation}) => {
   };
 
   const onRebook = (item, location) => {
-    let tempArr = get(item, 'appointment.AppointmentTreatments', []).filter((service) => service.TreatmentName !== 'Extensions').map(
-      (service, index) => {
+    MParticle.logEvent('Home - Rebook', MParticle.EventType.Navigation, {
+      'Source Page': 'Home',
+      'Book Type': 'Rebook',
+    });
+    let tempArr = get(item, 'appointment.AppointmentTreatments', [])
+      .filter((service) => service.TreatmentName !== 'Extensions')
+      .map((service, index) => {
         const timezone = moment()
           .utcOffset(service.StartDateTimeOffset)
           .utcOffset();
@@ -134,8 +141,7 @@ const Home = ({navigation}) => {
           },
           customer: item.Customer,
         };
-      },
-    );
+      });
     dispatch(setLocation(location));
     dispatch(setmemberCount(tempArr));
     dispatch(setIsEdit(true));

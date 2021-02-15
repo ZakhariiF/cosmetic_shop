@@ -1,18 +1,30 @@
 import {get} from 'lodash';
+import MParticle from "react-native-mparticle";
 import {AlertHelper} from 'utils/AlertHelper';
 import {authActions} from './ducks';
 import * as API from 'services';
 
 export const _onlogin = (token, email, password) => async (dispatch) => {
-  
+
   dispatch(authActions.loginRequest());
   
   try {
-    console.log("&&&&&&&&&&&&&&&")
+
     const data = await API._login(token, email, password);
-    console.log(data);
+
     if (data) {
       const userInfo = await API.getUser(get(data, '_embedded.user.id'));
+      const request = new MParticle.IdentityRequest()
+      request.email = email;
+      request.setCustomerID(get(userInfo, 'profile.bookerId'));
+
+      MParticle.Identity.login(request, (error, userId) => {
+        console.log('MParticle Identify:', error, userId);
+      });
+
+      MParticle.logEvent('Login Successful', MParticle.EventType.Other, {
+        'Source Page': 'Login'
+      });
       console.log('userInfo get of Okta sever', userInfo);
       let userData = data;
       userData['userInfo'] = userInfo;

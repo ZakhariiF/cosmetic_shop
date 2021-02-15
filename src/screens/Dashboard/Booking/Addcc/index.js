@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {addCreditCard} from '../thunks';
 import Indicator from 'components/Indicator';
 import DismissKeyboard from 'components/DismissKeyboard';
+import MParticle from "react-native-mparticle";
 
 const Addcc = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -22,6 +23,9 @@ const Addcc = () => {
   // alert(JSON.stringify(userInfo));
 
   const onAddCard = () => {
+    MParticle.logEvent('Sace Card', MParticle.EventType.Other, {
+      'Source Page': 'Add card',
+    });
     const data = {
       SpaID: 112,
       // CustomerID: 119704688,

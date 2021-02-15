@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 import rootStyle from 'rootStyle';
 import LocationItem from 'components/LocationItem';
-import {useNavigation, useNavigationState} from '@react-navigation/native';
+import {useNavigation, useNavigationState, useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
 import {
@@ -37,6 +37,7 @@ import {
 import EmptyContainer from 'components/EmptyContainer';
 import ReviewPopup from 'components/ReviewPopup';
 import {types} from 'screens/Dashboard/Booking/ducks';
+import MParticle from "react-native-mparticle";
 
 // import Location from 'screens/Dashboard/Booking/Location';
 
@@ -49,6 +50,7 @@ const LocationModal = forwardRef((props, ref) => {
   const navigation = useNavigation();
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const data = useSelector((state) => state.booking.locations);
+  const route = useRoute();
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
@@ -65,6 +67,13 @@ const LocationModal = forwardRef((props, ref) => {
   const [favItem, setFavItem] = useState(favStore || '');
   const currentRoute = routes[routes.length - 1].name;
   let showReview = currentRoute != 'Location';
+
+  useEffect(() => {
+    MParticle.logEvent('Set store locator', MParticle.EventType.Other, {
+      'Source Page': 'Booking Location',
+      'Filter': activeTab === 0 ? 'Closest' : 'Favorite',
+    });
+  }, [activeTab]);
 
   // useImperativeHandle(ref, () => ({
   //   onMin() {
@@ -139,6 +148,14 @@ const LocationModal = forwardRef((props, ref) => {
   };
 
   const onBook = (item = get(data, '[0]', {})) => {
+    MParticle.logEvent('Select Location for Booking', MParticle.EventType.Other, {
+      'Source Page': route.name,
+      'Location Id': item.bookerLocationId,
+      'Location Address': `${get(item, 'contact.street1')} ${get(item, 'contact.city')}, ${get(item, 'contact.state')} ${get(item, 'contact.postalCode')}`,
+      'Selection Mode': 'List',
+      'User Location': '',
+      'Distance': 0,
+    });
     dispatch(setLocation(item));
     dispatch(setmemberCount([]));
     navigation.navigate('Coming');

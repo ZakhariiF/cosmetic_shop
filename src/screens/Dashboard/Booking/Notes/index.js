@@ -8,6 +8,7 @@ import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
 import {setmemberCount} from '../thunks';
 import {useSelector, useDispatch} from 'react-redux';
+import MParticle from "react-native-mparticle";
 
 const Notes = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -41,6 +42,10 @@ const Notes = ({navigation, route}) => {
             // let tempArr = [...totalGuests];
             // tempArr.push({Notes: notes});
             // dispatch(setmemberCount(tempArr));
+            MParticle.logEvent('Add Requests', MParticle.EventType.Other, {
+              'Source Page': 'Notes',
+              'Request': notes,
+            });
             navigation.navigate('ApptHold', {
               Notes: notes,
             });

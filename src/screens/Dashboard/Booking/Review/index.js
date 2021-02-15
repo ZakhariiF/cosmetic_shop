@@ -26,6 +26,7 @@ import {
 import Indicator from 'components/Indicator';
 import {getAppointments} from 'screens/Dashboard/thunks';
 import {cancelItinerary, cancelAppt} from 'services';
+import MParticle from "react-native-mparticle";
 
 const Review = ({navigation, route}) => {
   const [isChecked, setChecked] = useState(false);
@@ -212,6 +213,12 @@ const Review = ({navigation, route}) => {
     setShowCancel(!showCancel);
   };
 
+  const onEdit = () => {
+    MParticle.logEvent('Change their booking information', MParticle.EventType.Other, {
+      'Source Page': 'Review',
+    });
+  }
+
   // console.log('selectedLocation', selectedLocation);
   // console.log('CouponCode', promoInfo);
 
@@ -258,7 +265,10 @@ const Review = ({navigation, route}) => {
 
             <TouchableOpacity
               style={styles.editContainer}
-              onPress={() => navigation.navigate('Services')}>
+              onPress={() => {
+                onEdit();
+                navigation.navigate('Services')
+              }}>
               <Image source={Images.edit} />
             </TouchableOpacity>
           </View>
@@ -297,7 +307,10 @@ const Review = ({navigation, route}) => {
 
             <TouchableOpacity
               style={styles.editContainer}
-              onPress={() => navigation.navigate('Addons')}>
+              onPress={() => {
+                onEdit();
+                navigation.navigate('Addons')
+              }}>
               <Image source={Images.edit} />
             </TouchableOpacity>
           </View>
@@ -341,7 +354,10 @@ const Review = ({navigation, route}) => {
             )}
             <TouchableOpacity
               style={styles.editContainer}
-              onPress={() => navigation.navigate('DateTime')}>
+              onPress={() => {
+                onEdit();
+                navigation.navigate('DateTime');
+              }}>
               <Image source={Images.edit} />
             </TouchableOpacity>
           </View>

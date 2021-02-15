@@ -9,6 +9,7 @@ import {useDispatch} from 'react-redux';
 import {setActiveGuestTab, setIsEdit, setmemberCount} from '../thunks';
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
+import MParticle from "react-native-mparticle";
 
 const Coming = ({navigation}) => {
   const dispatch = useDispatch();
@@ -38,11 +39,20 @@ const Coming = ({navigation}) => {
       };
       tempArr.push(obj);
     }
+    MParticle.logEvent('Select How Many', MParticle.EventType.Other, {
+      'Source Page': 'Book How Many',
+      'User Option': 'Me + Guest',
+      'Guest Count': val,
+    });
     dispatch(setmemberCount(tempArr));
     navigation.navigate('Services');
   };
 
   const onJust = () => {
+    MParticle.logEvent('Select How Many', MParticle.EventType.Other, {
+      'Source Page': 'Book How Many',
+      'User Option': 'Just Me',
+    });
     setGuestTab(false);
     setCount(1);
     onNext(1);

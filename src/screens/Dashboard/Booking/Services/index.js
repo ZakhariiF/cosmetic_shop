@@ -13,6 +13,7 @@ import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
 import Indicator from 'components/Indicator';
 import ServiceInfoModal from 'components/ServiceInfoModal';
+import MParticle from "react-native-mparticle";
 
 const Services = ({navigation}) => {
   const dispatch = useDispatch();
@@ -39,6 +40,10 @@ const Services = ({navigation}) => {
   };
 
   const onServiceList = (item) => {
+    MParticle.logEvent('Select Service', MParticle.EventType.Other, {
+      'Source Page': 'Select Service',
+      'Service Name': get(item, 'Name'),
+    });
     let tempArr = [...totalGuests];
 
     if (!isChecked) {
@@ -49,7 +54,7 @@ const Services = ({navigation}) => {
     } else {
       tempArr[activeUser].services = item;
     }
-    
+
     dispatch(setmemberCount(tempArr));
     onNext(tempArr);
   };

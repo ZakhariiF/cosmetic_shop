@@ -2,6 +2,7 @@ import Button from 'components/Button';
 import {Colors, Fonts, Images} from 'constant';
 import {get, set} from 'lodash';
 import React, {useState} from 'react';
+import MParticle from "react-native-mparticle";
 import {
   FlatList,
   StyleSheet,
@@ -28,6 +29,7 @@ const UpcomingAppts = ({data, navigation, locationData}) => {
     const locationId = get(item, 'appointment.Customer.LocationID');
 
     const location = get(locationData, 'storeCollection.items', []).find(l => l.bookerLocationId === locationId);
+    const services = get(item, 'appointment.AppointmentTreatments', []).filter((service) => service.TreatmentName !== 'Extensions');
 
     return (
       <View style={{marginVertical: 10}}>
@@ -40,7 +42,7 @@ const UpcomingAppts = ({data, navigation, locationData}) => {
             )}
           </Text>
 
-          {get(item, 'appointment.AppointmentTreatments', []).filter((service) => service.TreatmentName !== 'Extensions').map((service) => (
+          {services.map((service) => (
             <View style={styles.clock}>
               <View style={styles.box}>
                 <Image source={Images.clock} resizeMode="contain" style={styles.icon} />
@@ -87,27 +89,50 @@ const UpcomingAppts = ({data, navigation, locationData}) => {
         <View style={styles.bottomContainer}>
           <TouchableOpacity
             style={styles.editButton}
-            onPress={() =>
+            onPress={() => {
+              MParticle.logEvent('Home - Appointment Edit', MParticle.EventType.Navigation, {
+                'Source Page': 'Home',
+                'Book Type': 'Book',
+              });
+              MParticle.logEvent('Home - Edit / Cancel', MParticle.EventType.Other, {
+                'Source Page': 'Home',
+              });
               navigation.navigate('My Appts', {
                 screen: 'ApptDetails',
                 params: {item, past: false, location},
               })
-            }>
+            }}>
             <Text style={styles.editText}>Edit/Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.editButton}
-            onPress={() =>
+            onPress={() => {
+              MParticle.logEvent('Home - Get Direction', MParticle.EventType.Other, {
+                'Source Page': 'Home',
+              });
               openMaps(
                 get(item.appointment, 'Customer.LocationName'),
                 get(location, 'contact.coordinates[0]'),
                 get(location, 'contact.coordinates[1]'),
-              )
-            }>
+              );
+            }}>
             <Text style={styles.editText}>Get Directions</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.editButton, {backgroundColor: Colors.yellow}]}>
+            style={[styles.editButton, {backgroundColor: Colors.yellow}]}
+            onPress={() => {
+              MParticle.logEvent('Home - Appointment Check IN', MParticle.EventType.Other, {
+                'Source Page': 'Home',
+                'Location ID': locationId,
+                'AppointmentStartTime': startTime.format('YYYY-MM-DDTHH:mm:ssZ'),
+                'BookingNumber': get(item, 'appointment.BookingNumber'),
+                'Service': '', // Multiple,
+                'DiscountCode': '',
+                'Guests': services.length,
+                'Status': get(item, 'appointment.Status.Name'),
+              });
+            }}
+          >
             <Text style={styles.editText}>Check in</Text>
           </TouchableOpacity>
         </View>

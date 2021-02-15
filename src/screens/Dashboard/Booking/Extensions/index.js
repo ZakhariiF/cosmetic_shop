@@ -49,7 +49,7 @@ const Extensions = ({navigation, onSkip}) => {
   };
 
   const onExtension = (item) => {
-    console.log('On Extension:', item)
+
     let tempArr = [...totalGuests];
     tempArr[activeTab].extension = item;
     dispatch(setmemberCount(tempArr));
