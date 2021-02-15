@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {View, Text} from 'react-native';
 import Button from 'components/Button';
 import CheckBox from 'components/Checkbox';
@@ -10,6 +10,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch, useSelector} from 'react-redux';
 import {onregister} from '../thunks';
 import Indicator from 'components/Indicator';
+import {addToContactList} from "services/Emarsys";
 
 const Phone = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Phone = ({navigation, route}) => {
     params: {firstName, lastName, email},
   } = route;
 
-  const onNext = () => {
+  const onNext = useCallback(async () => {
     dispatch(
       onregister({
         firstName,
@@ -29,12 +30,21 @@ const Phone = ({navigation, route}) => {
         email,
         phone,
       }),
-    ).then((response) => {
+    ).then(async (response) => {
       if (response.type === 'REGISTER_SUCCESS') {
+        const emarsysData = await addToContactList({
+          sourceType: 'DrybarshopsUserReq',
+          firstName,
+          lastName,
+          email,
+          homePhone: 'Mobile Phone',
+          phoneNumber: phone,
+        });
+        console.log('Emarsys response:', emarsysData);
         navigation.navigate('CheckEmail', {email});
       }
     });
-  };
+  }, [firstName, lastName, email, phone]);
 
   return (
     <View style={styles.container}>
