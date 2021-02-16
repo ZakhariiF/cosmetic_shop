@@ -1,5 +1,6 @@
 // import {doQuery} from '../../state/utils/contentful';
 import {doQuery} from 'services/Contentful';
+import {get} from 'lodash';
 import {
   queryGallery,
   queryMarketingSection,
@@ -34,10 +35,19 @@ const parseStylesCollection = (data) => {
 const parseMarketingSection = (data) => {
   let heroImage = '';
 
+  console.log('ParseMarketingSection: ', data);
+
   try {
     heroImage =
-      data.marketingSection.marketingComponentsCollection.items[0].image
-        .desktopMedia.url;
+      get(
+        data,
+        'marketingSection.marketingComponentsCollection.items[0].image.mobileMedia.url',
+      ) ||
+      get(
+        data,
+        'marketingSection.marketingComponentsCollection.items[0].image.desktopMedia.url',
+        '',
+      );
   } catch (err) {
     console.error('step 2', err);
   }
@@ -53,8 +63,12 @@ const parseStylesExceptGallery = (data) => {
         title: item.title,
         subtitle: item.subtitle,
         featuredVideo: item.featuredVideo?.desktopUrl || '',
-        featuredImage: item.featuredImage?.desktopMedia?.url || '',
-        galleryCollectionId: item.galleryCollection?.items[0]?.sys?.id || '',
+        featuredImage:
+          get(item, 'featuredImage.mobileMedia.url') ||
+          get(item, 'featuredImage.desktopMedia.url', ''),
+        galleryCollectionIds: (item.galleryCollection?.items || [])
+          .filter((item) => item?.sys?.id)
+          .map((item) => item?.sys?.id),
       };
       stylesData.push(styleData);
     });
@@ -70,13 +84,16 @@ const parseGallery = (data) => {
     video: '',
     images: [],
   };
+
+  console.log('ParseGallery:', data);
+
   try {
     if (data && data.styleGallery) {
       galleryData.title = data.styleGallery?.title;
       galleryData.video = data.styleGallery?.video?.desktopUrl;
       galleryData.images = (
         data.styleGallery?.imagesCollection?.items || []
-      ).map((item) => item?.desktopMedia?.url || '');
+      ).map((item) => item?.mobileMedia?.url || item?.desktopMedia?.url || '');
     }
   } catch (err) {
     console.error('styleGallery err', err);
@@ -109,11 +126,13 @@ export const gqlLoadTheStyles = async () => {
 
     let stylesData = parseStylesExceptGallery(data);
     for (let i = 0; i < stylesData.length; i++) {
-      data = await doQuery(queryGallery(stylesData[i].galleryCollectionId));
-      stylesData[i].gallery = parseGallery(data);
+      data = stylesData[i].galleryCollectionIds.map((item) =>
+        doQuery(queryGallery(item)),
+      );
+      data = await Promise.all(data);
+      stylesData[i].gallery = data.map(datum => parseGallery(datum));
     }
     theStylesSectionData.styles = stylesData;
   }
-
   return theStylesSectionData;
 };

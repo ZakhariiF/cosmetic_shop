@@ -25,18 +25,25 @@ export default StyleSheet.create({
   swiperTextStyle: {
     fontSize: 30,
     fontFamily: Fonts.DCondensed,
-    padding: 30,
+    padding: 10,
     color: '#42413D',
+    textAlign: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
   swiperContainer: {
-    height: 375,
+    height: 400,
     width: '100%',
     marginTop: 30,
   },
   imageStyle: {
-    height: '100%',
+    height: 350,
     width: '100%',
     justifyContent: 'flex-end',
+    marginBottom: 30,
+    position: 'relative',
   },
   buttonStyle: {
     width: '55%',
