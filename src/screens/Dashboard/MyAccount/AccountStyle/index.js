@@ -124,7 +124,6 @@ const AccountStyle = ({navigation}) => {
         <View style={{flex: 1, paddingHorizontal: 20}}>
           <Slick
             showsButtons={true}
-            style={[rootStyle.shadow, styles.swiperContainer]}
           >
             {/* {[1, 2, 3, 4].map((e, i) => ( */}
             {get(data, 'styles', []).map((e, i) => {
