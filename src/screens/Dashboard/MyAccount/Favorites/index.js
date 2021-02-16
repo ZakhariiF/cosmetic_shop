@@ -89,7 +89,7 @@ const Favorites = () => {
 
   return (
     <View style={rootStyle.container}>
-      <Header title="FAVORITES" isTab />
+      <Header title="FAVORITE SHOP" isTab />
 
       <View style={rootStyle.innerContainer}>
         <Text style={styles.headerTitle}>YOUR FAVORITE SHOP</Text>

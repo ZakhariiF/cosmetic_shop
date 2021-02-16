@@ -13,6 +13,7 @@ import moment from 'moment';
 import {get} from 'lodash';
 import EmptyContainer from 'components/EmptyContainer';
 import {storeCollectionQuery} from 'constant/query';
+import Button from 'components/Button';
 
 const MyAppts = ({navigation}) => {
   const dispatch = useDispatch();
@@ -145,7 +146,9 @@ const MyAppts = ({navigation}) => {
 
           {!data.length && !pastAppt.length ? (
             <View style={styles.emptyContainer}>
-              <EmptyContainer emptyText="No Appointments Found!" />
+              <EmptyContainer emptyText="You do not have any upcoming appointments" />
+              <EmptyContainer emptyText="Book on from here or easily rebook from one of your previous visits" />
+              <Button onButtonPress={() => navigation.navigate('Book')} name={"Book an Appointment"} />
             </View>
           ) : null}
         </ScrollView>
