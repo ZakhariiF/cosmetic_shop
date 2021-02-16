@@ -89,7 +89,7 @@ const Favorites = () => {
 
   return (
     <View style={rootStyle.container}>
-      <Header title="FAVORITES" isTab />
+      <Header title="FAVORITE SHOP" isTab />
 
       <View style={rootStyle.innerContainer}>
         <Text style={styles.headerTitle}>YOUR FAVORITE SHOP</Text>
@@ -99,8 +99,7 @@ const Favorites = () => {
         ) : (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
-              You have not selected a favorite Drybar Shop. Lorem ipsum button
-              below Proin sodales pulvinar sic tempor.
+              You have not selected a favorite Drybar Shop.
             </Text>
           </View>
         )}
