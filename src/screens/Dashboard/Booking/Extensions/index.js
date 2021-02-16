@@ -3,15 +3,22 @@ import GuestTab from 'components/GuestTab';
 import {Colors, Fonts} from 'constant';
 import {get} from 'lodash';
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Linking,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import rootStyle from 'rootStyle';
 import {setmemberCount} from '../thunks';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const data = [
-  {name: 'Yes', price: 20},
   {name: 'No', price: 0},
+  {name: 'Yes', price: 20},
 ];
 
 const Extensions = ({navigation, onSkip}) => {
@@ -53,6 +60,10 @@ const Extensions = ({navigation, onSkip}) => {
     let tempArr = [...totalGuests];
     tempArr[activeTab].extension = item;
     dispatch(setmemberCount(tempArr));
+
+    if (!tempArr.find((i) => !i.extension)) {
+      onSkip();
+    }
   };
 
   return (
@@ -66,7 +77,9 @@ const Extensions = ({navigation, onSkip}) => {
 
         <Text style={styles.noticeText}>
           Learn about our extension policy{' '}
-          <Text style={{textDecorationLine: 'underline'}}>here.</Text>
+          <TouchableOpacity onPress={() => Linking.openURL('https://www.drybarshops.com/extension-policy')}>
+            <Text style={{textDecorationLine: 'underline'}}>here.</Text>
+          </TouchableOpacity>
         </Text>
       </View>
 

@@ -123,3 +123,30 @@ export const screenBarfly = () => gql`{
     }
 }
 `;
+
+export const productInformationCollection = (productID) => gql`{
+    productCollection(where: {productId: "${productID}"}) {
+        items {
+          type
+          productId
+          title
+          serviceTime
+          price
+          description {
+            json
+          }
+          bestFor
+          imagesCollection(limit: 10) {
+            items {
+              desktopMedia {
+                url
+              }
+              mobileMedia {
+                url
+              }
+            }
+          }
+        }
+      }
+  }
+`;

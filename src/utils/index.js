@@ -36,7 +36,7 @@ export const updateRouteName = (name) => {
     case 'DateTime':
       return 'DATE/TIME';
 
-    case 'Appthold':
+    case 'ApptHold':
       return 'HOLD';
 
     default:
