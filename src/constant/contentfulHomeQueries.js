@@ -168,6 +168,12 @@ const queryProducts = (collectionId) =>
             serviceTime
           }
         }
+        actionsCollection {
+          items {
+            title
+            linkToMobileSlug
+          }
+        }
       }
      
  }`;

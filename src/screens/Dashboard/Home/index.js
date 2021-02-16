@@ -149,6 +149,25 @@ const Home = ({navigation}) => {
     navigation.navigate('Book', {screen: 'Review', initial: false});
   };
 
+  const onBrowser = (action) => {
+    if (action) {
+      let link = action.linkToMobileSlug;
+      if (link === 'styles') {
+        return navigation.navigate('Account', {
+          screen: 'AccountStyle',
+        });
+      } else if (link === 'services') {
+        return navigation.navigate('Account', {
+          screen: 'AccountService',
+        });
+      } else if (link === 'addons') {
+        return navigation.navigate('Account', {
+          screen: 'AccountAddon',
+        });
+      }
+    }
+  };
+
   return (
     <View style={rootStyle.container}>
       <Authheader isCall />
@@ -219,26 +238,36 @@ const Home = ({navigation}) => {
 
           {homeData.map((item) => {
             if (item.marketingStyles) {
+              let action = get(
+                item,
+                'marketingProducts.actionsCollection.items[0]',
+              );
               return (
                 <StyleSwiper
                   title={item.marketingStyles.title}
                   imageSource={Images.lady}
                   data={item.marketingStyles.stylesCollection}
-                  onBrowse={() =>
-                    navigation.navigate('Account', {screen: 'AccountStyle'})
-                  }
+                  onBrowse={() => {
+                    onBrowser(action)
+                  }}
                   imgField={'featuredImage.desktopMedia.url'}
+                  action={action}
                 />
               );
             } else if (item.marketingProducts) {
+              let action = get(
+                item,
+                'marketingProducts.actionsCollection.items[0]',
+              );
               return (
                 <StyleSwiper
                   title={item.marketingProducts.title}
                   imageSource={Images.lady}
                   data={item.marketingProducts.productsCollection}
-                  onBrowse={() =>
-                    navigation.navigate('Account', {screen: 'AccountStyle'})
-                  }
+                  action={action}
+                  onBrowse={() => {
+                    onBrowser(action);
+                  }}
                   imgField={'imagesCollection.items[0].mobileMedia.url'}
                 />
               );

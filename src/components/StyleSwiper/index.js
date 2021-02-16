@@ -19,6 +19,7 @@ const StyleSwiper = ({
   onBrowse,
   data,
   imgField = 'image',
+  action,
 }) => {
   const [visible, setVisible] = useState(false);
   const [activeScreen, setActiveScreen] = useState(0);
@@ -62,7 +63,7 @@ const StyleSwiper = ({
                     key={i}
                     resizeMode="cover"
                     style={styles.imageContainer}
-                    source={ imgUrl ? {uri: imgUrl} : imageSource}>
+                    source={imgUrl ? {uri: imgUrl} : imageSource}>
                     <View style={styles.imageTitleContainer}>
                       <Text style={styles.imageTitleStyle}>
                         {get(e, 'title')}
@@ -88,7 +89,9 @@ const StyleSwiper = ({
           </View>
 
           <Text onPress={onBrowse} style={styles.browse}>
-            {get(data, 'action.title', 'Browse All Styles')}
+            {action
+              ? get(action, 'title', 'Browse ALL Styles')
+              : get(data, 'action.title', 'Browse All Styles')}
           </Text>
         </View>
       ) : null}
