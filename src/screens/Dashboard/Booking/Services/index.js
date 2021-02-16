@@ -91,7 +91,6 @@ const Services = ({navigation}) => {
               onService={onServiceList}
               activeUser={activeUser}
               onInfo={(item) => {
-                console.log('onSelect:', item)
                 setInfo(true);
                 setinfoItem(item);
               }}

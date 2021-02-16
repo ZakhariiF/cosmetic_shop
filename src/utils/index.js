@@ -128,7 +128,6 @@ export const requestUserLocationLocation = () => {
 //   });
 // };
 
-
 export const playVideo = (link) => {
   Linking.openURL(link).catch((error) => {
     console.log('link error', error);
@@ -157,157 +156,198 @@ export const call = (number) => {
 };
 
 export function distance(lat1, lon1, lat2, lon2, unit) {
-  if ((lat1 == lat2) && (lon1 == lon2)) {
-      return 0;
-  }
-  else {
-      var radlat1 = Math.PI * lat1 / 180;
-      var radlat2 = Math.PI * lat2 / 180;
-      var theta = lon1 - lon2;
-      var radtheta = Math.PI * theta / 180;
-      var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-      if (dist > 1) {
-          dist = 1;
-      }
-      dist = Math.acos(dist);
-      dist = dist * 180 / Math.PI;
-      dist = dist * 60 * 1.1515;
-      if (unit == "K") { dist = dist * 1.609344 }
-      if (unit == "N") { dist = dist * 0.8684 }
-      return dist;
+  if (lat1 == lat2 && lon1 == lon2) {
+    return 0;
+  } else {
+    var radlat1 = (Math.PI * lat1) / 180;
+    var radlat2 = (Math.PI * lat2) / 180;
+    var theta = lon1 - lon2;
+    var radtheta = (Math.PI * theta) / 180;
+    var dist =
+      Math.sin(radlat1) * Math.sin(radlat2) +
+      Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+      dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = (dist * 180) / Math.PI;
+    dist = dist * 60 * 1.1515;
+    if (unit == 'K') {
+      dist = dist * 1.609344;
+    }
+    if (unit == 'N') {
+      dist = dist * 0.8684;
+    }
+    return dist;
   }
 }
 
-const MAX_DISTANCE = 100
+const MAX_DISTANCE = 100;
 
-export const findStoresFromPointWithTitle = (locationData, geolocatedPoints, searchStr, defaultPoint = null) => {
-
-  if (locationData.length === 0) return {
-    error: 'Can not get the stores from contentful'
+export const findStoresFromPointWithTitle = (
+  locationData,
+  geolocatedPoints,
+  searchStr,
+  defaultPoint = null,
+) => {
+  if (locationData.length === 0) {
+    return {
+      error: 'Can not get the stores from contentful',
+    };
   }
 
-  let center = []
+  let center = [];
 
-  let storesByTitle = []
-  let storesSlugsByTitle = []
+  let storesByTitle = [];
+  let storesSlugsByTitle = [];
 
   if (searchStr && searchStr !== '') {
-      let str = searchStr.toLowerCase();
-      str = str.replace(/street/gi, 'st');
+    let str = searchStr.toLowerCase();
+    str = str.replace(/street/gi, 'st');
 
-      storesByTitle = locationData.filter(location =>
-          {
-              return (
-                  location.settings.visible &&
-                  location.contact &&
-                  location.title.toLowerCase().includes(searchStr.toLowerCase())
-              )
-          }
-      ).sort((a, b) => {
-          if (!a.title.toLowerCase().includes(searchStr) && b.title.toLowerCase().includes(searchStr)) return 1
-          return 0
+    storesByTitle = locationData
+      .filter((location) => {
+        return (
+          location.settings.visible &&
+          location.contact &&
+          location.title.toLowerCase().includes(searchStr.toLowerCase())
+        );
       })
-      storesByTitle.forEach(s => {
-          storesSlugsByTitle.push(s.slug)
-          center.push({
-              lat: s.contact.coordinates[0],
-              lng: s.contact.coordinates[1]
-          })
-      })
+      .sort((a, b) => {
+        if (
+          !a.title.toLowerCase().includes(searchStr) &&
+          b.title.toLowerCase().includes(searchStr)
+        ) {
+          return 1;
+        }
+        return 0;
+      });
+    storesByTitle.forEach((s) => {
+      storesSlugsByTitle.push(s.slug);
+      center.push({
+        lat: s.contact.coordinates[0],
+        lng: s.contact.coordinates[1],
+      });
+    });
   }
 
-  let storesByAddress = []
+  let storesByAddress = [];
 
   if (geolocatedPoints && geolocatedPoints.length) {
+    storesByAddress = locationData.filter((location) => {
+      if (!location.contact || storesSlugsByTitle.includes(location.slug)) {
+        return false;
+      }
 
-      storesByAddress = locationData.filter((location) => {
+      let matchedAddress = geolocatedPoints.find((point) => {
+        if (point.formatted_address.includes(location.contact.postalCode)) {
+          return true;
+        }
 
-          if (!location.contact || storesSlugsByTitle.includes(location.slug)) return false
+        if (
+          point.address_components.length <= 5 &&
+          point.address_components.length >= 2
+        ) {
+          let searchedState =
+            point.address_components[point.address_components.length - 2];
+          if (
+            searchedState.long_name.includes(location.contact.state) ||
+            searchedState.short_name.includes(location.contact.region) ||
+            location.contact.region.includes(searchedState.long_name)
+          ) {
+            if (point.address_components.length === 2) {
+              // search with state
+              return true;
+            } else if (point.address_components.length >= 4) {
+              // search with city
+              let searchedCity =
+                point.address_components[point.address_components.length - 4];
 
-          let matchedAddress = geolocatedPoints.find((point) => {
-              if (point.formatted_address.includes(location.contact.postalCode)) return true
-
-              if (point.address_components.length <= 5 && point.address_components.length >= 2) {
-                  let searchedState = point.address_components[point.address_components.length - 2]
+              if (searchedCity.long_name.includes(location.contact.city)) {
+                if (point.address_components.length === 5) {
+                  let searchedStreet = point.address_components[0];
                   if (
-                      searchedState.long_name.includes(location.contact.state) ||
-                      searchedState.short_name.includes(location.contact.region) ||
-                      location.contact.region.includes(searchedState.long_name)
+                    location.contact.street1.includes(
+                      searchedStreet.long_name,
+                    ) ||
+                    location.contact.street1.includes(searchedStreet.short_name)
                   ) {
-                      if (point.address_components.length === 2) {
-                          // search with state
-                          return true
-
-                      } else if (point.address_components.length >= 4) {
-                          // search with city
-                          let searchedCity = point.address_components[point.address_components.length - 4]
-
-                          if (searchedCity.long_name.includes(location.contact.city)) {
-                              if (point.address_components.length === 5) {
-                                  let searchedStreet = point.address_components[0]
-                                  if (location.contact.street1.includes(searchedStreet.long_name) || location.contact.street1.includes(searchedStreet.short_name)) return true
-                                  else return false
-                              }
-                              return true
-                          }
-                          else return false
-                      }
+                    return true;
+                  } else {
+                    return false;
                   }
+                }
+                return true;
+              } else {
+                return false;
               }
-              return false
-          })
-          return !!matchedAddress
-      })
-      storesByAddress.forEach((location) => {
-          storesSlugsByTitle.push(location.slug)
-          center.push({
-              lat: location.contact.coordinates[0],
-              lng: location.contact.coordinates[1]
-          })
-      })
+            }
+          }
+        }
+        return false;
+      });
+      return !!matchedAddress;
+    });
+    storesByAddress.forEach((location) => {
+      storesSlugsByTitle.push(location.slug);
+      center.push({
+        lat: location.contact.coordinates[0],
+        lng: location.contact.coordinates[1],
+      });
+    });
   }
 
-  center = center.concat((geolocatedPoints || []).map((g) => g.geometry.location))
+  center = center.concat(
+    (geolocatedPoints || []).map((g) => g.geometry.location),
+  );
 
   if (center.length === 0 && defaultPoint) {
-      center = [defaultPoint]
+    center = [defaultPoint];
   }
 
-  console.log('center:', center, defaultPoint)
+  console.log('center:', center, defaultPoint);
 
-
-  if (center.length === 0) return {
-      error: 'Can not get the stores from contentful'
+  if (center.length === 0) {
+    return {
+      error: 'Can not get the stores from contentful',
+    };
   }
 
   const filteredLocationData = locationData
-      .filter(location => location.settings.visible && !storesSlugsByTitle.includes(location.slug))
-      .map(location => {
-          const storeLat = parseFloat(location.contact.coordinates[0])
-          const storeLng = parseFloat(location.contact.coordinates[1])
+    .filter(
+      (location) =>
+        location.settings.visible &&
+        !storesSlugsByTitle.includes(location.slug),
+    )
+    .map((location) => {
+      const storeLat = parseFloat(location.contact.coordinates[0]);
+      const storeLng = parseFloat(location.contact.coordinates[1]);
 
-          const distanceFromCenter = center.reduce((d, curPoint) => {
+      const distanceFromCenter = center.reduce((d, curPoint) => {
+        const curLat = parseFloat(curPoint.lat);
+        const curLng = parseFloat(curPoint.lng);
+        const dis = distance(curLat, curLng, storeLat, storeLng);
+        if (d > dis) {
+          d = dis;
+        }
+        return d;
+      }, MAX_DISTANCE);
 
-              const curLat = parseFloat(curPoint.lat)
-              const curLng = parseFloat(curPoint.lng)
-              const dis = distance(curLat, curLng, storeLat, storeLng)
-              if (d > dis)
-                  d = dis
-              return d
-          }, MAX_DISTANCE)
+      return {
+        ...location,
+        distance: distanceFromCenter,
+      };
+    })
+    .filter((location) => location.distance < MAX_DISTANCE)
+    .sort((location1, location2) =>
+      location1.distance < location2.distance ? -1 : 1,
+    );
 
-          return {
-              ...location,
-              distance: distanceFromCenter,
-          };
-      })
-      .filter((location) => location.distance < MAX_DISTANCE)
-      .sort((location1, location2) => location1.distance < location2.distance ? -1 : 1)
+  console.log('filteredLocationData:', filteredLocationData);
 
-  console.log('filteredLocationData:', filteredLocationData)
-
-  return { data: storesByTitle.concat(storesByAddress.concat(filteredLocationData)) }
-
+  return {
+    data: storesByTitle.concat(storesByAddress.concat(filteredLocationData)),
+  };
 };
 
 export const mapGraphqlToNavigator = {
@@ -320,4 +360,3 @@ export const mapGraphqlToNavigator = {
   'my account': 'MyAccount',
   booking: 'Book',
 };
-
