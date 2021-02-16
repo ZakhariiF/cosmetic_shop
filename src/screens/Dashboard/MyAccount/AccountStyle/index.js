@@ -117,7 +117,7 @@ const AccountStyle = ({navigation}) => {
           {/* <Text style={styles.topText}>
             CHOOSE A LOOK{'\n'} FOR THE NEXT TIME YOU BOOK
           </Text> */}
-          <Text style={styles.topText}>{get(data, 'title')}</Text>
+          <Text style={styles.topText}>{get(data, 'title', '').toUpperCase()}</Text>
           {/* <Text style={styles.desc}>{get(data, 'description')}</Text> */}
         </View>
 
