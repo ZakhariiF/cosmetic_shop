@@ -25,6 +25,31 @@ export const screenAddOnsCollections = () => gql`
         description {
           json
         }
+        marketingComponentsCollection {
+          items {
+            ...on MarketingImage {
+              desktopMedia {
+                url
+              }
+              mobileMedia {
+                url
+              }
+            }
+            ...on MarketingCard {
+              sys{
+                id
+              }
+              image {
+                desktopMedia {
+                  url
+                }
+                mobileMedia {
+                  url
+                }
+              }
+            }
+          }
+        }
         productsCollection {
           items {
             title
