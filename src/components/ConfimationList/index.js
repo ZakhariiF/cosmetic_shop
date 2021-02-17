@@ -34,7 +34,7 @@ const ConfirmationList = ({item, index, data}) => {
             source={Images.calendar}
             resizeMode="contain"
             style={styles.icon}
-          />Confirm
+          /><Text>Confirm</Text>
           <View>
             <Text style={styles.infoText}>
               {startTime.format('DD / MM')}

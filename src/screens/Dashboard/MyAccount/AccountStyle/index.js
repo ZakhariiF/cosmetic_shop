@@ -121,14 +121,12 @@ const AccountStyle = ({navigation}) => {
           {/* <Text style={styles.desc}>{get(data, 'description')}</Text> */}
         </View>
 
-        <View style={{flex: 1, paddingHorizontal: 20}}>
-          <Slick
-            showsButtons={true}
-          >
+        <View style={{paddingHorizontal: 20}}>
+          <Slick showsButtons={true} containerStyle={styles.swiperContainer}>
             {/* {[1, 2, 3, 4].map((e, i) => ( */}
             {get(data, 'styles', []).map((e, i) => {
               return (
-                <View style={[styles.imageStyle, {width: 400, height: 400}]}>
+                <View >
                   <Image source={{uri: e.featuredImage}} style={styles.imageStyle} />
                   <Text style={styles.swiperTextStyle}>{e.title}</Text>
                 </View>

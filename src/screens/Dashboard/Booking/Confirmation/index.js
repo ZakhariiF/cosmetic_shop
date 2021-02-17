@@ -39,8 +39,7 @@ const Confirmation = () => {
           ListHeaderComponent={() => (
             <>
               <Text style={styles.heading}>
-                Some last minute notes will go here lorem ipsum dolor
-                consectuer.
+                Please don’t blow us off! If you can’t make your appointment, please be sure to cancel so we can try to fill your spot. Thank you!
               </Text>
               <TouchableOpacity
                 onPress={() =>
