@@ -229,6 +229,7 @@ const Review = ({navigation, route}) => {
 
       <View style={rootStyle.innerContainer}>
         <ScrollView>
+          <Text>Please confirm your details and book your Appointment below</Text>
           <View style={styles.locContainer}>
             <Text style={styles.headerText}>Location</Text>
 
@@ -426,9 +427,7 @@ const Review = ({navigation, route}) => {
           <View style={styles.bottomContainer}>
             <Text style={styles.notice}>*</Text>
             <Text style={[styles.notice, {marginLeft: 10}]}>
-              If you are a BarFly member then we would communicate things
-              related to that here. Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit. Aenean euismod bibendum laoreet.
+              If you're a Barfly, your additional discounts will be taken in-shop at time of appointment.
             </Text>
           </View>
         </ScrollView>

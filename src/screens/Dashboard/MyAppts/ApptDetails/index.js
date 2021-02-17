@@ -103,8 +103,17 @@ const ApptDetails = ({route, navigation}) => {
                   // backgroundColor: Colors.dimGray,
                 }
               }
+              label="Cancel"
+              onPress={() => setVisible(false)} />
+            <Dialog.Button
+              color="black"
+              style={
+                {
+                  // backgroundColor: Colors.dimGray,
+                }
+              }
               label="Confirm"
-              onPress={handleCancel}></Dialog.Button>
+              onPress={handleCancel} />
             {/* <Dialog.Button label="" onPress={handleDelete} /> */}
           </Dialog.Container>
         </View>
