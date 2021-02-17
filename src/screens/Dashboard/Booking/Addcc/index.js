@@ -16,6 +16,7 @@ import MParticle from "react-native-mparticle";
 const Addcc = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const isLoading = useSelector((state) => state.booking.isCCLoading);
+  const location = useSelector((state) => state.booking.location);
   const dispatch = useDispatch();
   const [isdefault, setDefault] = useState(true);
 
@@ -26,8 +27,10 @@ const Addcc = () => {
     MParticle.logEvent('Sace Card', MParticle.EventType.Other, {
       'Source Page': 'Add card',
     });
+
+    console.log('CardInfo:', cardInfo);
     const data = {
-      SpaID: 112,
+      SpaID: location.bookerLocationId,
       // CustomerID: 119704688,
       CustomerID: get(userInfo, 'profile.bookerId', ''),
       CreditCard: {
@@ -37,7 +40,7 @@ const Addcc = () => {
         },
         Number: get(cardInfo, 'values.number'),
         NameOnCard: 'Test Customer',
-        ExpirationDate: '/Date(1638259200000-0500)/',
+        ExpirationDateOffset: '/Date(1638259200000-0500)/',
         SecurityCode: get(cardInfo, 'values.cvc'),
         Address: {
           Street1: 'string',
