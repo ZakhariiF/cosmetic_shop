@@ -4,7 +4,7 @@ import DottedView from 'components/DottedView';
 import Header from 'components/Header/Header';
 import Paragraph from 'components/Paragraph';
 import SlideShow from 'components/SlideShow';
-import {Images} from 'constant';
+import {Images, Colors} from 'constant';
 import {gqlLoadTheStyles} from 'constant/contentfulTheStylesActions';
 import {
   Image,
@@ -15,6 +15,7 @@ import {
   View,
   Modal,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import rootStyle from 'rootStyle';
@@ -33,8 +34,6 @@ const AccountStyle = ({navigation}) => {
 
   useEffect(() => {
     getData();
-    // alert(JSON.stringify(data));
-    console.log('stylllllllllllllllllllllllll ' + JSON.stringify(data));
   }, []);
 
   const getData = async () => {
@@ -45,56 +44,68 @@ const AccountStyle = ({navigation}) => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log('errrore>>>', error);
     }
   };
 
   const showModal = (item) => {
-    alert(JSON.stringify(item.gallery.images));
     setModalVisible(true);
-    setImages(item.gallery.images);
+    setImages(item.images);
   };
   useEffect(() => {}, [modalVisible]);
 
   return (
     <View style={rootStyle.container}>
       <Header title="STYLES" isBack isTab />
-      {/* <View
-        style={{
-          width: 200,
-          height: 200,
-          justifyContent: 'center',
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
         }}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
+        <TouchableOpacity onPressOut={() => setModalVisible(false)} style={{flex: 1}}>
           <View
             style={{
-              width: 400,
-              height: 400,
-              backgroundColor: 'yellow',
-              alignSelf: 'center',
-            }}>
-            <Slick
-              loop={true}
-              // style={{width: 100, height: 100}}
-              showsButtons={true}>
-              {images.map((e, i) => (
-                <View key={i} style={{width: 400, height: 400}}>
-                  <Image
-                    style={{width: 400, height: 400, resizeMode: 'contain'}}
-                    source={{uri: e}}
-                  />
-                </View>
-              ))}
-            </Slick>
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: Colors.bg,
+            }}
+          >
+            <View
+              style={{
+                width: 400,
+                height: 500,
+                padding: 15,
+              }}
+            >
+              <Slick
+                loop={true}
+                // style={{width: 100, height: 100}}
+                showsButtons={true}>
+                {images.map((e, i) => (
+                  <View key={i} style={{width: 400, height: 400}}>
+                    <Image
+                      style={{width: 400, height: 400, resizeMode: 'contain'}}
+                      source={{uri: e}}
+                    />
+                  </View>
+                ))}
+              </Slick>
+              <Button
+                onButtonPress={() => {
+                  navigation.navigate('Book');
+                }}
+                name="Book this style"
+              />
+            </View>
           </View>
-        </Modal>
-      </View> */}
+        </TouchableOpacity>
+
+
+      </Modal>
+
       <ScrollView>
         <Image
           resizeMode="cover"
@@ -106,29 +117,21 @@ const AccountStyle = ({navigation}) => {
           {/* <Text style={styles.topText}>
             CHOOSE A LOOK{'\n'} FOR THE NEXT TIME YOU BOOK
           </Text> */}
-          <Text style={styles.topText}>{get(data, 'title')}</Text>
+          <Text style={styles.topText}>{get(data, 'title', '').toUpperCase()}</Text>
           {/* <Text style={styles.desc}>{get(data, 'description')}</Text> */}
         </View>
 
         <View style={{flex: 1, paddingHorizontal: 20}}>
           <Slick
-            loop={true}
-            // style={{width: 100, height: 100}}
             showsButtons={true}
-            dot={false}
-            style={[rootStyle.shadow, styles.swiperContainer]}>
+          >
             {/* {[1, 2, 3, 4].map((e, i) => ( */}
             {get(data, 'styles', []).map((e, i) => {
-              console.log(e, i);
               return (
-                <ImageBackground
-                  key={i}
-                  style={styles.imageStyle}
-                  // source={Images.oldFashioned}>
-                  source={{uri: e.featuredImage}}>
+                <View style={[styles.imageStyle, {width: 400, height: 400}]}>
+                  <Image source={{uri: e.featuredImage}} style={styles.imageStyle} />
                   <Text style={styles.swiperTextStyle}>{e.title}</Text>
-                  {/* <Text style={styles.swiperTextStyle}>OLD FASHIONED</Text> */}
-                </ImageBackground>
+                </View>
               );
             })}
           </Slick>
@@ -172,7 +175,7 @@ const AccountStyle = ({navigation}) => {
 
                 <SlideShow
                   // item={e}
-                  item={get(data, 'styles', [])}
+                  item={get(e, 'gallery', [])}
                   navigation={navigation}
                   showModal={showModal}
                 />

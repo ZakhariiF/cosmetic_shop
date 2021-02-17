@@ -29,7 +29,7 @@ const SlideShow = ({item, navigation, showModal}) => {
           <View key={i} style={[styles.container, rootStyle.shadow]}>
             <Image
               resizeMode="contain"
-              source={{uri: e.featuredImage}}
+              source={{uri: get(e, 'images[0]')}}
               style={styles.cardStyle}
             />
             <Button
