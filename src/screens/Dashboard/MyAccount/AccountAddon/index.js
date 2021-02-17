@@ -1,6 +1,5 @@
 import {useQuery} from '@apollo/client';
 import AccountServiceItem from 'components/AccountServiceItem';
-import Button from 'components/Button';
 import DottedView from 'components/DottedView';
 import Header from 'components/Header/Header';
 import Indicator from 'components/Indicator';
@@ -8,7 +7,7 @@ import {Images} from 'constant';
 import {screenAddOnsCollections} from 'constant/query';
 import {get} from 'lodash';
 import React from 'react';
-import {Image, ScrollView, View, Text} from 'react-native';
+import {Image, ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import rootStyle from 'rootStyle';
 import styles from './styles';
 
@@ -54,12 +53,12 @@ const AccountAddon = ({navigation}) => {
           </View>
 
           <DottedView number={250} />
+          <TouchableOpacity onPress={() => navigation.navigate('Book')}>
+            <View style={styles.bottomImg}>
+              <Image source={Images.service_top} style={styles.bottomIcon} />
+            </View>
+          </TouchableOpacity>
 
-          <View style={styles.bottomImg}>
-            <Image source={Images.service_top} style={styles.bottomIcon} />
-          </View>
-
-          <Button name="Book Now" containerStyle={styles.buttonContainer} />
         </View>
       </ScrollView>
       {loading ? <Indicator /> : null}
