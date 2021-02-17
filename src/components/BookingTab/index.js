@@ -6,9 +6,10 @@ import {
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native';
 import {Colors, Fonts, Images} from 'constant';
-import {useNavigationState} from '@react-navigation/native';
+import { useNavigation, useNavigationState } from "@react-navigation/native";
 import rootStyle from 'rootStyle';
 import {updateRouteName} from 'utils';
 
@@ -22,6 +23,8 @@ const BookingTab = ({}) => {
     allRoutes.indexOf(currentRoute) + 1,
     allRoutes.length,
   ).filter((r) => r !== 'BookingForm' && r !== 'ShopDetail');
+
+  const navigation = useNavigation();
 
   return (
     <>
@@ -39,9 +42,16 @@ const BookingTab = ({}) => {
             contentContainerStyle={styles.firstContainer}>
             {beforeRoute.map((e, i) => {
               return (
-                <Text key={i} style={styles.routeName}>
-                  {updateRouteName(e)}
-                </Text>
+                <TouchableOpacity onPress={() => {
+                  console.log('Before:', e);
+                  navigation.navigate('Book', {
+                      screen: e,
+                  });
+                }}>
+                  <Text key={i} style={styles.routeName}>
+                    {updateRouteName(e)}
+                  </Text>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>

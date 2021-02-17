@@ -2,7 +2,7 @@ const {bookingActions} = require('./ducks');
 import {get} from 'lodash';
 import * as API from 'services';
 import {AlertHelper} from 'utils/AlertHelper';
-import {logoutSuccess} from '../../Auth/thunks'
+import {logoutSuccess} from '../../Auth/thunks';
 
 export const setmemberCount = (data) => async (dispatch) => {
   return dispatch(bookingActions.setMembers(data));
@@ -23,15 +23,26 @@ export const getServices = (id) => async (dispatch) => {
 
     if (data.IsSuccess) {
       let serviceArr = get(data, 'Treatments', []);
-      let services = []
-      serviceArr = serviceArr.forEach((service) => {
+      let services = [];
+      serviceArr.forEach((service) => {
         if (service.Name === 'Extensions') {
-          dispatch(bookingActions.setExtensionAddon(service))
+          dispatch(bookingActions.setExtensionAddon(service));
         } else if (service.AllowCustomersToBookOnline) {
-          services.push(service)
+          services.push(service);
         }
       });
-      return dispatch(bookingActions.getServiceSuccess(services));
+      return dispatch(
+        bookingActions.getServiceSuccess(
+          services.sort((a, b) => {
+            if (a.Name > b.Name) {
+              return 1;
+            } else if (a.Name < b.Name) {
+              return -1;
+            }
+            return 0;
+          }),
+        ),
+      );
     } else {
       AlertHelper.showError(get(data, 'ErrorMessage', 'Server Error'));
       return dispatch(bookingActions.getServiceError());
@@ -39,12 +50,11 @@ export const getServices = (id) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getServiceError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.getServiceError());
     }
-
   }
 };
 
@@ -56,7 +66,7 @@ export const getAddons = (serviceId) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getAddonError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.getAddonError());
@@ -74,7 +84,7 @@ export const getTimeSlots = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getSlotsError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.getSlotsError());
@@ -95,7 +105,7 @@ export const createAppointment = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.bookingError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.bookingError());
@@ -108,7 +118,7 @@ export const createGuestAppointment = (obj) => async (dispatch) => {
   try {
     const data = await API.createItinerary(obj);
     if (data.IsSuccess) {
-      const res = await API.bookItinerary(data.ID, obj.GroupName)
+      const res = await API.bookItinerary(data.ID, obj.GroupName);
       if (res.IsSuccess) {
         return dispatch(bookingActions.guestBookingSuccess(data));
       } else {
@@ -122,7 +132,7 @@ export const createGuestAppointment = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.guestBookingError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.guestBookingError());
@@ -139,7 +149,7 @@ export const getAvailableDates = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getAvailSlotsError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.getAvailSlotsError());
@@ -157,7 +167,7 @@ export const getMultiUserDates = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getMultiDatesError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.getMultiDatesError());
@@ -187,7 +197,7 @@ export const updateAppointment = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.updateApptError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.updateApptError());
@@ -214,7 +224,7 @@ export const applyPromoCode = (locId, code) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.promoCodeError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       console.log('promo code error>>', error);
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
@@ -237,7 +247,7 @@ export const addCreditCard = (obj) => async (dispatch) => {
     }
   } catch (error) {
     if (error.response.status === 401) {
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       console.log('promo code error>>', error);
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
@@ -262,7 +272,7 @@ export const getCreditCard = (userId) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getCCError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       console.log('promo code error>>', error);
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
@@ -275,7 +285,9 @@ export const getEmplyeesData = (objs, extensionObjs) => async (dispatch) => {
   dispatch(bookingActions.getEmployeeRequest());
   try {
     const data = await Promise.all(objs.map((obj) => API.getEmployee(obj)));
-    const extensionAddonData = extensionObjs.length ? await Promise.all(extensionObjs.map((obj) => API.getEmployee(obj))) : [];
+    const extensionAddonData = extensionObjs.length
+      ? await Promise.all(extensionObjs.map((obj) => API.getEmployee(obj)))
+      : [];
     if (data) {
       return dispatch(
         bookingActions.getEmployeeSuccess(data, extensionAddonData),
@@ -287,7 +299,7 @@ export const getEmplyeesData = (objs, extensionObjs) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getEmployeeError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.getEmployeeError());
@@ -308,7 +320,7 @@ export const setFavoriteLocation = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.setFavError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.setFavError());
@@ -331,7 +343,7 @@ export const getMultiUserTimeSlots = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getMultiSlotsError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.getMultiSlotsError());
@@ -356,7 +368,7 @@ export const bookedForMoreUser = (obj) => async (dispatch) => {
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.bookingFormError());
-      return dispatch(logoutSuccess())
+      return dispatch(logoutSuccess());
     } else {
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.bookingFormError());

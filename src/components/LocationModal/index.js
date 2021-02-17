@@ -38,6 +38,7 @@ import EmptyContainer from 'components/EmptyContainer';
 import ReviewPopup from 'components/ReviewPopup';
 import {types} from 'screens/Dashboard/Booking/ducks';
 import MParticle from "react-native-mparticle";
+import { current } from "@reduxjs/toolkit";
 
 // import Location from 'screens/Dashboard/Booking/Location';
 
@@ -56,17 +57,20 @@ const LocationModal = forwardRef((props, ref) => {
   );
   const favStore = useSelector((state) => state.auth.favItem);
   const distance = useSelector((state) => state);
+  const currentRoute = routes[routes.length - 1].name || 'Location';
 
   const customerInfo = useSelector((state) => state.auth.customerInfo);
   const userInfo = useSelector((state) => state.auth.userInfo);
   const [activeTab, setactiveTab] = useState(0);
   const [updatedHeight, setHight] = useState(
     currentRoute === 'Location' ? '40%' : '10%',
-  );
+  )
+
   const [min, setMin] = useState(currentRoute !== 'Location');
+
   const [favItem, setFavItem] = useState(favStore || '');
-  const currentRoute = routes[routes.length - 1].name;
-  let showReview = currentRoute != 'Location';
+
+  let showReview = currentRoute !== 'Location';
 
   useEffect(() => {
     MParticle.logEvent('Set store locator', MParticle.EventType.Other, {

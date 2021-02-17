@@ -12,10 +12,17 @@ import {
 } from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import rootStyle from 'rootStyle';
+import {parseJSONFormat, parsedJSON2Html} from 'utils/contentful';
+import HTMLView from 'react-native-htmlview';
 
 const {height} = Dimensions.get('window');
 
 const ServiceInfoModal = ({visible, onRequestClose, item}) => {
+  const {service, content} = item;
+  const description = parsedJSON2Html(parseJSONFormat(content?.description));
+
+  console.log('Information:', item);
+
   return (
     <Modal
       visible={visible}
@@ -41,19 +48,18 @@ const ServiceInfoModal = ({visible, onRequestClose, item}) => {
             </View>
           </View>
           <ScrollView>
-            <CustomSwiper imageSource={Images.addons} />
+            <CustomSwiper images={get(content, 'imagesCollection.items', [])} />
             <Text style={styles.works}>How It works</Text>
             <Text style={styles.desc}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-              euismod bibendum laoreet. Pro in gravida dolor.
+              <HTMLView value={description} />
             </Text>
             <View style={styles.priceContainer}>
               <Text style={rootStyle.commonText}>Price</Text>
-              <Text style={styles.min}>${get(item, 'Price.Amount', 0)}</Text>
+              <Text style={styles.min}>${get(service, 'Price.Amount', 0)}</Text>
             </View>
             <View style={[styles.priceContainer, {marginTop: 5}]}>
               <Text style={rootStyle.commonText}>Service Time</Text>
-              <Text style={styles.min}>{get(item, 'TotalDuration')} mins</Text>
+              <Text style={styles.min}>{get(service, 'TotalDuration')} mins</Text>
             </View>
           </ScrollView>
         </View>
