@@ -1,16 +1,25 @@
 import React from 'react';
 import {Colors, Fonts, Images} from 'constant';
-import {Image, StyleSheet, View, Text, Dimensions} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import {get} from 'lodash';
 import rootStyle from 'rootStyle';
 import {useDispatch} from 'react-redux';
 import {setLocation} from 'screens/Dashboard/Booking/thunks';
-import { openMaps } from 'utils';
+import {openMaps, distance, call} from 'utils';
 
 const {width} = Dimensions.get('window');
 
-const CustomMapMarker = ({selected, item, navigation}) => {
+const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
   const dispatch = useDispatch();
+
+  const phoneNumber = get(item, 'contact.phoneNumber');
 
   return (
     <View>
@@ -39,16 +48,31 @@ const CustomMapMarker = ({selected, item, navigation}) => {
 
             <View style={styles.nameContainer}>
               <View>
-                <Text style={styles.miles}>3.8 miles away</Text>
+                {currentLocation && (
+                  <Text style={styles.miles}>
+                    {Math.round(
+                      distance(
+                        currentLocation.latitude,
+                        currentLocation.longitude,
+                        get(item, 'contact.coordinates[0]', 34.1434376),
+                        get(item, 'contact.coordinates[1]', 34.1434376),
+                      ),
+                    )}{' '}
+                    miles away
+                  </Text>
+                )}
+                <TouchableOpacity
+                  onPress={() => call(phoneNumber)}>
+                  <Text style={styles.contactNo}>
+                    <Image
+                      source={Images.phone}
+                      style={{tintColor: Colors.header_title}}
+                    />
 
-                <Text style={styles.contactNo}>
-                  <Image
-                    source={Images.phone}
-                    style={{tintColor: Colors.header_title}}
-                  />
-                  {'  '}
-                  {get(item, 'contact.phoneNumber')}
-                </Text>
+                    {'  '}
+                    {phoneNumber}
+                  </Text>
+                </TouchableOpacity>
               </View>
 
               <View

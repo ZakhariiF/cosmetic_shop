@@ -20,7 +20,11 @@ import {
 } from 'react-native';
 import rootStyle from 'rootStyle';
 import LocationItem from 'components/LocationItem';
-import {useNavigation, useNavigationState, useRoute} from '@react-navigation/native';
+import {
+  useNavigation,
+  useNavigationState,
+  useRoute,
+} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
 import {
@@ -38,12 +42,19 @@ import EmptyContainer from 'components/EmptyContainer';
 import ReviewPopup from 'components/ReviewPopup';
 import {types} from 'screens/Dashboard/Booking/ducks';
 import MParticle from "react-native-mparticle";
-import { current } from "@reduxjs/toolkit";
 
 // import Location from 'screens/Dashboard/Booking/Location';
 
 const LocationModal = forwardRef((props, ref) => {
-  const {selectedIndex, onSearch, onChangeText, searchVal, locationData} = props;
+  const {
+    selectedIndex,
+    onSearch,
+    onChangeText,
+    searchVal,
+    locationData,
+    onSelect,
+    currentLocation,
+  } = props;
   const dispatch = useDispatch();
   const routes = useNavigationState((state) => state.routes);
   const searchRef = useRef(null);
@@ -75,7 +86,7 @@ const LocationModal = forwardRef((props, ref) => {
   useEffect(() => {
     MParticle.logEvent('Set store locator', MParticle.EventType.Other, {
       'Source Page': 'Booking Location',
-      'Filter': activeTab === 0 ? 'Closest' : 'Favorite',
+      Filter: activeTab === 0 ? 'Closest' : 'Favorite',
     });
   }, [activeTab]);
 
@@ -107,7 +118,9 @@ const LocationModal = forwardRef((props, ref) => {
   }, [favStore]);
 
   const _keyboardDidShow = () => {
-    if (currentRoute === 'Notes') return;
+    if (currentRoute === 'Notes') {
+      return;
+    }
     collapse();
     setHight('60%');
 
@@ -129,8 +142,9 @@ const LocationModal = forwardRef((props, ref) => {
 
     if (min && showReview) {
       setHight('80%');
-    } else if (min && !showReview) setHight('40%');
-    else {
+    } else if (min && !showReview) {
+      setHight('40%');
+    } else {
       setHight('10%');
     }
     setMin(!min);
@@ -152,14 +166,21 @@ const LocationModal = forwardRef((props, ref) => {
   };
 
   const onBook = (item = get(data, '[0]', {})) => {
-    MParticle.logEvent('Select Location for Booking', MParticle.EventType.Other, {
-      'Source Page': route.name,
-      'Location Id': item.bookerLocationId,
-      'Location Address': `${get(item, 'contact.street1')} ${get(item, 'contact.city')}, ${get(item, 'contact.state')} ${get(item, 'contact.postalCode')}`,
-      'Selection Mode': 'List',
-      'User Location': '',
-      'Distance': 0,
-    });
+    MParticle.logEvent(
+      'Select Location for Booking',
+      MParticle.EventType.Other,
+      {
+        'Source Page': route.name,
+        'Location Id': item.bookerLocationId,
+        'Location Address': `${get(item, 'contact.street1')} ${get(
+          item,
+          'contact.city',
+        )}, ${get(item, 'contact.state')} ${get(item, 'contact.postalCode')}`,
+        'Selection Mode': 'List',
+        'User Location': '',
+        Distance: 0,
+      },
+    );
     dispatch(setLocation(item));
     dispatch(setmemberCount([]));
     navigation.navigate('Coming');
@@ -249,7 +270,9 @@ const LocationModal = forwardRef((props, ref) => {
               data={
                 activeTab == 0
                   ? data
-                  : (locationData || data).filter((e) => e.bookerLocationId == favItem)
+                  : (locationData || data).filter(
+                      (e) => e.bookerLocationId == favItem,
+                    )
                 // miles
               }
               contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}
@@ -261,6 +284,8 @@ const LocationModal = forwardRef((props, ref) => {
                   customerInfo={customerInfo}
                   onFavIcon={onFav}
                   isFav={get(e, 'item.bookerLocationId') == favItem}
+                  onSelect={onSelect}
+                  currentLocation={currentLocation}
                 />
               )}
               keyExtractor={(_, index) => index.toString()}

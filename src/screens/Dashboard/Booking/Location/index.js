@@ -36,13 +36,14 @@ const Location = ({navigation}) => {
   const dispatch = useDispatch();
   const childRef = useRef(null);
   const mapRef = useRef(null);
-  const [markerIndex, setMarker] = useState(-1);
+  const [selectedLocationId, setSelectedLocation] = useState(-1);
   const [searchVal, setSearch] = useState('');
   const allLocations = useSelector((state) => state.booking.locations);
   const isFavLoad = useSelector((state) => state.booking.isFavLoading);
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
-
+  const [currentLocation, setCurrentLocation] = useState(null);
+  
   useEffect(() => {
     getUserLocation();
   }, []);
@@ -100,12 +101,18 @@ const Location = ({navigation}) => {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       });
+      setCurrentLocation({
+        latitude,
+        longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
     } catch (e) {
       console.log('Can not get the current user location');
     }
   };
 
-  const onMarker = (item, i) => {
+  const onMarker = (item) => {
     // childRef.current.onMin();
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
@@ -114,10 +121,10 @@ const Location = ({navigation}) => {
       longitudeDelta: 0.0121 * 8,
     });
 
-    if (markerIndex === i) {
-      setMarker(-1);
+    if (selectedLocationId === item.bookerLocationId) {
+      setSelectedLocation(-1);
     } else {
-      setMarker(i);
+      setSelectedLocation(item.bookerLocationId);
     }
   };
 
@@ -150,11 +157,12 @@ const Location = ({navigation}) => {
                   longitudeDelta: 0.0121 * 8,
                 }}
                 animation
-                onPress={() => onMarker(e, i)}>
+                onPress={() => onMarker(e)}>
                 <CustomMapMarker
-                  selected={markerIndex === i}
+                  selected={selectedLocationId === e.bookerLocationId}
                   item={e}
                   navigation={navigation}
+                  currentLocation={currentLocation}
                 />
               </MapView.Marker>
             ))
@@ -164,11 +172,13 @@ const Location = ({navigation}) => {
       {get(data, 'storeCollection') ? (
         <LocationModal
           ref={childRef}
-          selectedIndex={markerIndex}
+          selectedIndex={selectedLocationId}
           onSearch={() => searchFilterFunction()}
           onChangeText={(e) => setSearch(e)}
           searchVal={searchVal}
           locationData={arrayHolder}
+          onSelect={(item) => onMarker(item)}
+          currentLocation={currentLocation}
         />
       ) : null}
 

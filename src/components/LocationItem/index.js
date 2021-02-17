@@ -10,12 +10,14 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import rootStyle from 'rootStyle';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {get} from 'lodash';
 import {openMaps} from 'utils';
 import {getDistance, getPreciseDistance} from 'geolib';
 import {distance, requestUserLocationLocation} from 'utils';
+import {current} from '@reduxjs/toolkit';
 
 const LocationItem = ({
   navigation,
@@ -26,6 +28,8 @@ const LocationItem = ({
   isFav = false,
   isViewMode,
   fromFindLoc = false,
+  onSelect,
+  currentLocation,
 }) => {
   const window = Dimensions.get('window');
   const {width, height} = window;
@@ -38,13 +42,7 @@ const LocationItem = ({
     distanceCal.coordinates !== undefined
       ? distanceCal.coordinates
       : {lat: 0, long: 0};
-  const [coords, setCoords] = useState({
-    latitude: 34.070528,
-    longitude: -84.2795478,
-    latitudeDelta: 0.015 * 8,
-    longitudeDelta: 0.0121 * 8,
-  });
-  const [distanceMiles, setDistanceMiles] = useState([]);
+
   var obj = [];
   for (var i = 0; i < contactsCal.length; i++) {
     obj[i] = {
@@ -58,44 +56,21 @@ const LocationItem = ({
           : Number(0),
     };
   }
-  useEffect(() => {
-    getUserLocation();
-    // calculateDistance()
-    calculatePreciseDistance();
-  }, []);
-  const calculatePreciseDistance = () => {
-    var miless = [];
-    for (var i = 0; i < obj.length; i++) {
-      var pdis = getPreciseDistance(
-        {latitude: coords.latitude, longitude: coords.longitude},
-        {latitude: obj[i].lat, longitude: obj[i].long},
-      );
-      miless[i] = `${parseFloat((pdis / 1000) * 1.60934).toFixed(2)} `;
-    }
-    setDistanceMiles(miless);
 
-    console.log('########## #######################', miless);
-
-    // setDistanceMiles(miless)
-  };
-  const getUserLocation = async () => {
-    const position = await requestUserLocationLocation();
-    const latitude = get(position, 'coords.latitude');
-    const longitude = get(position, 'coords.longitude');
-    setCoords({
-      latitude,
-      longitude,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
-    });
-  };
 
   const operatingMessage = get(item, 'settings.operatingMessage', '');
   const arrivalInformation = get(item, 'arrivalInformation', '');
+
   // console.log("PROPS?????????", distanceMiles[0])
+  const isBookable =
+    item.type === 'Drybar Shop' && get(item, 'settings.bookable', false);
   return (
     <TouchableWithoutFeedback
-      onPress={() => navigation.navigate('ShopDetail', {item, fromFindLoc})}>
+      onPress={() => {
+        if (onSelect) {
+          onSelect(item);
+        }
+      }}>
       <View style={styles.container}>
         {/*  */}
         <View style={styles.flexContainer}>
@@ -103,22 +78,21 @@ const LocationItem = ({
             <Image source={Images.notice} />
             <Text style={styles.locName}>{get(item, 'title')}</Text>
           </View>
-          {item.type === 'Drybar Shop' &&
-            get(item, 'settings.bookable', false) && (
-              <TouchableOpacity
-                style={styles.buttonContainer}
-                onPress={() => {
-                  if (isViewMode) {
-                    navigation.navigate('ShopDetail', {item, fromFindLoc});
-                  } else {
-                    onBook(item);
-                  }
-                }}>
-                <Text style={styles.selectText}>
-                  {isViewMode ? 'View Shop' : 'Book'}
-                </Text>
-              </TouchableOpacity>
-            )}
+          {isBookable && (
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => {
+                if (isViewMode) {
+                  navigation.navigate('ShopDetail', {item, fromFindLoc});
+                } else {
+                  onBook(item);
+                }
+              }}>
+              <Text style={styles.selectText}>
+                {isViewMode ? 'View Shop' : 'Book'}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={[styles.flexContainer, {marginTop: 10}]}>
@@ -141,12 +115,37 @@ const LocationItem = ({
               style={styles.favIcon}
             />
           </TouchableOpacity>
+          {isBookable && (
+            <TouchableOpacity
+              onPress={() => onFavIcon(item)}
+              style={styles.favIcon}>
+              <MaterialCommunityIcons
+                name="alert-circle"
+                size={20}
+                style={styles.noticeIcon}
+                color={Colors.header_title}
+                onPress={() =>
+                  navigation.navigate('ShopDetail', {item, fromFindLoc})
+                }
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={[styles.flexContainer, {marginTop: 10, marginLeft: 35}]}>
-          <Text style={styles.miles}>
-            {distanceMiles[0] !== undefined ? distanceMiles[0] : 0} miles away
-          </Text>
+          {currentLocation && (
+            <Text style={styles.miles}>
+              {Math.round(
+                distance(
+                  currentLocation.latitude,
+                  currentLocation.longitude,
+                  get(item, 'contact.coordinates[0]'),
+                  get(item, 'contact.coordinates[1]'),
+                ),
+              )}{' '}
+              miles away
+            </Text>
+          )}
 
           <TouchableOpacity
             onPress={() =>
