@@ -39,8 +39,9 @@ const FindLocation = ({navigation}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const storeTypes = ['Drybar Shop', 'Retail Store'];
   const [storeIdx, setStoreIdx] = useState(0);
-  const LOCATION_QUERY = storeCollectionQuery(storeTypes[storeIdx]);
+  const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
+  const {data: retailStores} = useQuery(storeCollectionQuery('Retail Store'))
   const mapRef = useRef(null);
   const [markerIndex, setMarker] = useState(-1);
 
@@ -115,7 +116,7 @@ const FindLocation = ({navigation}) => {
   const searchFilterFunction = useCallback(async () => {
     const geolocatedPoints = await geolocateSearchLocation(searchVal);
 
-    const {data: newData} = findStoresFromPointWithTitle(
+    let {data: newData} = findStoresFromPointWithTitle(
       arrayHolder,
       geolocatedPoints,
       searchVal,
@@ -124,6 +125,21 @@ const FindLocation = ({navigation}) => {
         lng: coords.longitude,
       },
     );
+
+    if (storeIdx === 1) {
+      const {data: retailStoreData} = findStoresFromPointWithTitle(
+        get(retailStores, 'storeCollection.items', []),
+        geolocatedPoints,
+        searchVal,
+        {
+          lat: coords.latitude,
+          lng: coords.longitude,
+        },
+      );
+
+      newData = newData.concat(retailStoreData);
+    }
+
     setLocationItems(newData);
 
     if (newData.length) {
@@ -139,6 +155,10 @@ const FindLocation = ({navigation}) => {
       });
     }
   }, [searchVal, arrayHolder]);
+
+  useEffect(() => {
+    searchFilterFunction();
+  }, [storeIdx]);
 
   const onFav = (item) => {
     const obj = {

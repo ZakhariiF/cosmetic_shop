@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, ScrollView, RefreshControl} from 'react-native';
 import Header from 'components/Header/Header';
 import rootStyle from 'rootStyle';
@@ -13,6 +13,7 @@ import moment from 'moment';
 import {get} from 'lodash';
 import EmptyContainer from 'components/EmptyContainer';
 import {storeCollectionQuery} from 'constant/query';
+import Dialog from 'react-native-dialog';
 
 const MyAppts = ({navigation}) => {
   const dispatch = useDispatch();
@@ -23,6 +24,8 @@ const MyAppts = ({navigation}) => {
 
   const LOCATION_QUERY = storeCollectionQuery();
   const {data: locationData, error, loading} = useQuery(LOCATION_QUERY);
+
+  const [cancelItem, setCancelItem] = useState(null)
 
   useEffect(() => {
     getAppts();
@@ -80,12 +83,19 @@ const MyAppts = ({navigation}) => {
   };
 
   const onCancel = (item, location) => {
+    setCancelItem({
+      item, location,
+    });
+  };
+
+  const handleCancel = () => {
+    const {item, location} = cancelItem
     if (!item.groupID) {
       dispatch(cancelAppointment(item.appointment.ID));
     } else {
       dispatch(cancelItinerary(item.groupID, location.bookerLocationId));
     }
-  };
+  }
 
   return (
     <View style={rootStyle.container}>
@@ -148,6 +158,37 @@ const MyAppts = ({navigation}) => {
               <EmptyContainer emptyText="No Appointments Found!" />
             </View>
           ) : null}
+
+          <Dialog.Container visible={cancelItem}>
+            <Dialog.Title>Cancel Appointment</Dialog.Title>
+            <Dialog.Description>
+              Are you sure you want to cancel?
+            </Dialog.Description>
+
+            <Dialog.Button
+              color="black"
+              style={
+                {
+                  // backgroundColor: Colors.dimGray,
+                }
+              }
+              label="Cancel"
+              onPress={() => setCancelItem(null)}
+            />
+            <Dialog.Button
+              color="black"
+              style={
+                {
+                  // backgroundColor: Colors.dimGray,
+                }
+              }
+              label="Confirm"
+              onPress={handleCancel}
+            />
+
+
+            {/* <Dialog.Button label="" onPress={handleDelete} /> */}
+          </Dialog.Container>
         </ScrollView>
       </View>
       {isLoading ? <Indicator /> : null}

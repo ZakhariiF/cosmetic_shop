@@ -21,8 +21,7 @@ const Notes = ({navigation, route}) => {
       <Header title="HAVE ANY REQUESTS?" safeBackColor={Colors.bg} />
       <View style={rootStyle.innerContainer}>
         <Text style={styles.heading}>
-          Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus
-          accumsan et viverra justo commodo.
+          Is it your first time? Anything special we should know about? Would you like to request a favorite stylist? While we can’t guarantee it, we’ll do our very best to make it happen!
         </Text>
 
         <View style={styles.seprator} />

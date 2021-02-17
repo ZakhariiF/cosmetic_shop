@@ -1,9 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import MParticle from 'react-native-mparticle';
+import {useQuery} from '@apollo/client';
 import Header from 'components/Header/Header';
 import rootStyle from 'rootStyle';
 import CheckBox from 'components/Checkbox';
 import {Colors, Fonts} from 'constant';
+import {productInformationCollection} from 'constant/query';
 import GuestTab from 'components/GuestTab';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
@@ -13,7 +16,6 @@ import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
 import Indicator from 'components/Indicator';
 import ServiceInfoModal from 'components/ServiceInfoModal';
-import MParticle from "react-native-mparticle";
 
 const Services = ({navigation}) => {
   const dispatch = useDispatch();
@@ -49,8 +51,8 @@ const Services = ({navigation}) => {
     if (!isChecked) {
       tempArr = tempArr.map((user) => ({
         ...user,
-        services: item
-      }))
+        services: item,
+      }));
     } else {
       tempArr[activeUser].services = item;
     }
@@ -91,7 +93,6 @@ const Services = ({navigation}) => {
               onService={onServiceList}
               activeUser={activeUser}
               onInfo={(item) => {
-                console.log('onSelect:', item)
                 setInfo(true);
                 setinfoItem(item);
               }}
@@ -145,6 +146,9 @@ const ServiceItem = ({
   activeUser,
   onInfo,
 }) => {
+  const PRODUCT_INFO_QUERY = productInformationCollection(item.ID);
+  const {data, error, loading} = useQuery(PRODUCT_INFO_QUERY);
+
   const isExist = (item) => {
     let isActive = false;
 
@@ -158,14 +162,27 @@ const ServiceItem = ({
     return isActive;
   };
 
+  const information = get(data, 'productCollection.items', []);
+
   return (
     <View style={styles.listContainer}>
       <MaterialCommunityIcons
         name="alert-circle"
         size={20}
-        style={styles.noticeIcon}
+        style={
+          information.length > 0
+            ? styles.noticeIcon
+            : [styles.noticeIcon, {opacity: 0}]
+        }
         color={Colors.header_title}
-        onPress={() => onInfo(item)}
+        onPress={() => {
+          if (information.length > 0) {
+            onInfo({
+              content: information[0],
+              service: item,
+            });
+          }
+        }}
       />
 
       <TouchableOpacity

@@ -65,7 +65,7 @@ const Confirmation = () => {
             <>
               <Button
                 name="Manage Appointments"
-                onButtonPress={() => reset('Dashboard')}
+                onButtonPress={() => reset('My Appts')}
               />
 
               <View style={styles.specialContainer}>

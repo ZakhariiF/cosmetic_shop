@@ -89,6 +89,9 @@ const LocationItem = ({
       longitudeDelta: LONGITUDE_DELTA,
     });
   };
+
+  const operatingMessage = get(item, 'settings.operatingMessage', '');
+  const arrivalInformation = get(item, 'arrivalInformation', '');
   // console.log("PROPS?????????", distanceMiles[0])
   return (
     <TouchableWithoutFeedback
@@ -158,7 +161,17 @@ const LocationItem = ({
           </TouchableOpacity>
         </View>
 
-        {/*  */}
+        {((operatingMessage && operatingMessage != '') ||
+          (arrivalInformation && arrivalInformation !== '')) && (
+          <View style={styles.information}>
+            {operatingMessage !== '' && (
+              <Text style={styles.inforText}>{operatingMessage}</Text>
+            )}
+            {arrivalInformation !== '' && (
+              <Text style={styles.inforText}>{arrivalInformation}</Text>
+            )}
+          </View>
+        )}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -221,5 +234,17 @@ const styles = StyleSheet.create({
     ...rootStyle.commonText,
     fontSize: 13,
     textDecorationLine: 'underline',
+  },
+  information: {
+    borderTopWidth: 2,
+    borderTopColor: Colors.seprator,
+    borderStyle: 'solid',
+    backgroundColor: Colors.bg,
+    marginTop: 10,
+    padding: 10,
+  },
+  inforText: {
+    color: Colors.light_gray,
+    marginBottom: 10,
   },
 });
