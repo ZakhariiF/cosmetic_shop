@@ -76,9 +76,13 @@ const queryStylesExceptGallery = (screenStylesId) =>
             subtitle
             featuredVideo {
               desktopUrl
+              mobileUrl
             }
             featuredImage {
               desktopMedia {
+                url
+              }
+              mobileMedia {
                 url
               }
             }
@@ -110,6 +114,9 @@ const queryGallery = (galleryId) =>
             desktopMedia {
               url
             }
+            mobileMedia {
+              url
+            }
           }
         }
       }
@@ -129,6 +136,9 @@ const queryMarketingSection = (marketingSectionId) =>
             ... on MarketingCard {
               image {
                 desktopMedia {
+                  url
+                }
+                mobileMedia {
                   url
                 }
               }
