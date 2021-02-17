@@ -177,7 +177,7 @@ const Home = ({navigation}) => {
         }>
         <View>
           <Text style={styles.hiText}>
-            Hi {get(userInfo, 'profile.firstName', 'Emily')}, {greetings()}
+            Hi {get(userInfo, 'profile.firstName', 'Emily')}
           </Text>
 
           <UpcomingAppts

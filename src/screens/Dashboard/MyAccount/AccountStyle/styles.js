@@ -34,14 +34,13 @@ export default StyleSheet.create({
     width: '100%',
   },
   swiperContainer: {
-    height: 400,
+    height: 420,
     width: '100%',
     marginTop: 30,
   },
   imageStyle: {
     height: 350,
     width: '100%',
-    justifyContent: 'flex-end',
     marginBottom: 30,
     position: 'relative',
   },

@@ -135,15 +135,7 @@ const Login = ({navigation}) => {
             Recover Password
           </Text>
 
-          <View style={styles.seprateContainer}>
-            <View style={styles.seprator} />
-            <Text style={styles.orText}>OR</Text>
-            <View style={styles.seprator} />
-          </View>
 
-          <SocialLogin name="Log in with Google" socialImage={Images.google} />
-          <SocialLogin name="Log in with Facebook" socialImage={Images.fb} />
-          <View style={{height: 20}} />
         </View>
       </KeyboardAwareScrollView>
 

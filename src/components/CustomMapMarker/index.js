@@ -20,6 +20,8 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
   const dispatch = useDispatch();
 
   const phoneNumber = get(item, 'contact.phoneNumber');
+  const isBookable =
+    item.type === 'Drybar Shop' && get(item, 'settings.bookable', false);
 
   return (
     <View>
@@ -74,15 +76,16 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-
-              <View
-                onTouchStart={() => {
-                  dispatch(setLocation(item));
-                  navigation.navigate('Book', {screen: 'Coming'});
-                }}
-                style={styles.buttonContainer}>
-                <Text style={styles.selectText}>Select</Text>
-              </View>
+              {
+                isBookable && <View
+                  onTouchStart={() => {
+                    dispatch(setLocation(item));
+                    navigation.navigate('Book', {screen: 'Coming'});
+                  }}
+                  style={styles.buttonContainer}>
+                  <Text style={styles.selectText}>Select</Text>
+                </View>
+              }
             </View>
           </View>
           <View style={styles.triangle} />

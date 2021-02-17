@@ -104,7 +104,7 @@ const ApptDetails = ({route, navigation}) => {
                 }
               }
               label="Cancel"
-              onPress={() => setVisible(false)} />
+              onPress={() => onCancel()} />
             <Dialog.Button
               color="black"
               style={
@@ -113,7 +113,8 @@ const ApptDetails = ({route, navigation}) => {
                 }
               }
               label="Confirm"
-              onPress={handleCancel} />
+              onPress={handleCancel}
+            />
             {/* <Dialog.Button label="" onPress={handleDelete} /> */}
           </Dialog.Container>
         </View>

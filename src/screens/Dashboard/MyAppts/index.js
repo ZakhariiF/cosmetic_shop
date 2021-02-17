@@ -92,11 +92,15 @@ const MyAppts = ({navigation}) => {
 
   const handleCancel = () => {
     const {item, location} = cancelItem
-    if (!item.groupID) {
-      dispatch(cancelAppointment(item.appointment.ID));
-    } else {
-      dispatch(cancelItinerary(item.groupID, location.bookerLocationId));
+    if (item) {
+
+      if (!item.groupID) {
+        dispatch(cancelAppointment(item.appointment.ID));
+      } else {
+        dispatch(cancelItinerary(item.groupID, location.bookerLocationId));
+      }
     }
+    setCancelItem(null);
   }
 
   return (
