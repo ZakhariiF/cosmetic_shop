@@ -28,7 +28,7 @@ export const AccounData = [
   },
   {
     title: 'Settings',
-    data: [{name: 'Favorite Shop', route: 'Favorites'}],
+    data: [{name: 'Favorite', route: 'Favorites'}],
     icon: Images.setting,
   },
   {
