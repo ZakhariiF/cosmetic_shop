@@ -108,11 +108,6 @@ export const gqlLoadHome = async () => {
 
   let data = await doQuery(homeTopLevelQuery());
 
-  console.log(
-    'Home Sections:',
-    get(data, 'marketingSection.marketingComponentsCollection.items', []),
-  );
-
   let graphqlRequests = get(
     data,
     'marketingSection.marketingComponentsCollection.items',
