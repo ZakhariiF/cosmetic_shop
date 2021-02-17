@@ -99,8 +99,7 @@ const Favorites = () => {
         ) : (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
-              You have not selected a favorite Drybar Shop. Lorem ipsum button
-              below Proin sodales pulvinar sic tempor.
+              You have not selected a favorite Drybar Shop.
             </Text>
           </View>
         )}
