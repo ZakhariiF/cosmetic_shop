@@ -49,4 +49,45 @@ export default StyleSheet.create({
     alignItems: 'center',
     ...rootStyle.shadow,
   },
+  selectLocationHeader: {
+    fontSize: 25,
+    paddingTop: 40,
+    paddingBottom: 20,
+    textAlign: 'center',
+  },
+  selectedStore: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  selectedStoreLabel: {
+    fontSize: 16,
+    color: '#777',
+    marginRight: 10,
+  },
+  locationTitleWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  locationTitle: {
+    flexDirection: 'row',
+    width: '50%',
+  },
+  locationWrapper: {
+    backgroundColor: Colors.bg,
+    marginBottom: 10,
+    padding: 20,
+  },
+  locationModalWrapper: {
+    paddingTop: 30,
+    paddingBottom: 10,
+    paddingRight: 10,
+    paddingLeft: 10,
+  },
+  locationTitleText: {
+    fontSize: 15,
+  },
+  locationModalTitle: {
+    fontSize: 19,
+  },
 });

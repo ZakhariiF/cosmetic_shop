@@ -6,7 +6,6 @@ import Button from 'components/Button'
 import rootStyle from 'rootStyle';
 
 const AccountServiceItem = ({item, navigation, isService}) => {
-  console.log('Service Item:', item)
   const serviceTime = get(item, 'serviceTime')
   return (
     <View style={styles.itemContainer}>
