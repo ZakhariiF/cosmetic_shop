@@ -1,8 +1,9 @@
 import {Colors} from 'constant';
 import React, {useState} from 'react';
 import {View, Image, ScrollView, StyleSheet} from 'react-native';
+import {get} from 'lodash';
 
-const CustomSwiper = ({imageSource}) => {
+const CustomSwiper = ({images}) => {
   const [activeScreen, setActiveScreen] = useState(0);
 
   const onScrollEnd = (e) => {
@@ -27,13 +28,15 @@ const CustomSwiper = ({imageSource}) => {
           bottom: 0,
           right: 10,
         }}>
-        {[1, 2, 3, 4].map((e, i) => {
+        {images.map((e, i) => {
           return (
             <Image
               key={i}
               resizeMode="contain"
               style={styles.imageContainer}
-              source={imageSource}
+              source={{
+                uri: get(e, 'mobileMedia.url') || get(e, 'desktopMedia.url')
+              }}
             />
           );
         })}
