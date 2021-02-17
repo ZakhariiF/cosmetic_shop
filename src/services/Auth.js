@@ -247,26 +247,6 @@ export const getCustomer = (id) => {
     .then((response) => response.data);
 };
 
-export const updateCustomer = (locId) => {
-  return client
-    .post('/booker/UpdateCustomer', {
-      method: 'PUT',
-      urlParams: {
-        id: 119704688,
-      },
-      data: {
-        LocationID: locId || 1639,
-        CustomerID: 119704688,
-        Customer: {
-          LastName: 'Good',
-          FirstName: 'Amin',
-          Email: 'asq@poliden.me',
-        },
-      },
-    })
-    .then((response) => response.data);
-};
-
 export const resendEmail = (email) => {
   return client
     .post('/okta/resend-activation-link', {

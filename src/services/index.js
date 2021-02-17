@@ -95,3 +95,4 @@ export {client};
 export * from './Booking';
 export * from './Dashboard';
 export * from './Auth';
+export * from './Account';

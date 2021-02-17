@@ -29,6 +29,8 @@ import Review from 'screens/Dashboard/Booking/Review';
 import Addcc from 'screens/Dashboard/Booking/Addcc';
 import Confirmation from 'screens/Dashboard/Booking/Confirmation';
 import BarflyMembership from 'screens/Dashboard/MyAccount/BarflyMembership';
+import BarflyMembershipEnrollment from 'screens/Dashboard/MyAccount/BarflyMembershipEnrollment';
+import BarflyConfirm from 'screens/Dashboard/MyAccount/BarflyConfirm';
 import ShopDetail from 'screens/Dashboard/Booking/ShopDetail';
 import AccountService from 'screens/Dashboard/MyAccount/AccountService';
 import AccountAddon from 'screens/Dashboard/MyAccount/AccountAddon';
@@ -89,6 +91,8 @@ const AccountNavigator = () => (
     />
     <AccountStack.Screen name="Favorites" component={Favorites} />
     <AccountStack.Screen name="BarflyMembership" component={BarflyMembership} />
+    <AccountStack.Screen name="BarflyMembershipEnrollment" component={BarflyMembershipEnrollment} />
+    <AccountStack.Screen name="BarflyConfirm" component={BarflyConfirm} />
     <AccountStack.Screen name="AccountService" component={AccountService} />
     <AccountStack.Screen name="AccountAddon" component={AccountAddon} />
     <AccountStack.Screen name="Contactus" component={Contactus} />

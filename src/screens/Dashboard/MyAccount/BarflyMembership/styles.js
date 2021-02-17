@@ -115,7 +115,15 @@ export default StyleSheet.create({
     backgroundColor: Colors.white,
     justifyContent: 'center',
   },
+  selectedContainer: {
+    borderWidth: 2,
+    borderColor: Colors.yellow,
+    borderStyle: 'solid'
+  },
   topContainer: {
+    borderWidth: 2,
+    borderColor: 'transparent',
+    borderStyle: 'solid',
     padding: 6,
     backgroundColor: Colors.white,
   },
@@ -190,4 +198,29 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 15,
   },
+  storeSelectButtonContainer: {
+    height: 30,
+    width: 100,
+    display: 'flex',
+    maxWidth: '50%'
+  },
+  storeSelectButtonTitle: {
+    fontSize: 14,
+  },
+  storeTitleWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%'
+  },
+  storeTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    maxWidth: '50%'
+  },
+  storeAddress: {
+    display: 'flex',  
+    flexDirection: 'row'
+  } 
 });

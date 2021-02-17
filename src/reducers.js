@@ -8,11 +8,13 @@ import {combineReducers} from 'redux';
 import authReducer, {authIntialState} from './screens/Auth/ducks';
 import homeReducer from './screens/Dashboard/ducks';
 import bookingReducer from './screens/Dashboard/Booking/ducks';
+import accountReducer from 'screens/Dashboard/MyAccount/ducks';
 
 const appReducer = combineReducers({
   auth: authReducer,
   home: homeReducer,
   booking: bookingReducer,
+  account: accountReducer
 });
 
 export default (state, action) => {
