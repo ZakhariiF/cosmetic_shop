@@ -89,27 +89,6 @@ const AccountInfo = ({navigation}) => {
             hide
             onEdit={() => navigation.navigate('ChangePassword')}
           />
-
-          <View style={[styles.headerContainer, {marginTop: 50}]}>
-            {/* <Image source={Images.mail} /> */}
-            <Text style={styles.headerTitle}>Email Preferences</Text>
-          </View>
-
-          <View style={styles.bottomContainer}>
-            <Text style={styles.underlineText}>Email opt out</Text>
-            <Text style={styles.desc}>
-              Password rules will go here lorem ipsum dolor interdum et
-              malesuada.
-            </Text>
-
-            <Text style={[styles.underlineText, {marginTop: 20}]}>
-              CCPA enactment
-            </Text>
-            <Text style={styles.desc}>
-              Proin gravida dolor sit amet lacus accumsaninterdum et malesuada
-              fames ac ante ipsum primis into faucibus. In congue augue lorem.
-            </Text>
-          </View>
         </View>
       </KeyboardAwareScrollView>
 
