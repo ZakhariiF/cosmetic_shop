@@ -19,6 +19,7 @@ import {types} from 'screens/Dashboard/Booking/ducks';
 import CustomMapMarker from 'components/CustomMapMarker';
 import {geolocateSearchLocation} from 'services/Google';
 import CheckBox from 'components/Checkbox';
+import { current } from "@reduxjs/toolkit";
 
 const window = Dimensions.get('window');
 const {width, height} = window;
@@ -43,14 +44,16 @@ const FindLocation = ({navigation}) => {
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const {data: retailStores} = useQuery(storeCollectionQuery('Retail Store'))
   const mapRef = useRef(null);
-  const [markerIndex, setMarker] = useState(-1);
+  const [selectedLocationId, setSelectedLocation] = useState(-1);
 
   const [coords, setCoords] = useState({
-    latitude: 34.070528,
-    longitude: -84.2795478,
+    latitude: 34.0577908,
+    longitude: -118.3622365,
     latitudeDelta: 0.015 * 8,
     longitudeDelta: 0.0121 * 8,
   });
+  
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   if (error) {
     // return AlertHelper.showError('Server error');
@@ -62,6 +65,12 @@ const FindLocation = ({navigation}) => {
       const latitude = get(position, 'coords.latitude');
       const longitude = get(position, 'coords.longitude');
       setCoords({
+        latitude,
+        longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      });
+      setCurrentLocation({
         latitude,
         longitude,
         latitudeDelta: LATITUDE_DELTA,
@@ -97,7 +106,7 @@ const FindLocation = ({navigation}) => {
     return data;
   }, [loading, error, data]);
 
-  const onMarker = (item, i) => {
+  const onMarker = (item) => {
     // childRef.current.onMin();
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
@@ -106,10 +115,10 @@ const FindLocation = ({navigation}) => {
       longitudeDelta: 0.0121 * 8,
     });
 
-    if (markerIndex === i) {
-      setMarker(-1);
+    if (selectedLocationId === item.bookerLocationId) {
+      setSelectedLocation(-1);
     } else {
-      setMarker(i);
+      setSelectedLocation(item.bookerLocationId);
     }
   };
 
@@ -185,7 +194,7 @@ const FindLocation = ({navigation}) => {
         style={{
           flex: 1,
         }}
-        initialRegion={coords}
+        initialRegion={currentLocation || coords}
         region={coords}>
         {arrayHolder.map((e, i) => (
           <MapView.Marker
@@ -197,11 +206,12 @@ const FindLocation = ({navigation}) => {
               longitudeDelta: 0.0121 * 8,
             }}
             animation
-            onPress={() => onMarker(e, i)}>
+            onPress={() => onMarker(e)}>
             <CustomMapMarker
-              selected={markerIndex === i}
+              selected={selectedLocationId === e.bookerLocationId}
               item={e}
               navigation={navigation}
+              currentLocation={currentLocation}
             />
           </MapView.Marker>
         ))}
@@ -229,6 +239,8 @@ const FindLocation = ({navigation}) => {
               customerInfo={customerInfo}
               onFavIcon={onFav}
               isFav={get(e, 'item.bookerLocationId') == favItem}
+              onSelect={(item) => onMarker(item)}
+              currentLocation={currentLocation}
             />
           )}
           keyExtractor={(_, index) => index.toString()}
