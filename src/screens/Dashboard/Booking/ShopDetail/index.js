@@ -15,6 +15,10 @@ const ShopDetail = ({navigation, route}) => {
   const {
     params: {item, fromFindLoc},
   } = route;
+  const operatingMessage = get(item, 'settings.operatingMessage', '');
+  const arrivalInformation = get(item, 'arrivalInformation', '');
+
+  console.log('Shop Detail:', item);
 
   const onBook = () => {
     if (fromFindLoc) {
@@ -84,6 +88,24 @@ const ShopDetail = ({navigation, route}) => {
               <Text style={styles.weekDay}>8:00am to 8:00pm</Text>
             </View>
           </View>
+
+          {operatingMessage !== '' && (
+            <>
+              <Text style={styles.hour}>Operating Message</Text>
+              <View style={styles.hourContainer}>
+                <Text style={styles.weekDay}>{operatingMessage}</Text>
+              </View>
+            </>
+          )}
+
+          {arrivalInformation !== '' && (
+            <>
+              <Text style={styles.hour}>Parking Information</Text>
+              <View style={styles.hourContainer}>
+                <Text style={styles.weekDay}>{arrivalInformation}</Text>
+              </View>
+            </>
+          )}
 
           <Button name="Book an Appointment" onButtonPress={onBook} />
         </View>
