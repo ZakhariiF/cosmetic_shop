@@ -128,6 +128,15 @@ const Location = ({navigation}) => {
     }
   };
 
+  const setCenter = (item) => {
+    setCoords({
+      latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
+      longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
+      latitudeDelta: 0.015 * 8,
+      longitudeDelta: 0.0121 * 8,
+    });
+  };
+
   return (
     <>
       <BookingTab />
@@ -172,12 +181,14 @@ const Location = ({navigation}) => {
       {get(data, 'storeCollection') ? (
         <LocationModal
           ref={childRef}
-          selectedIndex={selectedLocationId}
+          selectedIndex={arrayHolder
+            .map((item) => item.bookerLocationId)
+            .indexOf(selectedLocationId)}
           onSearch={() => searchFilterFunction()}
           onChangeText={(e) => setSearch(e)}
           searchVal={searchVal}
           locationData={arrayHolder}
-          onSelect={(item) => onMarker(item)}
+          onSelect={(item) => setCenter(item)}
           currentLocation={currentLocation}
         />
       ) : null}

@@ -27,7 +27,7 @@ const MyAppts = ({navigation}) => {
   const LOCATION_QUERY = storeCollectionQuery();
   const {data: locationData, error, loading} = useQuery(LOCATION_QUERY);
 
-  const [cancelItem, setCancelItem] = useState(null)
+  const [cancelItem, setCancelItem] = useState(null);
 
   useEffect(() => {
     getAppts();
@@ -36,11 +36,10 @@ const MyAppts = ({navigation}) => {
   const getAppts = () =>
     dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
 
-  const onEdit = (item, location) => {
+  const onEdit = (item, location, isRebook=false) => {
     let tempArr = get(item, 'appointment.AppointmentTreatments', [])
       .filter((service) => service.TreatmentName !== 'Extensions')
-      .map(
-      (service, index) => {
+      .map((service, index) => {
         const timezone = moment()
           .utcOffset(service.StartDateTimeOffset)
           .utcOffset();
@@ -67,8 +66,7 @@ const MyAppts = ({navigation}) => {
           },
           customer: item.Customer,
         };
-      },
-    );
+      });
 
     dispatch(setLocation(location));
 
@@ -80,20 +78,23 @@ const MyAppts = ({navigation}) => {
         oldLocation: location.bookerLocationId,
       }),
     );
-
-    navigation.navigate('Book', {screen: 'Services'});
+    if (isRebook) {
+      navigation.navigate('Book', {screen: 'DateTime'});
+    } else {
+      navigation.navigate('Book', {screen: 'Services'});
+    }
   };
 
   const onCancel = (item, location) => {
     setCancelItem({
-      item, location,
+      item,
+      location,
     });
   };
 
   const handleCancel = () => {
-    const {item, location} = cancelItem
+    const {item, location} = cancelItem;
     if (item) {
-
       if (!item.groupID) {
         dispatch(cancelAppointment(item.appointment.ID));
       } else {
@@ -101,7 +102,7 @@ const MyAppts = ({navigation}) => {
       }
     }
     setCancelItem(null);
-  }
+  };
 
   return (
     <View style={rootStyle.container}>
@@ -163,7 +164,10 @@ const MyAppts = ({navigation}) => {
             <View style={styles.emptyContainer}>
               <EmptyContainer emptyText="You do not have any upcoming appointments" />
               <EmptyContainer emptyText="Book on from here or easily rebook from one of your previous visits" />
-              <Button onButtonPress={() => navigation.navigate('Book')} name={"Book an Appointment"} />
+              <Button
+                onButtonPress={() => navigation.navigate('Book')}
+                name={'Book an Appointment'}
+              />
             </View>
           ) : null}
 
@@ -193,7 +197,6 @@ const MyAppts = ({navigation}) => {
               label="Confirm"
               onPress={handleCancel}
             />
-
 
             {/* <Dialog.Button label="" onPress={handleDelete} /> */}
           </Dialog.Container>

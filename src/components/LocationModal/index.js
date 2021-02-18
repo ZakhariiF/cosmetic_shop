@@ -261,7 +261,7 @@ const LocationModal = forwardRef((props, ref) => {
                 const wait = new Promise((resolve) => setTimeout(resolve, 500));
                 wait.then(() => {
                   selectedIndex > -1 &&
-                    flatList.current?.scrollToIndex({
+                    flatRef.current?.scrollToIndex({
                       index: selectedIndex,
                       animated: true,
                     });

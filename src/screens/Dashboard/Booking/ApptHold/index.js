@@ -20,11 +20,17 @@ const ApptHold = ({navigation, route}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const isLoading = useSelector((state) => state.booking.isCCLoading);
   const customerCards = useSelector((state) => state.booking.customerCards);
+  const selectedLocation = useSelector((state) => state.booking.selectedLocation);
   const [activeScreen, setActiveScreen] = useState(0);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      dispatch(getCreditCard(get(userInfo, 'profile.bookerId', '')));
+      dispatch(
+        getCreditCard(
+          get(userInfo, 'profile.bookerId', ''),
+          selectedLocation.bookerLocationId,
+        ),
+      );
     });
     return unsubscribe;
   }, [navigation]);

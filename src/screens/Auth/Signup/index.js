@@ -9,11 +9,22 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import SocialLogin from 'components/SocialLogin';
 import {Images} from 'constant';
 import {isValidEmail} from 'utils';
+import CheckBox from "components/Checkbox";
 
 const Signup = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [isChecked, setChecked] = useState(false);
+
+  const onNext = () => {
+    navigation.navigate('Phone', {
+      firstName,
+      lastName,
+      email,
+      isEmailOptIn: isChecked,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -44,13 +55,17 @@ const Signup = ({navigation}) => {
           />
           <Text style={styles.heading}>You will use this as your log in.</Text>
 
+          <CheckBox
+            isChecked={isChecked}
+            titile="Email opt in"
+            onPressed={() => setChecked(!isChecked)}
+          />
+
           <Button
             disabled={!isValidEmail(email) || !firstName || !lastName}
             name="Next"
             containerStyle={{marginTop: 60}}
-            onButtonPress={() =>
-              navigation.navigate('Phone', {firstName, lastName, email})
-            }
+            onButtonPress={() => onNext()}
           />
           <Text style={styles.recover}>
             Already have an account?{' '}
@@ -61,14 +76,14 @@ const Signup = ({navigation}) => {
             </Text>
           </Text>
 
-          <View style={styles.seprateContainer}>
-            <View style={styles.seprator} />
-            <Text style={styles.orText}>OR</Text>
-            <View style={styles.seprator} />
-          </View>
+          {/*<View style={styles.seprateContainer}>*/}
+          {/*  <View style={styles.seprator} />*/}
+          {/*  <Text style={styles.orText}>OR</Text>*/}
+          {/*  <View style={styles.seprator} />*/}
+          {/*</View>*/}
 
-          <SocialLogin name="Sign Up with Google" socialImage={Images.google} />
-          <SocialLogin name="Sign Up with Facebook" socialImage={Images.fb} />
+          {/*<SocialLogin name="Sign Up with Google" socialImage={Images.google} />*/}
+          {/*<SocialLogin name="Sign Up with Facebook" socialImage={Images.fb} />*/}
           <View style={{height: 20}} />
         </View>
       </KeyboardAwareScrollView>

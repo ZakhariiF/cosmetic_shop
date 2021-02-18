@@ -93,6 +93,7 @@ export default StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 40,
+    width: 200,
   },
   cancelMembership: {
     fontSize: 15,

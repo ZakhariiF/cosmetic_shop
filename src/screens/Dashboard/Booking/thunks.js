@@ -237,7 +237,6 @@ export const addCreditCard = (obj) => async (dispatch) => {
   dispatch(bookingActions.addCCRequest());
   try {
     const data = await API.addCC(obj);
-    console.log('ccc', data);
     if (data.IsSuccess) {
       AlertHelper.showSuccess('Credit card added successfully');
       return dispatch(bookingActions.addCCSuccess(data));
@@ -256,10 +255,10 @@ export const addCreditCard = (obj) => async (dispatch) => {
   }
 };
 
-export const getCreditCard = (userId) => async (dispatch) => {
+export const getCreditCard = (userId, locationId) => async (dispatch) => {
   dispatch(bookingActions.getCCRequest());
   try {
-    const data = await API.getCC(userId);
+    const data = await API.getCC(userId, locationId);
     console.log('get ccc', data);
     if (data.IsSuccess) {
       return dispatch(

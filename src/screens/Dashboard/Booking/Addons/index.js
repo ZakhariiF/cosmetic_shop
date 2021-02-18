@@ -116,8 +116,6 @@ const Addons = ({navigation}) => {
             : 'ADD-ONS'
         }
         safeBackColor={Colors.bg}
-        isNext
-        onNext={onNext}
         onBackPress={onBackPress}
       />
 

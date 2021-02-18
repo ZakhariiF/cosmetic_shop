@@ -74,11 +74,10 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
 
   useEffect(() => {
     const customerId = get(userInfo, 'profile.bookerId');
-    console.log('UserInfo:', userInfo, customerId);
-    if (customerId && !customerDetails) {
+    if (customerId) {
       dispatch(getCustomerDetails(customerId));
     }
-  }, [userInfo, customerDetails]);
+  }, [userInfo]);
 
   const goToConfirmBarfly = (values) => {
     const updatedBirth = values.CustomField.Birth;
@@ -101,6 +100,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
       customer,
       card: updatedCard,
       membership: route.params.membership,
+      thankMessage: route.params.thankMessage,
     });
   };
 
@@ -184,7 +184,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
           style={{padding: 20}}
           value={firstYear + i}
           key={i}
-          label={`${firstYear + i + 1}`}
+          label={`${firstYear + i}`}
         />,
       );
     }

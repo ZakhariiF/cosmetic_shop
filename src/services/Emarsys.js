@@ -14,7 +14,7 @@ export const addToContactList = ({
   email,
   homePhone = '',
   phoneNumber = '',
-  bookerId = 0,
+  isEmail = false,
 }) => {
   let data = [
     {
@@ -24,10 +24,14 @@ export const addToContactList = ({
       3: email,
       15: homePhone,
       37: phoneNumber,
-      8833: bookerId,
-      31: 1,
     },
   ];
+
+  if (isEmail) {
+    data[0]['31'] = 1;
+  } else {
+    data[0]['4415'] = 1;
+  }
 
   console.log('Emarsys Payload:', data);
 

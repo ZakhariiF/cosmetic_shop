@@ -56,13 +56,12 @@ client.interceptors.request.use(async (requestConfig) => {
       tokens.expires_in = 86400;
       tokens.scope = 'offline_access openid profile';
       tokens.token_type = 'Bearer';
-      console.log('tokens from refreshtoken function', tokens);
       tokenData = {
         token: tokens,
         time: new Date().getTime(),
       };
       await AsyncStorage.setItem('token', JSON.stringify(tokenData));
-      console.log(JSON.stringify(tokenData));
+
       if (tokenData.token && tokenData.token.id_token) {
         requestConfig.headers = {
           ...requestConfig.headers,
