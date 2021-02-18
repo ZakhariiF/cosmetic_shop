@@ -9,14 +9,14 @@ export class AlertHelper {
   static show(type, title, message) {
     console.log('SHOW ERROR:', message);
     if (this.dropDown) {
-      // this.dropDown.alertWithType(type, title, message);
+      this.dropDown.alertWithType(type, title, message);
     }
   }
 
   static showError(message) {
     console.log('SHOW ERROR:', message);
     if (this.dropDown) {
-      // this.dropDown.alertWithType('error', 'Error', message);
+      this.dropDown.alertWithType('error', 'Error', message);
     }
   }
 
