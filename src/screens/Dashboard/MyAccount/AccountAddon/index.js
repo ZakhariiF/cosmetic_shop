@@ -17,6 +17,23 @@ const AccountAddon = ({navigation}) => {
 
   console.log('data>>>>>>', data);
 
+  let topImage = get(
+    data,
+    'screenProductCollection.items[0].marketingComponentsCollection.items[0]',
+  );
+
+  if (get(topImage, 'image')) {
+    topImage = topImage.image;
+  }
+  let bottomImage = get(
+    data,
+    'screenProductCollection.items[0].marketingComponentsCollection.items[1]',
+  );
+
+  if (get(bottomImage, 'image')) {
+    bottomImage = bottomImage.image;
+  }
+
   return (
     <View style={rootStyle.container}>
       <Header title="ADD ONS" isTab isBack />
@@ -24,7 +41,11 @@ const AccountAddon = ({navigation}) => {
         <Image
           resizeMode="contain"
           style={styles.topImage}
-          source={Images.addon_top}
+          source={{
+            uri:
+              get(topImage, 'mobileMedia.url') ||
+              get(topImage, 'desktopMedia.url'),
+          }}
         />
         <View style={rootStyle.innerContainer}>
           <View style={styles.topContainer}>
@@ -48,17 +69,25 @@ const AccountAddon = ({navigation}) => {
               'screenProductCollection.items[0].productsCollection.items',
               [],
             ).map((e, i) => {
-              return <AccountServiceItem key={i} item={e} navigation={navigation}/>;
+              return (
+                <AccountServiceItem key={i} item={e} navigation={navigation} />
+              );
             })}
           </View>
 
           <DottedView number={250} />
           <TouchableOpacity onPress={() => navigation.navigate('Book')}>
             <View style={styles.bottomImg}>
-              <Image source={Images.service_top} style={styles.bottomIcon} />
+              <Image
+                source={{
+                  uri:
+                    get(bottomImage, 'mobileMedia.url') ||
+                    get(bottomImage, 'desktopMedia.url'),
+                }}
+                style={styles.bottomIcon}
+              />
             </View>
           </TouchableOpacity>
-
         </View>
       </ScrollView>
       {loading ? <Indicator /> : null}
