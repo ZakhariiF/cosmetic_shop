@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, BackHandler, Platform} from 'react-native';
+import {View, Text, BackHandler, Platform, Alert} from 'react-native';
 import Button from 'components/Button';
 import Authheader from 'components/Header/Authheader';
 import Header from 'components/Header/Header';
@@ -23,8 +23,7 @@ import {
   signOut,
   EventEmitter
 } from '@okta/okta-react-native';
-import { useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 // rohit123
 
@@ -37,30 +36,7 @@ const Login = ({navigation}) => {
   const isloading = useSelector((state) => state.auth.isLoading);
   const [loading, setLoading] = useState(false);
   const isValidate = !isValidEmail(email) || password.length < 6 ? true : false;
-  // useEffect(() => {
-  //   EventEmitter.addListener('signInSuccess', e => {
-  //     console.log(e);
-  //     const {access_token, resolve_type} = e;
-  //     setLoading(false);
-  //   });
-  //   EventEmitter.addListener('signOutSuccess', e => {
-  //     console.log(e);
-  //     setLoading(false);
-  //   });
-  //   EventEmitter.addListener('onError', e => {
-  //     console.log(e);
-  //     setLoading(false);
-  //   });
-  //   EventEmitter.addListener('onCancelled', e => {
-  //     console.log(e);
-  //     setLoading(false);
-  //   });
-  //   return () => {
-  //     // EventEmitter.removeAllListeners();
-  //   }
-  // }, []);
-
-
+  
   const onLogin = async () => {
     MParticle.logEvent('User Attempts to Login', MParticle.EventType.Other, {
       'Source Page': 'Login',
@@ -78,20 +54,20 @@ const Login = ({navigation}) => {
 
       setLoading(true);
       signIn({username: email, password})
-        .then(token => {
-
+      .then(token => {
           dispatch(_onlogin(token, email, password));
-          setLoading(false);
-        })
-        .catch(e => {
-          MParticle.logEvent('User fails to Login', MParticle.EventType.Other, {
-            'Source Page': 'Login',
-            'Error Details': JSON.stringify(e),
-            'Email': email,
-          });
-          console.log(e);
-          setLoading(false);
+        setLoading(false);
+      })
+      .catch(e => {
+        MParticle.logEvent('User fails to Login', MParticle.EventType.Other, {
+          'Source Page': 'Login',
+          'Error Details': JSON.stringify(e),
+          'Email': email,
         });
+        console.log(e);
+        setLoading(false);
+        Alert.alert("Login Error", e.detail.message);
+      })
     } else {
       console.log("start logging in********************");
       dispatch(onlogin(email, password));
@@ -135,7 +111,15 @@ const Login = ({navigation}) => {
             Recover Password
           </Text>
 
+          {/* <View style={styles.seprateContainer}>
+            <View style={styles.seprator} />
+            <Text style={styles.orText}>OR</Text>
+            <View style={styles.seprator} />
+          </View> */}
 
+          {/* <SocialLogin name="Log in with Google" socialImage={Images.google} />
+          <SocialLogin name="Log in with Facebook" socialImage={Images.fb} /> */}
+          <View style={{height: 20}} />
         </View>
       </KeyboardAwareScrollView>
 

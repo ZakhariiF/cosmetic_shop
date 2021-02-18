@@ -67,6 +67,7 @@ const FindLocation = ({navigation}) => {
       const position = await requestUserLocationLocation();
       const latitude = get(position, 'coords.latitude');
       const longitude = get(position, 'coords.longitude');
+
       setCoords({
         latitude,
         longitude,
@@ -79,8 +80,6 @@ const FindLocation = ({navigation}) => {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       });
-
-      searchFilterFunction();
     } catch (e) {
       console.log('Can not get the current user location');
     }
@@ -117,10 +116,12 @@ const FindLocation = ({navigation}) => {
       longitudeDelta: 0.0121 * 8,
     });
 
-    if (selectedLocationId === item.bookerLocationId) {
-      setSelectedLocation(-1);
-    } else {
-      setSelectedLocation(item.bookerLocationId);
+    if (item.bookerLocationId) {
+      if (selectedLocationId === item.bookerLocationId) {
+        setSelectedLocation(-1);
+      } else {
+        setSelectedLocation(item.bookerLocationId);
+      }
     }
   };
 
@@ -134,7 +135,9 @@ const FindLocation = ({navigation}) => {
   };
 
   const searchFilterFunction = useCallback(async () => {
-    const geolocatedPoints = await geolocateSearchLocation(searchVal);
+    const geolocatedPoints = searchVal.length
+      ? await geolocateSearchLocation(searchVal)
+      : null;
 
     let {data: newData} = findStoresFromPointWithTitle(
       arrayHolder,
@@ -156,7 +159,6 @@ const FindLocation = ({navigation}) => {
           lng: coords.longitude,
         },
       );
-
       newData = newData.concat(retailStoreData);
     }
 
@@ -174,11 +176,11 @@ const FindLocation = ({navigation}) => {
         longitudeDelta: 0.0121 * 8,
       });
     }
-  }, [searchVal, arrayHolder]);
+  }, [searchVal, arrayHolder, storeIdx, currentLocation, coords]);
 
   useEffect(() => {
     searchFilterFunction();
-  }, [storeIdx]);
+  }, [storeIdx, currentLocation]);
 
   const onFav = (item) => {
     const obj = {
@@ -205,9 +207,11 @@ const FindLocation = ({navigation}) => {
         style={{
           flex: 1,
         }}
-        initialRegion={currentLocation || coords}
+        initialRegion={searchVal.length ? coords : currentLocation}
         region={coords}>
-        {(storeIdx
+        {(locationItems.length
+          ? locationItems
+          : storeIdx
           ? arrayHolder.concat(get(retailStores, 'storeCollection.items', []))
           : arrayHolder
         ).map((e, i) => (
