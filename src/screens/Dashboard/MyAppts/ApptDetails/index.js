@@ -72,6 +72,7 @@ const ApptDetails = ({route, navigation}) => {
   const onCancel = () => {
     setVisible(true);
   };
+
   const handleCancel = () => {
     setVisible(false);
     dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
@@ -104,7 +105,8 @@ const ApptDetails = ({route, navigation}) => {
                 }
               }
               label="Cancel"
-              onPress={() => onCancel()} />
+              onPress={() => setVisible(false)}
+            />
             <Dialog.Button
               color="black"
               style={
