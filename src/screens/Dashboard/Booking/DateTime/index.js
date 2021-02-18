@@ -28,8 +28,7 @@ import DateModal from 'components/DateModal';
 import WeekDays from 'components/WeekDays';
 import {types} from '../ducks';
 import {AlertHelper} from 'utils/AlertHelper';
-import { current } from "@reduxjs/toolkit";
-import MParticle from "react-native-mparticle";
+import MParticle from 'react-native-mparticle';
 
 const DateTime = ({navigation}) => {
   const dispatch = useDispatch();
@@ -37,8 +36,8 @@ const DateTime = ({navigation}) => {
   const activeTab = useSelector((state) => state.booking.activeGuestTab);
   const isLoading = useSelector((state) => state.booking.slotsLoading);
   const multiuserSlots = useSelector((state) => state.booking.multiUserSlots);
-  const availDates = useSelector((state) => state.booking.availableSlots);
-  const extensionAddon = useSelector(state => state.booking.extensionAddon)
+
+  const extensionAddon = useSelector((state) => state.booking.extensionAddon);
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
@@ -97,11 +96,11 @@ const DateTime = ({navigation}) => {
 
     totalGuests.forEach((element) => {
       tempArr.push({
-        serviceId: element.services.ID
+        serviceId: element.services.ID,
       });
     });
 
-    multiUserobj['Itineraries'] = tempArr;
+    multiUserobj.Itineraries = tempArr;
 
     dispatch(getMultiUserDates(multiUserobj));
   };
@@ -114,7 +113,7 @@ const DateTime = ({navigation}) => {
       IncludeFreelancers: false,
     };
 
-    multiUserobj['itineraries'] = totalGuests.map((element) => {
+    multiUserobj.itineraries = totalGuests.map((element) => {
       return {
         serviceId: element.services.ID,
       };
@@ -132,8 +131,9 @@ const DateTime = ({navigation}) => {
     if (
       totalGuests[activeTab].date &&
       totalGuests[activeTab].date.time === item
-    )
+    ) {
       isActive = true;
+    }
 
     return isActive;
   };
@@ -141,22 +141,30 @@ const DateTime = ({navigation}) => {
   const onSlot = (dateItem) => {
     MParticle.logEvent('Select Time', MParticle.EventType.Other, {
       'Source Page': 'Date Time Selection',
-      'Date': moment(selectedDate).utcOffset(dateItem.timezone).format('YYYY-MM-DD'),
-      'Time': moment(dateItem.startDateTime).utcOffset(dateItem.timezone).format('HH:mm:ss')
+      Date: moment(selectedDate)
+        .utcOffset(dateItem.timezone)
+        .format('YYYY-MM-DD'),
+      Time: moment(dateItem.startDateTime)
+        .utcOffset(dateItem.timezone)
+        .format('HH:mm:ss'),
     });
     let tempArr = [...totalGuests];
     tempArr = tempArr.map((user) => ({
       ...user,
-      date: {time: dateItem, date: selectedDate}
+      date: {time: dateItem, date: selectedDate},
     }));
-    const locationId = get(selectedLocation, 'bookerLocationId', '')
+    const locationId = get(selectedLocation, 'bookerLocationId', '');
 
     const usedEmployees = [];
     const extensionObjs = [];
     const objs = tempArr.map((item, idx) => {
-      const employeeIds = item.date.time.availabilityItems.filter(
-        (avItem) => avItem.serviceId === item.services.ID && !usedEmployees.includes(avItem.employeeId)
-      ).map((item) => item.employeeId);
+      const employeeIds = item.date.time.availabilityItems
+        .filter(
+          (avItem) =>
+            avItem.serviceId === item.services.ID &&
+            !usedEmployees.includes(avItem.employeeId),
+        )
+        .map((item) => item.employeeId);
       const employeeId = employeeIds.length > 0 ? employeeIds[0] : null;
       tempArr[idx].employees = employeeId;
 
@@ -168,7 +176,10 @@ const DateTime = ({navigation}) => {
         extensionObjs.push({
           locationId,
           serviceId: extensionAddon.ID,
-          startDateTime: moment(dateItem.startDateTime).add(item.services.TotalDuration, 'minutes').utcOffset(dateItem.timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
+          startDateTime: moment(dateItem.startDateTime)
+            .add(item.services.TotalDuration, 'minutes')
+            .utcOffset(dateItem.timezone)
+            .format('YYYY-MM-DDTHH:mm:ssZ'),
         });
       }
 
@@ -193,30 +204,43 @@ const DateTime = ({navigation}) => {
           }
         });
 
-        const extensionIdxs = tempArr.map((item, idx) => {
-          if (item.extension) {
-            return idx;
-          }
-          return -1;
-        }).filter((idx) => idx >= 0);
+        const extensionIdxs = tempArr
+          .map((item, idx) => {
+            if (item.extension) {
+              return idx;
+            }
+            return -1;
+          })
+          .filter((idx) => idx >= 0);
 
         if (extensionIdxs.length) {
-
           get(response, 'extensionData', []).map((item, idx) => {
             if (extensionIdxs[idx] !== undefined) {
-              const currentItem = tempArr[extensionIdxs[idx]]
-              let extensionEmployee = item.employees.find(e => e.available === 'Yes' && e.employeeId === currentItem.employees);
+              const currentItem = tempArr[extensionIdxs[idx]];
+              let extensionEmployee = item.employees.find(
+                (e) =>
+                  e.available === 'Yes' &&
+                  e.employeeId === currentItem.employees,
+              );
               if (!extensionEmployee) {
-                extensionEmployee = item.employees.find(e => e.available === 'Yes' && usedEmployees.includes(e.employeeId))
+                extensionEmployee = item.employees.find(
+                  (e) =>
+                    e.available === 'Yes' &&
+                    usedEmployees.includes(e.employeeId),
+                );
               }
               if (extensionEmployee) {
                 extensionEmployee = extensionEmployee.employeeId;
                 usedEmployees.push(extensionEmployee);
               }
 
-              let extensionroom = item.rooms.find(e => e.available === 'Yes' && e.roomId === currentItem.rooms);
+              let extensionroom = item.rooms.find(
+                (e) => e.available === 'Yes' && e.roomId === currentItem.rooms,
+              );
               if (!extensionroom) {
-                extensionroom = item.rooms.find(e => e.available === 'Yes' && usedRoomIds.includes(e.rooms))
+                extensionroom = item.rooms.find(
+                  (e) => e.available === 'Yes' && usedRoomIds.includes(e.rooms),
+                );
               }
 
               if (extensionroom) {
@@ -270,9 +294,9 @@ const DateTime = ({navigation}) => {
   useEffect(() => {
     MParticle.logEvent('Select Date', MParticle.EventType.Other, {
       'Source Page': 'Date Time Selection',
-      'Date': moment(selectedDate).format('YYYY-MM-DD')
+      Date: moment(selectedDate).format('YYYY-MM-DD'),
     });
-  }, [selectedDate])
+  }, [selectedDate]);
 
   return (
     <View style={rootStyle.container}>
