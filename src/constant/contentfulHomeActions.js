@@ -126,7 +126,5 @@ export const gqlLoadHome = async () => {
 
   homeSectionData = await Promise.all(graphqlRequests);
 
-  console.log('HomeSectionData:', homeSectionData);
-
   return homeSectionData;
 };

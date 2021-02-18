@@ -21,8 +21,6 @@ const ServiceInfoModal = ({visible, onRequestClose, item}) => {
   const {service, content} = item;
   const description = parsedJSON2Html(parseJSONFormat(content?.description));
 
-  console.log('Information:', item);
-
   return (
     <Modal
       visible={visible}

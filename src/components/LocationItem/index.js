@@ -75,7 +75,13 @@ const LocationItem = ({
         {/*  */}
         <View style={styles.flexContainer}>
           <View style={styles.rowContainer}>
-            <Image source={Images.notice} />
+            {isBookable && (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ShopDetail', {item, fromFindLoc})}
+                style={styles.favIcon}>
+                <Image source={Images.notice} />
+              </TouchableOpacity>
+            )}
             <Text style={styles.locName}>{get(item, 'title')}</Text>
           </View>
           {isBookable && (
@@ -115,21 +121,7 @@ const LocationItem = ({
               style={styles.favIcon}
             />
           </TouchableOpacity>
-          {isBookable && (
-            <TouchableOpacity
-              onPress={() => onFavIcon(item)}
-              style={styles.favIcon}>
-              <MaterialCommunityIcons
-                name="alert-circle"
-                size={20}
-                style={styles.noticeIcon}
-                color={Colors.header_title}
-                onPress={() =>
-                  navigation.navigate('ShopDetail', {item, fromFindLoc})
-                }
-              />
-            </TouchableOpacity>
-          )}
+
         </View>
 
         <View style={[styles.flexContainer, {marginTop: 10, marginLeft: 35}]}>

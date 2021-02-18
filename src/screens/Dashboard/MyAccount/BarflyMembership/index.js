@@ -58,6 +58,8 @@ const BarflyMembership = ({navigation}) => {
     setMembershipData(get(data, 'barfly.membershipsCollection.items', []));
   }, [loading, error, data]);
 
+  console.log('Membership Data:', data);
+
   useEffect(() => {
     const customerId = get(userInfo, 'profile.bookerId');
     const locationId = get(customerLocation, 'bookerLocationId');
@@ -132,16 +134,11 @@ const BarflyMembership = ({navigation}) => {
     </View>
   );
 
-  const onSelectMembership = (item) => {
-    setSelectedMembership(item);
-  };
-
-  const upgradeMembership = () => {
-    if (selectedMembership) {
-      navigation.navigate('BarflyMembershipEnrollment', {
-        membership: selectedMembership,
-      });
-    }
+  const upgradeMembership = (item) => {
+    navigation.navigate('BarflyMembershipEnrollment', {
+      membership: item,
+      thankMessage: get(data, 'barfly.thankYou'),
+    });
   };
 
   return (
@@ -192,59 +189,60 @@ const BarflyMembership = ({navigation}) => {
           <View
             style={[
               styles.topContainer,
-              get(membershipDataByLocation, '[0].ID') &&
-              get(membershipDataByLocation, '[0].ID') ===
-                get(selectedMembership, 'ID')
-                ? styles.selectedContainer
-                : {},
             ]}>
-            <TouchableOpacity
-              onPress={() =>
-                onSelectMembership(get(membershipDataByLocation, '[0]'))
-              }>
-              <Image style={styles.heart} source={Images.square_heart} />
-              <View style={styles.headerContainer}>
-                <View style={styles.dottBorderContainer}>
-                  <Text style={styles.headingText}>
-                    {get(membershipData, '[0].title', '')}
-                  </Text>
-                </View>
-              </View>
 
-              <View style={styles.innerContainer}>
-                <ImageBackground
-                  resizeMode="contain"
-                  source={Images.tip_img}
-                  style={styles.tipImg}>
-                  <Text style={styles.blowText}>
-                    {get(membershipData, '[0].subtitle', '')}
-                  </Text>
-                </ImageBackground>
-
-                <Text style={styles.plus}>- PLUS -</Text>
-
-                {get(membershipData, '[0].benefitsCollection.items', []).map(
-                  (e, i) => {
-                    return (
-                      <View key={i} style={styles.plusContainer}>
-                        <Text style={styles.percentageText}>{e.name}</Text>
-                        <Text style={styles.desc}>{e.value}</Text>
-                      </View>
-                    );
-                  },
-                )}
-
-                <Text style={styles.price}>
-                  $
-                  {get(
-                    membershipDataByLocation,
-                    '[0].MembershipBillableItem.Price.Amount',
-                  ) || get(membershipData, '[0].price', '')}{' '}
-                  <Text style={styles.monthText}> / month</Text>
+            <Image style={styles.heart} source={Images.square_heart} />
+            <View style={styles.headerContainer}>
+              <View style={styles.dottBorderContainer}>
+                <Text style={styles.headingText}>
+                  {get(membershipData, '[0].title', '')}
                 </Text>
-                <Text style={styles.tax}>+ tax (where applicable)</Text>
               </View>
-            </TouchableOpacity>
+            </View>
+
+            <View style={styles.innerContainer}>
+              <ImageBackground
+                resizeMode="contain"
+                source={Images.tip_img}
+                style={styles.tipImg}>
+                <Text style={styles.blowText}>
+                  {get(membershipData, '[0].subtitle', '')}
+                </Text>
+              </ImageBackground>
+
+              <Text style={styles.plus}>- PLUS -</Text>
+
+              {get(membershipData, '[0].benefitsCollection.items', []).map(
+                (e, i) => {
+                  return (
+                    <View key={i} style={styles.plusContainer}>
+                      <Text style={styles.percentageText}>{e.name}</Text>
+                      <Text style={styles.desc}>{e.value}</Text>
+                    </View>
+                  );
+                },
+              )}
+
+              <Text style={styles.price}>
+                $
+                {get(
+                  membershipDataByLocation,
+                  '[0].MembershipBillableItem.Price.Amount',
+                ) || get(membershipData, '[0].price', '')}{' '}
+                <Text style={styles.monthText}> / month</Text>
+              </Text>
+              <Text style={styles.tax}>+ tax (where applicable)</Text>
+              <Button
+                name="Select"
+                containerStyle={styles.buttonContainer}
+                disabled={
+                  customerMembership &&
+                  customerMembership.ID ===
+                    get(membershipDataByLocation, '[0].ID')
+                }
+                onButtonPress={() => upgradeMembership(get(membershipDataByLocation, '[0]'))}
+              />
+            </View>
           </View>
 
           <View style={rootStyle.seprator} />
@@ -253,71 +251,73 @@ const BarflyMembership = ({navigation}) => {
             style={[
               styles.topContainer,
               {marginTop: 15},
-              get(membershipDataByLocation, '[1].ID') &&
-              get(membershipDataByLocation, '[1].ID') ===
-                get(selectedMembership, 'ID')
-                ? styles.selectedContainer
-                : {},
             ]}>
-            <TouchableOpacity
-              onPress={() =>
-                onSelectMembership(get(membershipDataByLocation, '[1]'))
-              }>
-              <Image style={styles.heart} source={Images.black_heart} />
-              <View
-                style={[
-                  styles.headerContainer,
-                  {backgroundColor: Colors.header_title},
-                ]}>
-                <View style={styles.dottBorderContainer}>
-                  <Text style={[styles.headingText, {color: Colors.white}]}>
-                    {get(membershipData, '[1].title', '')}
-                  </Text>
-                </View>
-              </View>
 
-              <View style={styles.innerContainer}>
-                <ImageBackground
-                  resizeMode="contain"
-                  source={Images.tip_img}
-                  style={styles.tipImg}>
-                  <Text style={styles.blowText}>
-                    {get(membershipData, '[1].subtitle', '')}H
-                  </Text>
-                </ImageBackground>
-
-                <Text style={styles.plus}>- PLUS -</Text>
-
-                {get(membershipData, '[1].benefitsCollection.items', []).map(
-                  (e, i) => {
-                    return (
-                      <View key={i} style={styles.plusContainer}>
-                        <Text style={styles.percentageText}>{e.name}</Text>
-                        <Text style={styles.desc}>{e.value}</Text>
-                      </View>
-                    );
-                  },
-                )}
-
-                <Text style={styles.price}>
-                  $
-                  {get(
-                    membershipDataByLocation,
-                    '[1].MembershipBillableItem.Price.Amount',
-                  ) || get(membershipData, '[1].price', '')}{' '}
-                  <Text style={styles.monthText}> / month</Text>
+            <Image style={styles.heart} source={Images.black_heart} />
+            <View
+              style={[
+                styles.headerContainer,
+                {backgroundColor: Colors.header_title},
+              ]}>
+              <View style={styles.dottBorderContainer}>
+                <Text style={[styles.headingText, {color: Colors.white}]}>
+                  {get(membershipData, '[1].title', '')}
                 </Text>
-                <Text style={styles.tax}>+ tax (where applicable)</Text>
               </View>
-            </TouchableOpacity>
+            </View>
+
+            <View style={styles.innerContainer}>
+              <ImageBackground
+                resizeMode="contain"
+                source={Images.tip_img}
+                style={styles.tipImg}>
+                <Text style={styles.blowText}>
+                  {get(membershipData, '[1].subtitle', '')}H
+                </Text>
+              </ImageBackground>
+
+              <Text style={styles.plus}>- PLUS -</Text>
+
+              {get(membershipData, '[1].benefitsCollection.items', []).map(
+                (e, i) => {
+                  return (
+                    <View key={i} style={styles.plusContainer}>
+                      <Text style={styles.percentageText}>{e.name}</Text>
+                      <Text style={styles.desc}>{e.value}</Text>
+                    </View>
+                  );
+                },
+              )}
+
+              <Text style={styles.price}>
+                $
+                {get(
+                  membershipDataByLocation,
+                  '[1].MembershipBillableItem.Price.Amount',
+                ) || get(membershipData, '[1].price', '')}{' '}
+                <Text style={styles.monthText}> / month</Text>
+              </Text>
+              <Text style={styles.tax}>+ tax (where applicable)</Text>
+
+              <Button
+                name="Select"
+                containerStyle={styles.buttonContainer}
+                disabled={
+                  customerMembership &&
+                  customerMembership.ID ===
+                    get(membershipDataByLocation, '[1].ID')
+                }
+                onButtonPress={() => upgradeMembership(get(membershipDataByLocation, '[1]'))}
+              />
+            </View>
           </View>
 
-          <Button
-            name="Upgrade to Premium"
-            containerStyle={styles.buttonContainer}
-            disabled={!selectedMembership}
-            onButtonPress={upgradeMembership}
-          />
+          {/*<Button*/}
+          {/*  name="Upgrade to Premium"*/}
+          {/*  containerStyle={styles.buttonContainer}*/}
+          {/*  disabled={!selectedMembership}*/}
+          {/*  onButtonPress={upgradeMembership}*/}
+          {/*/>*/}
 
           <Text style={styles.cancelMembership}>Cancel Membership</Text>
         </View>

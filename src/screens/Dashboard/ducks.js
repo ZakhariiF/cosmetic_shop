@@ -38,7 +38,9 @@ const HomeReducer = (state = homeIntialState, action) => {
         appointments: action.payload.filter(
           (e) => !e.appointment.IsPastDue && !e.appointment.IsCancelled,
         ),
-        pastAppt: action.payload.filter((e) => e.appointment.IsPastDue),
+        pastAppt: action.payload.filter(
+          (e) => e.appointment.IsPastDue || e.appointment.IsCancelled,
+        ),
       };
 
     case types.GET_APPTS_ERROR:
@@ -60,7 +62,11 @@ const HomeReducer = (state = homeIntialState, action) => {
         ...state,
         apptLoading: false,
         appointments: state.appointments.filter(
-          (e) => (e.group && action.payload.Group && e.group !== action.payload.Group) || (!e.group && e.appointment.ID !== action.payload.ID),
+          (e) =>
+            (e.group &&
+              action.payload.Group &&
+              e.group !== action.payload.Group) ||
+            (!e.group && e.appointment.ID !== action.payload.ID),
         ),
       };
 

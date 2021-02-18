@@ -10,7 +10,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useDispatch, useSelector} from 'react-redux';
 import {onregister} from '../thunks';
 import Indicator from 'components/Indicator';
-import {addToContactList} from "services/Emarsys";
+import {addToContactList} from 'services/Emarsys';
 
 const Phone = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -19,7 +19,7 @@ const Phone = ({navigation, route}) => {
   const isLoading = useSelector((state) => state.auth.isLoading);
 
   const {
-    params: {firstName, lastName, email},
+    params: {firstName, lastName, email, isEmailOptIn},
   } = route;
 
   const onNext = useCallback(async () => {
@@ -32,15 +32,29 @@ const Phone = ({navigation, route}) => {
       }),
     ).then(async (response) => {
       if (response.type === 'REGISTER_SUCCESS') {
-        const emarsysData = await addToContactList({
-          sourceType: 'DrybarshopsUserReq',
-          firstName,
-          lastName,
-          email,
-          homePhone: 'Mobile Phone',
-          phoneNumber: phone,
-        });
-        console.log('Emarsys response:', emarsysData);
+        if (isChecked) {
+          const emarsysData = await addToContactList({
+            sourceType: 'DrybarshopsUserReq',
+            firstName,
+            lastName,
+            email,
+            homePhone: 'Mobile Phone',
+            phoneNumber: phone,
+          });
+          console.log('Emarsys response:', emarsysData);
+        }
+        if (isEmailOptIn) {
+          const emarsysData = await addToContactList({
+            sourceType: 'DrybarshopsUserReq',
+            firstName,
+            lastName,
+            email,
+            homePhone: 'Mobile Phone',
+            phoneNumber: phone,
+            isEmail: true,
+          });
+          console.log('Emarsys response:', emarsysData);
+        }
         navigation.navigate('CheckEmail', {email});
       }
     });
@@ -66,7 +80,7 @@ const Phone = ({navigation, route}) => {
           />
           <CheckBox
             isChecked={isChecked}
-            titile="SMS opt in language goes here lorem ipsum."
+            titile="SMS opt in"
             onPressed={() => setChecked(!isChecked)}
           />
 

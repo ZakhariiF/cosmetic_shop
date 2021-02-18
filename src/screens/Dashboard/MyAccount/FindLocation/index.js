@@ -3,8 +3,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import MapView from 'react-native-maps';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
-import { findStoresFromPointWithTitle, isEmptyString, requestUserLocationLocation } from "utils";
-import { FlatList, View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import {
+  findStoresFromPointWithTitle,
+  isEmptyString,
+  requestUserLocationLocation,
+} from 'utils';
+import {FlatList, View, StyleSheet, ScrollView, Dimensions} from 'react-native';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 import {Colors, Fonts} from 'constant';
@@ -19,7 +23,7 @@ import {types} from 'screens/Dashboard/Booking/ducks';
 import CustomMapMarker from 'components/CustomMapMarker';
 import {geolocateSearchLocation} from 'services/Google';
 import CheckBox from 'components/Checkbox';
-import { current } from "@reduxjs/toolkit";
+import {current} from '@reduxjs/toolkit';
 
 const window = Dimensions.get('window');
 const {width, height} = window;
@@ -38,11 +42,10 @@ const FindLocation = ({navigation}) => {
   const isFavLoad = useSelector((state) => state.booking.isFavLoading);
   const favItem = useSelector((state) => state.auth.favItem);
   const userInfo = useSelector((state) => state.auth.userInfo);
-  const storeTypes = ['Drybar Shop', 'Retail Store'];
   const [storeIdx, setStoreIdx] = useState(0);
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
-  const {data: retailStores} = useQuery(storeCollectionQuery('Retail Store'))
+  const {data: retailStores} = useQuery(storeCollectionQuery('Retail Store'));
   const mapRef = useRef(null);
   const [selectedLocationId, setSelectedLocation] = useState(-1);
 
@@ -52,7 +55,7 @@ const FindLocation = ({navigation}) => {
     latitudeDelta: 0.015 * 8,
     longitudeDelta: 0.0121 * 8,
   });
-  
+
   const [currentLocation, setCurrentLocation] = useState(null);
 
   if (error) {
@@ -85,7 +88,6 @@ const FindLocation = ({navigation}) => {
 
   useEffect(() => {
     getUserLocation();
-
   }, []);
 
   useEffect(() => {
@@ -120,6 +122,15 @@ const FindLocation = ({navigation}) => {
     } else {
       setSelectedLocation(item.bookerLocationId);
     }
+  };
+
+  const setCenter = (item) => {
+    setCoords({
+      latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
+      longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
+      latitudeDelta: 0.015 * 8,
+      longitudeDelta: 0.0121 * 8,
+    });
   };
 
   const searchFilterFunction = useCallback(async () => {
@@ -196,7 +207,10 @@ const FindLocation = ({navigation}) => {
         }}
         initialRegion={currentLocation || coords}
         region={coords}>
-        {arrayHolder.map((e, i) => (
+        {(storeIdx
+          ? arrayHolder.concat(get(retailStores, 'storeCollection.items', []))
+          : arrayHolder
+        ).map((e, i) => (
           <MapView.Marker
             key={i}
             coordinate={{
@@ -239,7 +253,7 @@ const FindLocation = ({navigation}) => {
               customerInfo={customerInfo}
               onFavIcon={onFav}
               isFav={get(e, 'item.bookerLocationId') == favItem}
-              onSelect={(item) => onMarker(item)}
+              onSelect={(item) => setCenter(item)}
               currentLocation={currentLocation}
             />
           )}

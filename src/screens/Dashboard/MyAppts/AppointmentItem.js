@@ -16,8 +16,12 @@ const AppointmentItem = ({
 
   const location = get(locationData, 'storeCollection.items', []).find(l => l.bookerLocationId === locationId);
 
-  const timezone = moment().utcOffset(get(item, 'appointment.StartDateTimeOffset')).utcOffset();
-  const startTime = moment(get(item, 'appointment.StartDateTimeOffset')).utcOffset(timezone)
+  const timezone = moment()
+    .utcOffset(get(item, 'appointment.StartDateTimeOffset'))
+    .utcOffset();
+  const startTime = moment(
+    get(item, 'appointment.StartDateTimeOffset'),
+  ).utcOffset(timezone);
 
   return (
     <View style={styles.container}>
@@ -53,7 +57,7 @@ const AppointmentItem = ({
           <View style={styles.rightContainer}>
             <TouchableOpacity
               style={styles.editContainer}
-              onPress={() => onEdit(item, location)}>
+              onPress={() => onEdit(item, location, past)}>
               <Text style={styles.editText}>{past ? 'Rebook' : 'Edit'}</Text>
             </TouchableOpacity>
             {!past && (

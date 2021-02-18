@@ -98,6 +98,7 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
             : item.type === 'Retail Store'
             ? Images.fav_marker
             : Images.yellow_pin
+          // Images.fav_marker
         }
         resizeMode="contain"
       />

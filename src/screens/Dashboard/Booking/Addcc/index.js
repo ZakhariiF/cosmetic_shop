@@ -11,27 +11,28 @@ import {useDispatch, useSelector} from 'react-redux';
 import {addCreditCard} from '../thunks';
 import Indicator from 'components/Indicator';
 import DismissKeyboard from 'components/DismissKeyboard';
-import MParticle from "react-native-mparticle";
+import MParticle from 'react-native-mparticle';
 
 const Addcc = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const isLoading = useSelector((state) => state.booking.isCCLoading);
-  const location = useSelector((state) => state.booking.location);
+  const location = useSelector((state) => state.booking.selectedLocation);
   const dispatch = useDispatch();
   const [isdefault, setDefault] = useState(true);
 
   const [cardInfo, setCardInfo] = useState('');
   // alert(JSON.stringify(userInfo));
 
+  console.log('Selected Location:', location);
+
   const onAddCard = () => {
     MParticle.logEvent('Sace Card', MParticle.EventType.Other, {
       'Source Page': 'Add card',
     });
 
-    console.log('CardInfo:', cardInfo);
+    const [month, year] = get(cardInfo, 'values.expiry', '').split('/')
     const data = {
       SpaID: location.bookerLocationId,
-      // CustomerID: 119704688,
       CustomerID: get(userInfo, 'profile.bookerId', ''),
       CreditCard: {
         Type: {
@@ -40,19 +41,8 @@ const Addcc = () => {
         },
         Number: get(cardInfo, 'values.number'),
         NameOnCard: 'Test Customer',
-        ExpirationDateOffset: '/Date(1638259200000-0500)/',
+        ExpirationDateOffset: `20${year}-${month}-01T00:00:00+00:00`,
         SecurityCode: get(cardInfo, 'values.cvc'),
-        Address: {
-          Street1: 'string',
-          Street2: 'string',
-          City: 'Irvine',
-          State: 'CA',
-          Zip: '92602',
-          Country: {
-            ID: 1,
-            Name: 'United States',
-          },
-        },
       },
     };
 

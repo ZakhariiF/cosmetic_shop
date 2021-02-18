@@ -47,8 +47,6 @@ const Home = ({navigation}) => {
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
 
-  console.log('HOME SCREEN userinfo', userInfo);
-
   React.useMemo(() => {
     if (loading || error) {
       return null;

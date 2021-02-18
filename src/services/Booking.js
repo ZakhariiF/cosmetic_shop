@@ -124,14 +124,14 @@ export const addCC = (data) =>
     })
     .then((response) => response.data);
 
-export const getCC = (userId) =>
+export const getCC = (userId, locationId) =>
   client
     .post('/booker/GetCustomerCreditCards', {
       method: 'POST',
       urlParams: {},
       data: {
         CustomerID: userId,
-        SpaID: 112,
+        SpaID: locationId,
       },
     })
     .then((response) => response.data);

@@ -151,7 +151,7 @@ export const bookingIntialState = {
   isFavLoading: false,
   multiUserSlots: [],
   isBooking: false,
-  extensionAddon: null
+  extensionAddon: null,
 };
 
 const BookingReducer = (state = bookingIntialState, action) => {

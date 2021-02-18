@@ -19,6 +19,10 @@ import styles from './styles';
 import {AlertHelper} from 'utils/AlertHelper';
 import CheckBox from 'components/Checkbox';
 
+import {parseJSONFormat, parsedJSON2Html} from 'utils/contentful';
+import HTMLView from 'react-native-htmlview';
+import HtmlView from 'react-native-htmlview';
+
 const BarflyConfirm = ({navigation, route}) => {
   const customerLocation = useSelector((state) => state.account.location);
   const dispatch = useDispatch();
@@ -29,9 +33,7 @@ const BarflyConfirm = ({navigation, route}) => {
   const [firstChecked, setFirstChecked] = useState(false);
   const [secondChecked, setSecondChecked] = useState(false);
 
-  const {membership, customer, card} = route.params;
-
-  console.log('Membership:', membership);
+  const {membership, customer, card, thankMessage} = route.params;
 
   const price = get(membership, 'MembershipBillableItem.Price.Amount');
 
@@ -82,7 +84,7 @@ const BarflyConfirm = ({navigation, route}) => {
 
 
   const addCreditCard = async () => {
-    console.log(card);
+    console.log('addCreditCard:', card);
     try {
       const data = await API.addCreditCardForCustomer(
         customerLocation.bookerLocationId,
@@ -136,9 +138,6 @@ const BarflyConfirm = ({navigation, route}) => {
         try {
           const order = await API.createOrder(customer.ID);
           if (order && order.IsSuccess) {
-            console.log('BillingCycle', moment().format(
-              'yyyy-MM-ddT00:00:00+00:00',
-            ));
             const addMemershipToOrder = await API.addMembershipToOrder({
               orderId: order.Order.ID,
               locationId: customerLocation.bookerLocationId,
@@ -147,6 +146,9 @@ const BarflyConfirm = ({navigation, route}) => {
               ),
               membershipId: membership.ID,
             });
+
+            console.log('addCreditCard:', addMemershipToOrder);
+
             const ExpirationDateOffset = getCardExpirationDate();
             const isPlaceOrder = await API.placeOrder(
               order.Order.ID,
@@ -247,12 +249,11 @@ const BarflyConfirm = ({navigation, route}) => {
             />
           </View>
           <Dialog.Container visible={showModal}>
-            <Dialog.Title>Thank you for your Membership Purchase</Dialog.Title>
+            <Dialog.Title>
+              {get(thankMessage, 'json.content[0].content[0].value')}
+            </Dialog.Title>
             <Dialog.Description>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation. Ut enim ad minim
-              veniam, quis nostrud exercitation.
+              <HtmlView value={parsedJSON2Html(parseJSONFormat(thankMessage))} />
             </Dialog.Description>
             <Dialog.Button
               color="black"
