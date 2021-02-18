@@ -18,6 +18,8 @@ target 'Drybar' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-add-calendar-event', :path => '../node_modules/react-native-add-calendar-event'
+
   target 'DrybarTests' do
     inherit! :complete
     # Pods for testing

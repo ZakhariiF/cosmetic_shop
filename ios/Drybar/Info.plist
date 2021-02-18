@@ -44,6 +44,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>$(PRODUCT_NAME) will have access your calendar to creat event.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) will have access your contact to creat event.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) will have access your location while running and in background to search nearby salon.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -85,6 +89,7 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
