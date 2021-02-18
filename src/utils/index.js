@@ -202,8 +202,6 @@ export const findStoresFromPointWithTitle = (
   let storesSlugsByTitle = [];
 
   if (searchStr && searchStr !== '') {
-    let str = searchStr.toLowerCase();
-    str = str.replace(/street/gi, 'st');
 
     storesByTitle = locationData
       .filter((location) => {
@@ -255,7 +253,7 @@ export const findStoresFromPointWithTitle = (
             searchedState.short_name.includes(location.contact.region) ||
             location.contact.region.includes(searchedState.long_name)
           ) {
-            if (point.address_components.length === 2) {
+            if (point.address_components.length <= 3) {
               // search with state
               return true;
             } else if (point.address_components.length >= 4) {
@@ -305,8 +303,6 @@ export const findStoresFromPointWithTitle = (
     center = [defaultPoint];
   }
 
-  console.log('center:', center, defaultPoint);
-
   if (center.length === 0) {
     return {
       error: 'Can not get the stores from contentful',
@@ -342,8 +338,6 @@ export const findStoresFromPointWithTitle = (
     .sort((location1, location2) =>
       location1.distance < location2.distance ? -1 : 1,
     );
-
-  console.log('filteredLocationData:', filteredLocationData);
 
   return {
     data: storesByTitle.concat(storesByAddress.concat(filteredLocationData)),

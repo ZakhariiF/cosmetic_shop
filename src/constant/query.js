@@ -177,3 +177,30 @@ export const productInformationCollection = (productID) => gql`{
       }
   }
 `;
+
+export const bannerQuery = () => gql`
+  {
+    screenCollection(where: {slug: "booking-confirmation-mobile"}) {
+      items {
+        title
+        description {
+          json
+        }
+        metadata {
+          sys {
+            id
+          }
+        }
+        marketingComponentsCollection(limit: 10) {
+          items {
+            ... on MarketingImage {
+              mobileMedia {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

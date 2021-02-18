@@ -162,6 +162,14 @@ const Home = ({navigation}) => {
         return navigation.navigate('Account', {
           screen: 'AccountAddon',
         });
+      } else if (link === 'locator') {
+        return navigation.navigate('Account', {
+          screen: 'FindLocation',
+        });
+      } else if (link === 'barfly') {
+        return navigation.navigate('Account', {
+          screen: 'BarflyMembership',
+        });
       }
     }
   };
@@ -246,7 +254,7 @@ const Home = ({navigation}) => {
                   imageSource={Images.lady}
                   data={item.marketingStyles.stylesCollection}
                   onBrowse={() => {
-                    onBrowser(action)
+                    onBrowser(action);
                   }}
                   imgField={'featuredImage.desktopMedia.url'}
                   action={action}
@@ -275,11 +283,8 @@ const Home = ({navigation}) => {
                 get(item, 'marketingCard.image.desktopMedia.url');
               let action = get(
                 item,
-                'marketingCard.actionsCollection.items[0].linkToMobileSlug',
+                'marketingCard.actionsCollection.items[0]',
               );
-              if (action) {
-                action = mapGraphqlToNavigator[action];
-              }
               let img = null;
               if (imgUrl) {
                 img = (
@@ -290,9 +295,10 @@ const Home = ({navigation}) => {
                   />
                 );
               }
+
               if (img && action) {
                 return (
-                  <TouchableOpacity onPress={() => navigation.navigate(action)}>
+                  <TouchableOpacity onPress={() => onBrowser(action)}>
                     {img}
                   </TouchableOpacity>
                 );

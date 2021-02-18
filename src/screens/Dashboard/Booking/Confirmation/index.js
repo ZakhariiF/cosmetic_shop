@@ -18,13 +18,42 @@ import {useSelector} from 'react-redux';
 import {reset} from 'navigation/RootNavigation';
 import {get} from 'lodash';
 import {openMaps} from 'utils';
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
+import moment from 'moment';
+import {bannerQuery} from 'constant/query';
+import {useQuery} from '@apollo/client';
+
+
 
 const Confirmation = () => {
+  const banner_Query = bannerQuery();
+  console.log(useQuery(banner_Query));
+  const {data} = useQuery(banner_Query);
+  const bannerImageUrl = get(data, 'screenCollection.items[0].marketingComponentsCollection.items[0].mobileMedia.url');
+  console.log(bannerImageUrl);
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
-
+  const openCalendarApp = () => {
+    const startDateTimeString = totalGuests[0].date.time.startDateTime;
+    const startDateTime = new Date(startDateTimeString);
+    const endDateTimeString = totalGuests[0].date.time.endDateTime;
+    const endDateTime = new Date(endDateTimeString);
+    const eventConfig = {
+      title: 'Drybar booking',
+      startDate: moment.utc(startDateTime).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+      endDate: moment.utc(endDateTime).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+    };
+    AddCalendarEvent.presentEventCreatingDialog(eventConfig)
+      .then((eventInfo) => {
+        console.warn(JSON.stringify(eventInfo));
+      })
+      .catch((error) => {
+        // handle error such as when user rejected permissions
+        console.warn(error);
+      });
+  }
   return (
     <View style={rootStyle.container}>
       <AuthHeader />
@@ -62,9 +91,14 @@ const Confirmation = () => {
           )}
           ListFooterComponent={() => (
             <>
+              <View style={styles.saveButtonContainer}>
+                <TouchableOpacity onPress={openCalendarApp}>
+                  <Text style={styles.saveButton}>Save to Calendar</Text>
+                </TouchableOpacity>
+              </View>
               <Button
                 name="Manage Appointments"
-                onButtonPress={() => reset('My Appts')}
+                onButtonPress={() => reset('Dashboard')}
               />
 
               <View style={styles.specialContainer}>
@@ -76,10 +110,10 @@ const Confirmation = () => {
                 />
                 <DottedView containerStyle={{flex: 1}} />
               </View>
-
+              
               <Image
                 resizeMode="contain"
-                source={Images.chaser}
+                source={{uri: bannerImageUrl}}
                 style={styles.chaserIcon}
               />
 
@@ -134,5 +168,14 @@ const styles = StyleSheet.create({
   chaserIcon: {
     width: '94%',
     alignSelf: 'center',
+    aspectRatio: 1
   },
+  saveButtonContainer: {
+    width:'100%',
+    alignItems:'center'
+  },
+  saveButton: {
+    ...rootStyle.commonText,
+    textDecorationLine: 'underline'
+  }
 });

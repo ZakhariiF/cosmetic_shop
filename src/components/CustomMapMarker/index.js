@@ -21,10 +21,12 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
 
   const phoneNumber = get(item, 'contact.phoneNumber');
   const isBookable =
-    item.type === 'Drybar Shop' && get(item, 'settings.bookable', false);
+    item.bookerLocationId &&
+    item.type === 'Drybar Shop' &&
+    get(item, 'settings.bookable', false);
 
   return (
-    <View>
+    <View pointerEvents="none">
       {selected ? (
         <View style={styles.container}>
           <View style={styles.innerContainer}>
@@ -63,8 +65,7 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
                     miles away
                   </Text>
                 )}
-                <TouchableOpacity
-                  onPress={() => call(phoneNumber)}>
+                <TouchableOpacity onPress={() => call(phoneNumber)}>
                   <Text style={styles.contactNo}>
                     <Image
                       source={Images.phone}
@@ -76,8 +77,8 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              {
-                isBookable && <View
+              {isBookable && (
+                <View
                   onTouchStart={() => {
                     dispatch(setLocation(item));
                     navigation.navigate('Book', {screen: 'Coming'});
@@ -85,7 +86,7 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
                   style={styles.buttonContainer}>
                   <Text style={styles.selectText}>Select</Text>
                 </View>
-              }
+              )}
             </View>
           </View>
           <View style={styles.triangle} />
@@ -98,7 +99,6 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
             : item.type === 'Retail Store'
             ? Images.fav_marker
             : Images.yellow_pin
-          // Images.fav_marker
         }
         resizeMode="contain"
       />
