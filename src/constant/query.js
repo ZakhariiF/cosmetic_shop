@@ -111,7 +111,7 @@ export const screenBarfly = () => gql`
           title
           subtitle
           price
-          benefitsCollection(limit: 3) {
+          benefitsCollection(limit: 10) {
             items {
               ... on BarflyBenefits {
                 name
