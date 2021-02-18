@@ -7,17 +7,13 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  FlatList,
   Dimensions,
 } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import rootStyle from 'rootStyle';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {get} from 'lodash';
 import {openMaps} from 'utils';
-import {getDistance, getPreciseDistance} from 'geolib';
 import {distance, requestUserLocationLocation} from 'utils';
-import {current} from '@reduxjs/toolkit';
 
 const LocationItem = ({
   navigation,
@@ -57,13 +53,14 @@ const LocationItem = ({
     };
   }
 
-
   const operatingMessage = get(item, 'settings.operatingMessage', '');
   const arrivalInformation = get(item, 'arrivalInformation', '');
 
   // console.log("PROPS?????????", distanceMiles[0])
   const isBookable =
-    item.type === 'Drybar Shop' && get(item, 'settings.bookable', false);
+    item.bookerLocationId &&
+    item.type === 'Drybar Shop' &&
+    get(item, 'settings.bookable', false);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -77,7 +74,9 @@ const LocationItem = ({
           <View style={styles.rowContainer}>
             {isBookable && (
               <TouchableOpacity
-                onPress={() => navigation.navigate('ShopDetail', {item, fromFindLoc})}
+                onPress={() =>
+                  navigation.navigate('ShopDetail', {item, fromFindLoc})
+                }
                 style={styles.favIcon}>
                 <Image source={Images.notice} />
               </TouchableOpacity>
@@ -121,7 +120,6 @@ const LocationItem = ({
               style={styles.favIcon}
             />
           </TouchableOpacity>
-
         </View>
 
         <View style={[styles.flexContainer, {marginTop: 10, marginLeft: 35}]}>

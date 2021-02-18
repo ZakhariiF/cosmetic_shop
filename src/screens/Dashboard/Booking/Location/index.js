@@ -53,7 +53,7 @@ const Location = ({navigation}) => {
   }
 
   const searchFilterFunction = useCallback(async () => {
-    const geolocatedPoints = await geolocateSearchLocation(searchVal);
+    const geolocatedPoints = searchVal.length ? await geolocateSearchLocation(searchVal) : null;
 
     const {data: newData} = findStoresFromPointWithTitle(
       arrayHolder,
@@ -73,11 +73,11 @@ const Location = ({navigation}) => {
         longitude: newData[0].contact.coordinates[1],
       });
     }
-  }, [searchVal, arrayHolder]);
+  }, [searchVal, arrayHolder, currentLocation]);
 
   useEffect(() => {
     searchFilterFunction();
-  }, [searchVal, searchFilterFunction]);
+  }, [searchVal, currentLocation]);
 
   const cachedMutatedData = React.useMemo(() => {
     if (loading || error) {
@@ -120,11 +120,12 @@ const Location = ({navigation}) => {
       latitudeDelta: 0.015 * 8,
       longitudeDelta: 0.0121 * 8,
     });
-
-    if (selectedLocationId === item.bookerLocationId) {
-      setSelectedLocation(-1);
-    } else {
-      setSelectedLocation(item.bookerLocationId);
+    if (item.bookerLocationId) {
+      if (selectedLocationId === item.bookerLocationId) {
+        setSelectedLocation(-1);
+      } else {
+        setSelectedLocation(item.bookerLocationId);
+      }
     }
   };
 
@@ -149,7 +150,7 @@ const Location = ({navigation}) => {
         style={{
           flex: 1,
         }}
-        initialRegion={coords}
+        initialRegion={searchVal.length ? coords : currentLocation}
         region={coords}>
         {get(data, 'storeCollection')
           ? allLocations.map((e, i) => (

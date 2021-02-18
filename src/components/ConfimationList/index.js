@@ -37,7 +37,7 @@ const ConfirmationList = ({item, index, data}) => {
           /><Text>Confirm</Text>
           <View>
             <Text style={styles.infoText}>
-              {startTime.format('DD / MM')}
+              {startTime.format('MM / DD')}
             </Text>
             <Text style={styles.bottomText}>
               {startTime.diff(moment(new Date()), 'days')}
