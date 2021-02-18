@@ -1,6 +1,6 @@
 import {gql} from '@apollo/client';
 
-export const storeCollectionQuery = (storeType='Drybar Shop') => gql`
+export const storeCollectionQuery = (storeType = 'Drybar Shop') => gql`
   {
     storeCollection(skip: 0, limit: 1000, where:{AND: [{type: "${storeType}"}]}) {
       items {
@@ -27,7 +27,7 @@ export const screenAddOnsCollections = () => gql`
         }
         marketingComponentsCollection {
           items {
-            ...on MarketingImage {
+            ... on MarketingImage {
               desktopMedia {
                 url
               }
@@ -35,8 +35,8 @@ export const screenAddOnsCollections = () => gql`
                 url
               }
             }
-            ...on MarketingCard {
-              sys{
+            ... on MarketingCard {
+              sys {
                 id
               }
               image {
@@ -74,7 +74,7 @@ export const screenAddOnsCollections = () => gql`
   }
 `;
 
-export const screenPrivacyPolicy = (id="3M4G7zZEh7x6gdjhOOTKVA") => gql`
+export const screenPrivacyPolicy = (id = '3M4G7zZEh7x6gdjhOOTKVA') => gql`
   {
     screen(id: "${id}") {
       title
@@ -101,10 +101,11 @@ export const screenPrivacyPolicy = (id="3M4G7zZEh7x6gdjhOOTKVA") => gql`
   }
 `;
 
-const id = '3Aw4uPJ7h8eRHBavDxoh0t'
+const id = '3Aw4uPJ7h8eRHBavDxoh0t';
 
-export const screenBarfly = () => gql`{
-  barfly(id: "3Aw4uPJ7h8eRHBavDxoh0t") {
+export const screenBarfly = () => gql`
+  {
+    barfly(id: "3Aw4uPJ7h8eRHBavDxoh0t") {
       membershipsCollection(limit: 2) {
         items {
           title
@@ -147,7 +148,7 @@ export const screenBarfly = () => gql`{
         }
       }
     }
-}
+  }
 `;
 
 export const productInformationCollection = (productID) => gql`{
