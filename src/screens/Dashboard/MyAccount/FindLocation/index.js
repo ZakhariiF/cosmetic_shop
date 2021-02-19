@@ -47,7 +47,7 @@ const FindLocation = ({navigation}) => {
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const {data: retailStores} = useQuery(storeCollectionQuery('Retail Store'));
   const mapRef = useRef(null);
-  const [selectedLocationId, setSelectedLocation] = useState(-1);
+  const [selectedLocationIndex, setSelectedLocation] = useState(-1);
 
   const [coords, setCoords] = useState({
     latitude: 34.0577908,
@@ -107,7 +107,7 @@ const FindLocation = ({navigation}) => {
     return data;
   }, [loading, error, data]);
 
-  const onMarker = (item) => {
+  const onMarker = (item, idx) => {
     // childRef.current.onMin();
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
@@ -116,13 +116,12 @@ const FindLocation = ({navigation}) => {
       longitudeDelta: 0.0121 * 8,
     });
 
-    if (item.bookerLocationId) {
-      if (selectedLocationId === item.bookerLocationId) {
-        setSelectedLocation(-1);
-      } else {
-        setSelectedLocation(item.bookerLocationId);
-      }
+    if (selectedLocationIndex === idx) {
+      setSelectedLocation(-1);
+    } else {
+      setSelectedLocation(idx);
     }
+
   };
 
   const setCenter = (item) => {
@@ -224,9 +223,9 @@ const FindLocation = ({navigation}) => {
               longitudeDelta: 0.0121 * 8,
             }}
             animation
-            onPress={() => onMarker(e)}>
+            onPress={() => onMarker(e, i)}>
             <CustomMapMarker
-              selected={selectedLocationId === e.bookerLocationId}
+              selected={selectedLocationIndex === i}
               item={e}
               navigation={navigation}
               currentLocation={currentLocation}
