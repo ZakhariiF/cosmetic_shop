@@ -112,11 +112,11 @@ const Review = ({navigation, route}) => {
       ),
       AppointmentTreatmentDTOs: items,
       Customer: {
-        FirstName: get(userInfo, 'profile.firstName', ''),
-        LastName: get(userInfo, 'profile.lastName', ''),
-        Email: get(userInfo, 'profile.email', ''),
-        HomePhone: get(userInfo, 'profile.mobilePhone', ''),
-        ID: get(userInfo, 'profile.bookerId', ''),
+        FirstName: get(userInfo, 'firstname', ''),
+        LastName: get(userInfo, 'lastname', ''),
+        Email: get(userInfo, 'preferred_username', ''),
+        HomePhone: get(userInfo, 'primaryPhone', ''),
+        ID: get(userInfo, 'bookerID', ''),
         SendEmail: true,
       },
       // AppointmentPayment: {
@@ -128,11 +128,9 @@ const Review = ({navigation, route}) => {
       Notes: route.params.Notes || '',
     };
 
-    console.log('apt obj>>>>>', obj);
-
     dispatch(createAppointment(obj)).then((res) => {
       if (res.payload && res.payload.IsSuccess) {
-        dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
+        dispatch(getAppointments(get(userInfo, 'bookerID', '')));
         navigation.navigate('Confirmation', {
           apptInfo: res.payload.Appointment,
         });
@@ -156,11 +154,11 @@ const Review = ({navigation, route}) => {
         EndDateTimeOffset: endTime,
         TreatmentID: totalGuests[i]?.services.ID,
         Guest: {
-          FirstName: get(userInfo, 'profile.firstName', ''),
-          LastName: get(userInfo, 'profile.lastName', ''),
-          Email: get(userInfo, 'profile.email', ''),
-          HomePhone: get(userInfo, 'profile.mobilePhone', ''),
-          ID: get(userInfo, 'profile.bookerId', ''),
+          FirstName: get(userInfo, 'firstname', ''),
+          LastName: get(userInfo, 'lastname', ''),
+          Email: get(userInfo, 'preferred_username', ''),
+          HomePhone: get(userInfo, 'primaryPhone', ''),
+          ID: get(userInfo, 'bookerID', ''),
         },
         AppointmentNotes:
           totalGuests[i].extension && totalGuests[i].extension.name === 'Yes'
@@ -175,13 +173,13 @@ const Review = ({navigation, route}) => {
   const bookApptGuest = () => {
     let obj = {
       LocationID: get(selectedLocation, 'bookerLocationId', ''),
-      GroupName: `${get(userInfo, 'profile.firstName', '')}'s friends`,
+      GroupName: `${get(userInfo, 'firstname', '')}'s friends`,
       ItineraryItems: guestList(),
     };
 
     dispatch(createGuestAppointment(obj)).then((res) => {
       if (res.payload && res.payload.IsSuccess) {
-        dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
+        dispatch(getAppointments(get(userInfo, 'bookerID', '')));
         navigation.navigate('Confirmation', {
           apptInfo: res.payload.Appointment,
         });

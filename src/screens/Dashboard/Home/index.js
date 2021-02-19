@@ -22,8 +22,8 @@ import {getAppointments} from '../thunks';
 import {useDispatch, useSelector} from 'react-redux';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
-import {getCustomerInfo} from 'screens/Auth/thunks';
-import {greetings, mapGraphqlToNavigator} from 'utils';
+import {getCustomerInfo, loginSuccess} from 'screens/Auth/thunks';
+
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
 import {
   getLocations,
@@ -35,6 +35,7 @@ import moment from 'moment';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 import Radar from 'react-native-radar';
+import {getUser} from '@okta/okta-react-native';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ const Home = ({navigation}) => {
   const [backpermission, setbackpermission] = useState(false);
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
+  const customerId = get(userInfo, 'bookerID');
 
   React.useMemo(() => {
     if (loading || error) {
@@ -57,17 +59,24 @@ const Home = ({navigation}) => {
   }, [loading, error, data]);
 
   useEffect(() => {
-    getAppts();
-    getCustomerDetails();
-    getHomeData();
-    hasRadarPermission();
+    if (customerId) {
+      getAppts();
+      getCustomerDetails();
+      getHomeData();
+      hasRadarPermission();
+    } else {
+      getUserInfo();
+    }
   }, []);
 
-  const getCustomerDetails = () =>
-    dispatch(getCustomerInfo(get(userInfo, 'profile.bookerId', '')));
+  const getUserInfo = async () => {
+    const user = await getUser();
+    dispatch(loginSuccess(user))
+  }
 
-  const getAppts = () =>
-    dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
+  const getCustomerDetails = () => dispatch(getCustomerInfo(customerId));
+
+  const getAppts = () => dispatch(getAppointments(customerId));
 
   const getHomeData = async () => {
     try {
@@ -183,7 +192,7 @@ const Home = ({navigation}) => {
         }>
         <View>
           <Text style={styles.hiText}>
-            Hi {get(userInfo, 'profile.firstName', 'Emily')}
+            Hi {get(userInfo, 'firstname', 'Emily')}
           </Text>
 
           <UpcomingAppts

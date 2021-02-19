@@ -33,7 +33,7 @@ const Addcc = () => {
     const [month, year] = get(cardInfo, 'values.expiry', '').split('/')
     const data = {
       SpaID: location.bookerLocationId,
-      CustomerID: get(userInfo, 'profile.bookerId', ''),
+      CustomerID: get(userInfo, 'bookerID', ''),
       CreditCard: {
         Type: {
           ID: 2,

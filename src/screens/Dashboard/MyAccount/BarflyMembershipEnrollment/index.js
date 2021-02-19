@@ -73,7 +73,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
   }, [route]);
 
   useEffect(() => {
-    const customerId = get(userInfo, 'profile.bookerId');
+    const customerId = get(userInfo, 'bookerID');
     if (customerId) {
       dispatch(getCustomerDetails(customerId));
     }
