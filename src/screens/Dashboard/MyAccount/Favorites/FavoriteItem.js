@@ -1,9 +1,12 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {Colors, Fonts, Images} from 'constant';
 import {get} from 'lodash';
+import {distance} from 'utils';
 
-const FavoriteItem = ({item, showHeart, onFavIcon, isFav}) => {
+const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -31,14 +34,26 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav}) => {
             />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.shopButton}>
+          <TouchableOpacity style={styles.shopButton} onPress={() => navigation.navigate('ShopDetail' ,{item})}>
             <Text style={styles.shopText}>View Shop</Text>
           </TouchableOpacity>
         )}
       </View>
 
       <View style={styles.bottomContainer}>
-        <Text style={styles.miles}>3.8 miles away</Text>
+        {
+          currentLocation && <Text style={styles.miles}>
+            {Math.round(
+              distance(
+                currentLocation.latitude,
+                currentLocation.longitude,
+                get(item, 'contact.coordinates[0]', 34.1434376),
+                get(item, 'contact.coordinates[1]', 34.1434376),
+              ),
+            )}{' '}
+            miles away
+          </Text>
+        }
 
         <View style={[styles.row, {alignItems: 'center'}]}>
           <Image source={Images.phone} />

@@ -2,9 +2,9 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import {Colors, Fonts, Images} from 'constant';
 import {get} from 'lodash';
-import {call} from 'utils';
+import {call, distance} from 'utils';
 
-const FavoriteSearchItem = ({item, onFavIcon, isFav}) => {
+const FavoriteSearchItem = ({item, onFavIcon, isFav, currentLocation}) => {
   return (
     <View style={styles.container}>
       <Image source={Images.notice} style={styles.noticeIcon} />
@@ -36,7 +36,19 @@ const FavoriteSearchItem = ({item, onFavIcon, isFav}) => {
         </Text>
 
         <View style={styles.bottomContainer}>
-          <Text style={styles.miles}>3.8 miles away</Text>
+          {
+            currentLocation && <Text style={styles.miles}>
+              {Math.round(
+                distance(
+                  currentLocation.latitude,
+                  currentLocation.longitude,
+                  get(item, 'contact.coordinates[0]', 34.1434376),
+                  get(item, 'contact.coordinates[1]', 34.1434376),
+                ),
+              )}{' '}
+              miles away
+            </Text>
+          }
 
           <View
             style={[styles.row, {alignItems: 'center'}]}

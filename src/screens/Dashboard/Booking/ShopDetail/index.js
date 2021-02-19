@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Image, ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import rootStyle from 'rootStyle';
 import Header from 'components/Header/Header';
@@ -6,9 +6,9 @@ import {Images} from 'constant';
 import styles from './styles';
 import Button from 'components/Button';
 import {get} from 'lodash';
-import {openMaps} from 'utils';
+import {distance, openMaps, requestUserLocationLocation} from 'utils';
 import {useDispatch} from 'react-redux';
-import { setLocation, setmemberCount } from '../thunks';
+import {setLocation, setmemberCount} from '../thunks';
 
 const ShopDetail = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -17,8 +17,30 @@ const ShopDetail = ({navigation, route}) => {
   } = route;
   const operatingMessage = get(item, 'settings.operatingMessage', '');
   const arrivalInformation = get(item, 'arrivalInformation', '');
+  const socialData = get(item, 'contact.social.instagram');
 
-  console.log('Shop Detail:', item);
+  console.log('ShopDetail:', item);
+
+  const [currentLocation, setCurrentLocation] = useState(null);
+
+  const getUserLocation = async () => {
+    try {
+      const position = await requestUserLocationLocation();
+      const latitude = get(position, 'coords.latitude');
+      const longitude = get(position, 'coords.longitude');
+
+      setCurrentLocation({
+        latitude,
+        longitude,
+      });
+    } catch (e) {
+      console.log('Can not get the current user location');
+    }
+  };
+
+  useEffect(() => {
+    getUserLocation();
+  }, []);
 
   const onBook = () => {
     if (fromFindLoc) {
@@ -26,7 +48,9 @@ const ShopDetail = ({navigation, route}) => {
         screen: 'Coming',
         initial: false,
       });
-    } else navigation.navigate('Coming');
+    } else {
+      navigation.navigate('Coming');
+    }
     dispatch(setLocation(item));
     dispatch(setmemberCount([]));
   };
@@ -58,7 +82,20 @@ const ShopDetail = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.shopMiles}>3.8 miles away</Text>
+            {currentLocation && (
+              <Text style={styles.shopMiles}>
+                {Math.round(
+                  distance(
+                    currentLocation.latitude,
+                    currentLocation.longitude,
+                    get(item, 'contact.coordinates[0]', 34.1434376),
+                    get(item, 'contact.coordinates[1]', 34.1434376),
+                  ),
+                )}{' '}
+                miles away
+              </Text>
+            )}
+
             <View style={rootStyle.seprator} />
             <Text style={styles.desc}>{get(item, 'information')}</Text>
           </View>
@@ -69,27 +106,27 @@ const ShopDetail = ({navigation, route}) => {
             </Text>
             <Image style={styles.callIcon} source={Images.call} />
           </View>
-          <View style={[styles.phoneContainer, {marginVertical: 0}]}>
-            <Text style={rootStyle.commonText}>
-              {get(item, 'contact.social.instagram')}
-            </Text>
-            <Image source={Images.insta} />
-          </View>
+          {(socialData || '') !== '' && (
+            <View style={[styles.phoneContainer, {marginVertical: 0}]}>
+              <Text style={rootStyle.commonText}>
+                {get(item, 'contact.social.instagram')}
+              </Text>
+              <Image source={Images.insta} />
+            </View>
+          )}
 
           <Text style={styles.hour}>Hours</Text>
-          <View style={styles.hourContainer}>
-            <View style={styles.weekContainer}>
-              <Text style={styles.weekDay}>Saturday</Text>
-              <Text style={styles.weekDay}>8:00am to 8:00pm</Text>
-            </View>
 
-            <View style={styles.weekContainer}>
-              <Text style={styles.weekDay}>Sunday</Text>
-              <Text style={styles.weekDay}>8:00am to 8:00pm</Text>
-            </View>
+          <View style={styles.hourContainer}>
+            {get(item, 'settings.operatingHours', []).map((d, idx) => (
+              <View style={styles.weekContainer} key={idx}>
+                <Text style={styles.weekDay}>{d[0]}</Text>
+                <Text style={styles.weekDay}>{d[1]}</Text>
+              </View>
+            ))}
           </View>
 
-          {operatingMessage !== '' && (
+          {(operatingMessage || '') !== '' && (
             <>
               <Text style={styles.hour}>Operating Message</Text>
               <View style={styles.hourContainer}>
@@ -98,7 +135,7 @@ const ShopDetail = ({navigation, route}) => {
             </>
           )}
 
-          {arrivalInformation !== '' && (
+          {(arrivalInformation || '') !== '' && (
             <>
               <Text style={styles.hour}>Parking Information</Text>
               <View style={styles.hourContainer}>
