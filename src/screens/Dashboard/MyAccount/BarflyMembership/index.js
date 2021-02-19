@@ -9,16 +9,16 @@ import {
   ImageBackground,
   FlatList,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import {useQuery} from '@apollo/client';
-import Dialog from 'react-native-dialog';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import Header from 'components/Header/Header';
 import Button from 'components/Button';
 import {Colors, Images} from 'constant';
 import {geolocateSearchLocation} from 'services/Google';
-import {findStoresFromPointWithTitle} from 'utils';
+import {findStoresFromPointWithTitle, openMaps} from 'utils';
 import {screenBarfly, storeCollectionQuery} from 'constant/query';
 import Indicator from 'components/Indicator';
 import SearchBar from 'components/SearchBar';
@@ -28,6 +28,7 @@ import rootStyle from 'rootStyle';
 import * as API from 'services';
 
 import styles from './styles';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const BarflyMembership = ({navigation}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -48,6 +49,7 @@ const BarflyMembership = ({navigation}) => {
   const [membershipDataByLocation, setMembershipDataByLocation] = useState([]);
   const [search, setSearch] = useState('');
   const [searchedLocations, setSearchedLocations] = useState([]);
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const [selectedMembership, setSelectedMembership] = useState(null);
   const dispatch = useDispatch();
 
@@ -57,8 +59,6 @@ const BarflyMembership = ({navigation}) => {
     }
     setMembershipData(get(data, 'barfly.membershipsCollection.items', []));
   }, [loading, error, data]);
-
-  console.log('Membership Data:', data);
 
   useEffect(() => {
     const customerId = get(userInfo, 'profile.bookerId');
@@ -97,7 +97,11 @@ const BarflyMembership = ({navigation}) => {
         geolocatedPoints,
         search,
       );
-      setSearchedLocations(newData);
+
+      if (newData.length) {
+        setShowLocationModal(true);
+        setSearchedLocations(newData);
+      }
     }
   };
 
@@ -111,8 +115,18 @@ const BarflyMembership = ({navigation}) => {
   };
 
   const LocationItem = ({item}) => (
-    <View>
+    <View style={styles.storeItemWrapper}>
       <View style={styles.storeTitleWrapper}>
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              setShowLocationModal(false);
+              navigation.navigate('ShopDetail', {item});
+            }}
+            style={styles.favIcon}>
+            <Image source={Images.notice} />
+          </TouchableOpacity>
+        </View>
         <Text style={styles.storeTitle}>{get(item, 'title')}</Text>
         <Button
           containerStyle={styles.storeSelectButtonContainer}
@@ -121,15 +135,27 @@ const BarflyMembership = ({navigation}) => {
           onButtonPress={() => onSelectLocation(item)}
         />
       </View>
-      <View style={styles.storeAddress}>
-        <EvilIcons name="location" size={26} />
-        <View>
-          <Text>
-            {get(item, 'contact.city')}, {get(item, 'contact.state')},{' '}
-            {get(item, 'contact.postalCode')}
-          </Text>
-          <Text>{get(item, 'contact.street1')}</Text>
+      <View style={styles.storeDec}>
+        <View style={styles.storeAddressWrapper}>
+          <EvilIcons name="location" size={26} />
+          <View>
+            <Text style={styles.storeAddress}>
+              {get(item, 'contact.city')}, {get(item, 'contact.state')},{' '}
+              {get(item, 'contact.postalCode')}
+            </Text>
+            <Text>{get(item, 'contact.street1')}</Text>
+          </View>
         </View>
+        <TouchableOpacity
+          onPress={() =>
+            openMaps(
+              get(item, 'title'),
+              get(item, 'contact.coordinates[0]'),
+              get(item, 'contact.contact.coordinates[1]'),
+            )
+          }>
+          <Text style={styles.storeDirection}>Get Directions</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -157,40 +183,40 @@ const BarflyMembership = ({navigation}) => {
               onSearch={searchFilterFunction}
             />
 
-            <View>
-              <Dialog.Container
-                visible={searchedLocations && searchedLocations.length > 0}>
-                <Dialog.Title>Select Preferred Store</Dialog.Title>
-                <ScrollView>
-                  <View>
-                    <FlatList
-                      data={searchedLocations}
-                      contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}
-                      renderItem={({item}) => (
-                        <LocationItem item={item} key={item.bookerLocationId} />
-                      )}
+            <Modal visible={showLocationModal}>
+              <View style={{backgroundColor: Colors.modal_bg}}>
+
+                <View style={{margin: 40, backgroundColor: Colors.bg, padding: 10}}>
+                  <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20}}>
+                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>Select Preferred Store</Text>
+                    <MaterialCommunityIcons
+                      name="close"
+                      size={25}
+                      color={Colors.header_title}
+                      onPress={() => setShowLocationModal(false)}
                     />
                   </View>
-                </ScrollView>
-                <Dialog.Button
-                  color="black"
-                  label="Close"
-                  onPress={closeSelectionLocationDialog}
-                />
-                {/* <Dialog.Button label="" onPress={handleDelete} /> */}
-              </Dialog.Container>
-            </View>
+                  <ScrollView>
+                    <View>
+                      <FlatList
+                        data={searchedLocations}
+                        contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}
+                        renderItem={({item}) => (
+                          <LocationItem item={item} key={item.bookerLocationId} />
+                        )}
+                      />
+                    </View>
+                  </ScrollView>
+                </View>
+              </View>
+            </Modal>
           </View>
 
           <View style={styles.barflyContainer}>
             <Text style={styles.barfly}>Barfly Membership Options</Text>
           </View>
 
-          <View
-            style={[
-              styles.topContainer,
-            ]}>
-
+          <View style={[styles.topContainer]}>
             <Image style={styles.heart} source={Images.square_heart} />
             <View style={styles.headerContainer}>
               <View style={styles.dottBorderContainer}>
@@ -240,19 +266,16 @@ const BarflyMembership = ({navigation}) => {
                   customerMembership.ID ===
                     get(membershipDataByLocation, '[0].ID')
                 }
-                onButtonPress={() => upgradeMembership(get(membershipDataByLocation, '[0]'))}
+                onButtonPress={() =>
+                  upgradeMembership(get(membershipDataByLocation, '[0]'))
+                }
               />
             </View>
           </View>
 
           <View style={rootStyle.seprator} />
 
-          <View
-            style={[
-              styles.topContainer,
-              {marginTop: 15},
-            ]}>
-
+          <View style={[styles.topContainer, {marginTop: 15}]}>
             <Image style={styles.heart} source={Images.black_heart} />
             <View
               style={[
@@ -307,7 +330,9 @@ const BarflyMembership = ({navigation}) => {
                   customerMembership.ID ===
                     get(membershipDataByLocation, '[1].ID')
                 }
-                onButtonPress={() => upgradeMembership(get(membershipDataByLocation, '[1]'))}
+                onButtonPress={() =>
+                  upgradeMembership(get(membershipDataByLocation, '[1]'))
+                }
               />
             </View>
           </View>

@@ -157,18 +157,22 @@ export default StyleSheet.create({
   plusContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 10,
   },
   percentageText: {
     fontSize: 13,
     color: Colors.header_title,
     fontFamily: Fonts.AvenirNextBold,
+    width: 200,
+    textAlign: 'right',
   },
   desc: {
     fontSize: 15,
     color: Colors.header_title,
     fontFamily: Fonts.AvenirNextRegular,
     marginLeft: 20,
+    width: 200
   },
   price: {
     fontSize: 18,
@@ -213,15 +217,33 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%'
+    width: '100%',
+  },
+  storeItemWrapper: {
+    padding: 10,
+    backgroundColor: Colors.bg,
+    borderTopColor: Colors.seprator,
+    borderTopWidth: 1,
+    borderStyle: 'solid',
+    marginBottom: 20,
   },
   storeTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    maxWidth: '50%'
+    fontSize: 15,
+    maxWidth: '50%',
+  },
+  storeAddressWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    maxWidth: '50%',
   },
   storeAddress: {
-    display: 'flex',  
-    flexDirection: 'row'
-  } 
+    fontSize: 13,
+  },
+  storeDec: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  storeDirection: {
+    textDecorationLine: 'underline',
+  },
 });
