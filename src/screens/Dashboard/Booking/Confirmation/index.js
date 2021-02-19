@@ -23,23 +23,38 @@ import moment from 'moment';
 import {bannerQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 
-
-
 const Confirmation = () => {
   const banner_Query = bannerQuery();
   console.log(useQuery(banner_Query));
   const {data} = useQuery(banner_Query);
-  const bannerImageUrl = get(data, 'screenCollection.items[0].marketingComponentsCollection.items[0].mobileMedia.url');
+  const bannerImageUrl = get(
+    data,
+    'screenCollection.items[0].marketingComponentsCollection.items[0].mobileMedia.url',
+  );
   console.log(bannerImageUrl);
   const totalGuests = useSelector((state) => state.booking.totalGuests);
+
+  const extensionAddon = useSelector((state) => state.booking.extensionAddon);
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
   const openCalendarApp = () => {
-    const startDateTimeString = totalGuests[0].date.time.startDateTime;
-    const startDateTime = new Date(startDateTimeString);
-    const endDateTimeString = totalGuests[0].date.time.endDateTime;
-    const endDateTime = new Date(endDateTimeString);
+    const startDateTime = get(totalGuests, '[0].date.time.startDateTime');
+    if (!startDateTime) {
+      return;
+    }
+
+    let endDateTime = moment(startDateTime).add(
+      get(totalGuests, '[0].services.TotalDuration', 0),
+      'minutes',
+    );
+
+    const extension = get(totalGuests, '[0].extension');
+
+    if (extension && extension.name === 'Yes' && extensionAddon) {
+      endDateTime = endDateTime.add(extensionAddon.totalDuration, 'minutes');
+    }
+
     const eventConfig = {
       title: 'Drybar booking',
       startDate: moment.utc(startDateTime).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
@@ -53,7 +68,7 @@ const Confirmation = () => {
         // handle error such as when user rejected permissions
         console.warn(error);
       });
-  }
+  };
   return (
     <View style={rootStyle.container}>
       <AuthHeader />
@@ -68,7 +83,9 @@ const Confirmation = () => {
           ListHeaderComponent={() => (
             <>
               <Text style={styles.heading}>
-                Please don’t blow us off! If you can’t make your appointment, please be sure to cancel so we can try to fill your spot. Thank you!
+                Please don’t blow us off! If you can’t make your appointment,
+                please be sure to cancel so we can try to fill your spot. Thank
+                you!
               </Text>
               <TouchableOpacity
                 onPress={() =>
@@ -110,7 +127,7 @@ const Confirmation = () => {
                 />
                 <DottedView containerStyle={{flex: 1}} />
               </View>
-              
+
               <Image
                 resizeMode="contain"
                 source={{uri: bannerImageUrl}}
@@ -168,14 +185,14 @@ const styles = StyleSheet.create({
   chaserIcon: {
     width: '94%',
     alignSelf: 'center',
-    aspectRatio: 1
+    aspectRatio: 1,
   },
   saveButtonContainer: {
-    width:'100%',
-    alignItems:'center'
+    width: '100%',
+    alignItems: 'center',
   },
   saveButton: {
     ...rootStyle.commonText,
-    textDecorationLine: 'underline'
-  }
+    textDecorationLine: 'underline',
+  },
 });
