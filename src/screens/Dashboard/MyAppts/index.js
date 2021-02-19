@@ -39,7 +39,7 @@ const MyAppts = ({navigation}) => {
   }, []);
 
   const getAppts = () =>
-    dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
+    dispatch(getAppointments(get(userInfo, 'bookerID', '')));
 
   const onEdit = (item, location, isRebook = false) => {
     const services = get(item, 'appointment.AppointmentTreatments', []).filter(

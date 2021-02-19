@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from 'constant/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {refreshTokens, getUserFromIdToken} from '@okta/okta-react-native';
+import {refreshTokens} from '@okta/okta-react-native';
 const checkStatus = (status) => status >= 200 && status < 300;
 
 const client = axios.create({

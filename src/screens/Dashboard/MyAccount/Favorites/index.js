@@ -101,7 +101,7 @@ const Favorites = () => {
 
   const onFav = (item) => {
     const obj = {
-      userId: get(userInfo, 'profile.bookerId', ''),
+      userId: get(userInfo, 'bookerID', ''),
       locId: get(item, 'bookerLocationId', '1639'),
     };
 

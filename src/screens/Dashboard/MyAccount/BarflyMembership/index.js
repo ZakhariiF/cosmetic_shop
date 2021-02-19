@@ -61,7 +61,7 @@ const BarflyMembership = ({navigation}) => {
   }, [loading, error, data]);
 
   useEffect(() => {
-    const customerId = get(userInfo, 'profile.bookerId');
+    const customerId = get(userInfo, 'bookerID');
     const locationId = get(customerLocation, 'bookerLocationId');
     if (locationId && customerId) {
       dispatch(getCustomerMembership(customerId, locationId));

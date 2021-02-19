@@ -16,14 +16,14 @@ const AccountInfo = ({navigation}) => {
   const isLoading = useSelector((state) => state.auth.isUpdate);
   const token = useSelector((state) => state.auth.token);
   const [firstName, setFirstName] = useState(
-    get(userInfo, 'profile.firstName', ''),
+    get(userInfo, 'firstname', ''),
   );
   const [lastName, setlastName] = useState(
-    get(userInfo, 'profile.lastName', ''),
+    get(userInfo, 'lastname', ''),
   );
-  const [email, setEmail] = useState(get(userInfo, 'profile.login', ''));
+  const [email, setEmail] = useState(get(userInfo, 'preferred_username', ''));
   const [phoneNumber, setphoneNumber] = useState(
-    get(userInfo, 'profile.mobilePhone', ''),
+    get(userInfo, 'primaryPhone', ''),
   );
 
   const onUpdate = () => {

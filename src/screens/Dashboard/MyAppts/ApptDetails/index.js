@@ -142,7 +142,7 @@ const ApptDetails = ({route, navigation}) => {
   };
 
   const getAppts = () =>
-    dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
+    dispatch(getAppointments(get(userInfo, 'bookerID', '')));
 
   return (
     <View style={rootStyle.container}>

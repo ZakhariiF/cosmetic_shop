@@ -4,28 +4,16 @@ import Button from 'components/Button';
 import Authheader from 'components/Header/Authheader';
 import Header from 'components/Header/Header';
 import Input from 'components/Input';
-import styles from './styles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MParticle from 'react-native-mparticle';
-import SocialLogin from 'components/SocialLogin';
-import {Images} from 'constant';
-import configFile from 'constant/config';
+import {signIn} from '@okta/okta-react-native';
+
 import {isValidEmail} from 'utils';
 import {onlogin, _onlogin} from '../thunks';
-import {types} from '../ducks'
 import {useDispatch, useSelector} from 'react-redux';
+
 import Indicator from 'components/Indicator';
-import axios from 'axios';
-
-import {
-  createConfig,
-  signIn,
-  signOut,
-  EventEmitter
-} from '@okta/okta-react-native';
-
-
-// rohit123
+import styles from './styles';
 
 const Login = ({navigation}) => {
   const dispatch = useDispatch();
@@ -36,40 +24,31 @@ const Login = ({navigation}) => {
   const isloading = useSelector((state) => state.auth.isLoading);
   const [loading, setLoading] = useState(false);
   const isValidate = !isValidEmail(email) || password.length < 6 ? true : false;
-  
+
   const onLogin = async () => {
     MParticle.logEvent('User Attempts to Login', MParticle.EventType.Other, {
       'Source Page': 'Login',
     });
 
-    if (Platform.OS == 'ios') {
-      await createConfig({
-        clientId: configFile.clientId,
-        redirectUri: configFile.redirectUri,
-        endSessionRedirectUri: configFile.endSessionRedirectUri,
-        discoveryUri: configFile.discoveryUri,
-        scopes: configFile.scopes,
-        requireHardwareBackedKeyStore: false
-      });
-
+    if (Platform.OS === 'ios') {
       setLoading(true);
       signIn({username: email, password})
-      .then(token => {
+        .then((token) => {
           dispatch(_onlogin(token, email, password));
-        setLoading(false);
-      })
-      .catch(e => {
-        MParticle.logEvent('User fails to Login', MParticle.EventType.Other, {
-          'Source Page': 'Login',
-          'Error Details': JSON.stringify(e),
-          'Email': email,
+          setLoading(false);
+        })
+        .catch((e) => {
+          MParticle.logEvent('User fails to Login', MParticle.EventType.Other, {
+            'Source Page': 'Login',
+            'Error Details': JSON.stringify(e),
+            Email: email,
+          });
+          console.log(e);
+          setLoading(false);
+          Alert.alert('Login Error', e.detail.message);
         });
-        console.log(e);
-        setLoading(false);
-        Alert.alert("Login Error", e.detail.message);
-      })
     } else {
-      console.log("start logging in********************");
+      console.log('start logging in********************');
       dispatch(onlogin(email, password));
     }
   };
@@ -123,7 +102,7 @@ const Login = ({navigation}) => {
         </View>
       </KeyboardAwareScrollView>
 
-      {(isloading || loading)  ? <Indicator /> : null}
+      {isloading || loading ? <Indicator /> : null}
     </View>
   );
 };

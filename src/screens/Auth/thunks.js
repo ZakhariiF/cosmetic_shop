@@ -1,33 +1,32 @@
 import {get} from 'lodash';
-import MParticle from "react-native-mparticle";
+import MParticle from 'react-native-mparticle';
 import {AlertHelper} from 'utils/AlertHelper';
 import {authActions} from './ducks';
+import { getUser, signOut } from "@okta/okta-react-native";
 import * as API from 'services';
 
 export const _onlogin = (token, email, password) => async (dispatch) => {
-
   dispatch(authActions.loginRequest());
-  
-  try {
 
+  try {
     const data = await API._login(token, email, password);
 
     if (data) {
-      const userInfo = await API.getUser(get(data, '_embedded.user.id'));
-      const request = new MParticle.IdentityRequest()
+      const userInfo = await getUser();
+      const request = new MParticle.IdentityRequest();
       request.email = email;
-      request.setCustomerID(get(userInfo, 'profile.bookerId'));
+      request.setCustomerID(get(userInfo, 'bookerID'));
 
       MParticle.Identity.login(request, (error, userId) => {
         console.log('MParticle Identify:', error, userId);
       });
 
       MParticle.logEvent('Login Successful', MParticle.EventType.Other, {
-        'Source Page': 'Login'
+        'Source Page': 'Login',
       });
-      console.log('userInfo get of Okta sever', userInfo);
+
       let userData = data;
-      userData['userInfo'] = userInfo;
+      userData.userInfo = userInfo;
       return dispatch(authActions.loginSuccess(userData));
     } else {
       return dispatch(authActions.loginError());
@@ -37,28 +36,33 @@ export const _onlogin = (token, email, password) => async (dispatch) => {
     if (error && error.response) {
       console.log('error here', error, error.response);
     } else {
-      console.log('error here', error)
+      console.log('error here', error);
     }
     AlertHelper.showError(
       get(error, 'response.data.errorSummary', 'Server Error'),
     );
     return dispatch(authActions.loginError());
   }
+};
 
-}
+export const loginSuccess = (user) => async (dispatch) => {
+  dispatch(
+    authActions.loginSuccess({
+      userInfo: user,
+    }),
+  );
+};
+
 export const onlogin = (email, password) => async (dispatch) => {
   dispatch(authActions.loginRequest());
 
   try {
     // const data = await oktaSigin(email, password);
     const data = await API.login(email, password);
-    console.log('user data of Main server', data);
     if (data) {
       const userInfo = await API.getUser(get(data, '_embedded.user.id'));
-      console.log('userInfo get of Okta sever', userInfo);
       let userData = data;
-      userData['userInfo'] = userInfo;
-      console.log('user Date after success', userData);
+      userData.userInfo = userInfo;
       return dispatch(authActions.loginSuccess(userData));
     } else {
       return dispatch(authActions.loginError());
@@ -68,7 +72,7 @@ export const onlogin = (email, password) => async (dispatch) => {
     if (error && error.response) {
       console.log('error here', error, error.response);
     } else {
-      console.log('error here', error)
+      console.log('error here', error);
     }
     AlertHelper.showError(
       get(error, 'response.data.errorSummary', 'Server Error'),

@@ -27,7 +27,7 @@ const ApptHold = ({navigation, route}) => {
     const unsubscribe = navigation.addListener('focus', () => {
       dispatch(
         getCreditCard(
-          get(userInfo, 'profile.bookerId', ''),
+          get(userInfo, 'bookerID', ''),
           selectedLocation.bookerLocationId,
         ),
       );
