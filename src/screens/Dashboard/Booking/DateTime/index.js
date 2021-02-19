@@ -17,6 +17,7 @@ import {
   getEmplyeesData,
   getMultiUserDates,
   getMultiUserTimeSlots,
+  getServices,
   setmemberCount,
 } from '../thunks';
 import BookingTab from 'components/BookingTab';
@@ -34,6 +35,9 @@ const DateTime = ({navigation}) => {
   const dispatch = useDispatch();
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const activeTab = useSelector((state) => state.booking.activeGuestTab);
+
+  const fromDate = get(totalGuests, `[${activeTab}].date.date`);
+
   const isLoading = useSelector((state) => state.booking.slotsLoading);
   const multiuserSlots = useSelector((state) => state.booking.multiUserSlots);
 
@@ -42,9 +46,22 @@ const DateTime = ({navigation}) => {
     (state) => state.booking.selectedLocation,
   );
   const isEmpLoading = useSelector((state) => state.booking.isEmpLoading);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(
+    fromDate ? new Date(fromDate) : new Date(),
+  );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentWeek, setcurrentWeek] = useState([]);
+  const services = useSelector((state) => state.booking.services);
+
+  useEffect(() => {
+    if (
+      !services.length &&
+      selectedLocation &&
+      selectedLocation.bookerLocationId
+    ) {
+      dispatch(getServices(selectedLocation.bookerLocationId));
+    }
+  }, [selectedLocation]);
 
   useEffect(() => {
     var currentDate = moment(selectedDate);
@@ -61,28 +78,6 @@ const DateTime = ({navigation}) => {
     }
     setcurrentWeek(days);
   }, [selectedDate]);
-
-  useEffect(() => {
-    availableDates(new Date());
-  }, []);
-
-  let showDays = () => {
-    var currentDate = moment();
-    var weekStart = currentDate.clone().startOf('isoweek');
-    var days = [];
-
-    for (var i = 0; i <= 6; i++) {
-      days.push({
-        day: moment(weekStart).add(i, 'days').format('ddd'),
-        date: moment(weekStart).add(i, 'days').format('DD'),
-        fulldate: moment(weekStart).add(i, 'days').format(),
-        disable:
-          moment().format('DD') > moment(weekStart).add(i, 'days').format('DD'),
-      });
-    }
-
-    setcurrentWeek(days);
-  };
 
   const availableDates = (date) => {
     let multiUserobj = {
@@ -106,6 +101,7 @@ const DateTime = ({navigation}) => {
   };
 
   useEffect(() => {
+    availableDates(selectedDate);
     let multiUserobj = {
       locationId: get(selectedLocation, 'bookerLocationId', ''),
       fromDateTime: selectedDate.toISOString(),
@@ -164,7 +160,7 @@ const DateTime = ({navigation}) => {
             avItem.serviceId === item.services.ID &&
             !usedEmployees.includes(avItem.employeeId),
         )
-        .map((item) => item.employeeId);
+        .map((em) => em.employeeId);
       const employeeId = employeeIds.length > 0 ? employeeIds[0] : null;
       tempArr[idx].employees = employeeId;
 
@@ -249,7 +245,7 @@ const DateTime = ({navigation}) => {
               }
 
               tempArr[extensionIdxs[idx]].extension = {
-                ...currentItem,
+                ...tempArr[extensionIdxs[idx]].extension,
                 employee: extensionEmployee,
                 rooms: extensionroom,
                 serviceId: extensionAddon.ID,
@@ -257,7 +253,6 @@ const DateTime = ({navigation}) => {
             }
           });
         }
-
         if (tempArr.find((o) => !o.rooms || !o.employees)) {
           AlertHelper.showError('Please choose another time slot');
           return;

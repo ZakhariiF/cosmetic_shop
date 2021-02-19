@@ -8,7 +8,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/client';
 import Indicator from 'components/Indicator';
 import {cancelAppointment, getAppointments, cancelItinerary} from '../thunks';
-import {setIsEdit, setLocation, setmemberCount} from '../Booking/thunks';
+import {
+  setExtensionAddon,
+  setIsEdit,
+  setLocation,
+  setmemberCount,
+} from '../Booking/thunks';
 import moment from 'moment';
 import {get} from 'lodash';
 import EmptyContainer from 'components/EmptyContainer';
@@ -36,40 +41,81 @@ const MyAppts = ({navigation}) => {
   const getAppts = () =>
     dispatch(getAppointments(get(userInfo, 'profile.bookerId', '')));
 
-  const onEdit = (item, location, isRebook=false) => {
-    let tempArr = get(item, 'appointment.AppointmentTreatments', [])
-      .filter((service) => service.TreatmentName !== 'Extensions')
-      .map((service, index) => {
-        const timezone = moment()
-          .utcOffset(service.StartDateTimeOffset)
-          .utcOffset();
-        const startTime = moment(service.StartDateTimeOffset).utcOffset(
-          timezone,
-        );
-        const endTime = moment(service.EndDateTimeOffset).utcOffset(timezone);
-        return {
-          userType: index === 0 ? 'Me' : `Guest ${index}`,
-          date: {
-            date: moment(service.StartDateTimeOffset).format(''),
-            time: {
-              startTime: startTime.format('YYYY-MM-DDTHH:mm:ssZ'),
-              endTime: endTime.format('YYYY-MM-DDTHH:mm:ssZ'),
-              timezone,
-            },
+  const onEdit = (item, location, isRebook = false) => {
+    const services = get(item, 'appointment.AppointmentTreatments', []).filter(
+      (service) => service.TreatmentName !== 'Extensions',
+    );
+
+    const extensionData = get(
+      item,
+      'appointment.AppointmentTreatments',
+      [],
+    ).find((service) => service.TreatmentName === 'Extensions');
+
+    const checkExtension = (service) => {
+      let extension = get(item, 'appointment.AppointmentTreatments', []).find(
+        (s) =>
+          s.AppointmentID === service.AppointmentID &&
+          s.TreatmentName === 'Extensions',
+      );
+
+      if (!extension) {
+        return (
+          get(
+            item,
+            `appointments.appoint_${service.AppointmentID}.Notes`,
+            '',
+          ) || ''
+        ).includes('Extensions added.');
+      }
+      return extension;
+    };
+
+    let tempArr = services.map((service, idx) => {
+      const extension = checkExtension(service);
+
+      return {
+        userType: idx === 0 ? 'Me' : 'Guest ' + idx,
+        date: {
+          date: moment(get(service, 'StartDateTimeOffset')).format(
+            'YYYY-MM-DDTHH:mm:ssZ',
+          ),
+          time: {
+            startTime: get(service, 'StartDateTimeOffset'),
+            endTime: get(service, 'EndDateTimeOffset'),
+            timezone: moment()
+              .utcOffset(get(service, 'StartDateTimeOffset'))
+              .utcOffset(),
           },
-          rooms: service.RoomID,
-          employees: service.EmployeeID,
-          services: {
-            Name: service.TreatmentName,
-            Price: {Amount: get(service, 'TagPrice.Amount')},
-            ...service,
-          },
-          customer: item.Customer,
-        };
-      });
+        },
+
+        rooms: get(service, 'RoomID'),
+        employees: get(service, 'EmployeeID'),
+        services: {
+          Name: get(service, 'TreatmentName'),
+          Price: {Amount: get(service, 'Treatment.Price.Amount')},
+          ...service.Treatment,
+        },
+        customer: item.Customer,
+        extension: extension
+          ? {
+              price: get(extensionData, 'TagPrice.Amount', 20),
+              name: 'Yes',
+              room: get(extensionData, 'RoomID'),
+              employee: get(extensionData, 'EmployeeID'),
+            }
+          : undefined,
+      };
+    });
 
     dispatch(setLocation(location));
-
+    dispatch(
+      setExtensionAddon({
+        Name: get(extensionData, 'TreatmentName'),
+        Price: {Amount: get(extensionData, 'Treatment.Price.Amount')},
+        ...get(extensionData, 'Treatment', {}),
+      }),
+    );
     dispatch(setmemberCount(tempArr));
     dispatch(
       setIsEdit({
