@@ -13,15 +13,14 @@ const AppContainer = () => {
   // const [token, setToken] = useState(null);
 
   const getToken = useCallback(async () => {
-    console.log(token)
     if (token) {
       await AsyncStorage.setItem('token', JSON.stringify(token))
     }
-  }, [token])
+  }, [token]);
 
   useEffect(() => {
-    getToken()
-  }, [])
+    getToken();
+  }, []);
   
   return (
     <NavigationContainer ref={navigationRef}>

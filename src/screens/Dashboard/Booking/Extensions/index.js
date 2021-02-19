@@ -2,7 +2,7 @@ import CheckBox from 'components/Checkbox';
 import GuestTab from 'components/GuestTab';
 import {Colors, Fonts} from 'constant';
 import {get} from 'lodash';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -13,19 +13,32 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import rootStyle from 'rootStyle';
-import {setmemberCount} from '../thunks';
+import {setmemberCount, getServices} from '../thunks';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const data = [
-  {name: 'No', price: 0},
-  {name: 'Yes', price: 20},
-];
 
 const Extensions = ({navigation, onSkip}) => {
   const [isChecked, setChecked] = useState(false);
   const dispatch = useDispatch();
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const activeTab = useSelector((state) => state.booking.activeGuestTab);
+  const extensionAddon = useSelector((state) => state.booking.extensionAddon);
+  const selectedLocation = useSelector((state) => state.booking.selectedLocation);
+  const services = useSelector((state) => state.booking.services);
+
+  const data = [
+    {name: 'No', price: 0},
+    {name: 'Yes', price: get(extensionAddon, 'Price.Amount', 0)},
+  ];
+
+  useEffect(() => {
+    if (
+      !services.length &&
+      selectedLocation &&
+      selectedLocation.bookerLocationId
+    ) {
+      dispatch(getServices(selectedLocation.bookerLocationId));
+    }
+  }, [selectedLocation]);
 
   const renderExtension = ({item}) => {
     return (
@@ -59,6 +72,7 @@ const Extensions = ({navigation, onSkip}) => {
 
     let tempArr = [...totalGuests];
     tempArr[activeTab].extension = item;
+
     dispatch(setmemberCount(tempArr));
 
     if (!tempArr.find((i) => !i.extension)) {

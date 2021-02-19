@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import MParticle from 'react-native-mparticle';
 import {useQuery} from '@apollo/client';
@@ -23,7 +23,6 @@ const Services = ({navigation}) => {
   const activeUser = useSelector((state) => state.booking.activeGuestTab);
   const data = useSelector((state) => state.booking.services);
   const isLoading = useSelector((state) => state.booking.serviceLoading);
-  const extensionAddon = useSelector((state) => state.booking.extensionAddon);
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
@@ -32,14 +31,21 @@ const Services = ({navigation}) => {
   const [infoItem, setinfoItem] = useState({});
 
   useEffect(() => {
-    // alert(JSON.stringify(selectedLocation));
-    getData();
-  }, []);
+    if (selectedLocation && selectedLocation.bookerLocationId) {
+      getData();
+    } else {
+      navigation.navigate('Book', {
+        Screen: 'Location',
+      });
+    }
+  }, [selectedLocation]);
 
-  const getData = () => {
-    dispatch(getServices(get(selectedLocation, 'bookerLocationId', '')));
-    // dispatch(getServices(get(selectedLocation, 'bookerLocationId', '')));
-  };
+  const getData = useCallback(() => {
+    const selectedLocationId = get(selectedLocation, 'bookerLocationId', '');
+    if (selectedLocationId) {
+      dispatch(getServices(selectedLocationId));
+    }
+  }, [selectedLocation]);
 
   const onServiceList = (item) => {
     MParticle.logEvent('Select Service', MParticle.EventType.Other, {
