@@ -18,7 +18,7 @@ import UpcomingAppts from 'components/UpcomingAppts';
 import {Fonts, Images} from 'constant';
 import StyleSwiper from 'components/StyleSwiper';
 import RebookAppts from 'components/RebookAppts';
-import {getAppointments} from '../thunks';
+import {cancelAppointment, cancelItinerary, getAppointments} from '../thunks';
 import {useDispatch, useSelector} from 'react-redux';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
@@ -27,6 +27,7 @@ import {getCustomerInfo, loginSuccess} from 'screens/Auth/thunks';
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
 import {
   getLocations,
+  setExtensionAddon,
   setIsEdit,
   setLocation,
   setmemberCount,
@@ -36,6 +37,7 @@ import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 import Radar from 'react-native-radar';
 import {getUser} from '@okta/okta-react-native';
+import Dialog from 'react-native-dialog';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -48,6 +50,7 @@ const Home = ({navigation}) => {
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const customerId = get(userInfo, 'bookerID');
+  const [deleteItem, setDeleteItem] = useState(null);
 
   React.useMemo(() => {
     if (loading || error) {
@@ -71,8 +74,8 @@ const Home = ({navigation}) => {
 
   const getUserInfo = async () => {
     const user = await getUser();
-    dispatch(loginSuccess(user))
-  }
+    dispatch(loginSuccess(user));
+  };
 
   const getCustomerDetails = () => dispatch(getCustomerInfo(customerId));
 
@@ -114,46 +117,127 @@ const Home = ({navigation}) => {
     console.log('Request Permission Result', permisson);
   };
 
-  const onRebook = (item, location) => {
+  const onEdit = (item, location, past) => {
+    const services = get(item, 'appointment.AppointmentTreatments', []).filter(
+      (service) => service.TreatmentName !== 'Extensions',
+    );
+
     MParticle.logEvent('Home - Rebook', MParticle.EventType.Navigation, {
       'Source Page': 'Home',
       'Book Type': 'Rebook',
     });
-    let tempArr = get(item, 'appointment.AppointmentTreatments', [])
-      .filter((service) => service.TreatmentName !== 'Extensions')
-      .map((service, index) => {
-        const timezone = moment()
-          .utcOffset(service.StartDateTimeOffset)
-          .utcOffset();
-        const startTime = moment(service.StartDateTimeOffset).utcOffset(
-          timezone,
-        );
-        const endTime = moment(service.EndDateTimeOffset).utcOffset(timezone);
-        return {
-          userType: index === 0 ? 'Me' : `Guest ${index}`,
-          date: {
-            date: moment(service.StartDateTimeOffset).format(''),
-            time: {
-              startTime: startTime.format('YYYY-MM-DDTHH:mm:ssZ'),
-              endTime: endTime.format('YYYY-MM-DDTHH:mm:ssZ'),
-              timezone,
-            },
-          },
-          rooms: service.RoomID,
-          employees: service.EmployeeID,
-          services: {
-            Name: service.TreatmentName,
-            Price: {Amount: get(service, 'TagPrice.Amount')},
-            ...service,
-          },
-          customer: item.Customer,
-        };
-      });
-    dispatch(setLocation(location));
-    dispatch(setmemberCount(tempArr));
-    dispatch(setIsEdit(true));
 
-    navigation.navigate('Book', {screen: 'Review', initial: false});
+    const extensionData = get(
+      item,
+      'appointment.AppointmentTreatments',
+      [],
+    ).find((service) => service.TreatmentName === 'Extensions');
+
+    const checkExtension = (service) => {
+      let extension = get(item, 'appointment.AppointmentTreatments', []).find(
+        (s) =>
+          s.AppointmentID === service.AppointmentID &&
+          s.TreatmentName === 'Extensions',
+      );
+
+      if (!extension) {
+        return (
+          get(
+            item,
+            `appointments.appoint_${service.AppointmentID}.Notes`,
+            '',
+          ) || ''
+        ).includes('Extensions added.');
+      }
+
+      return extension;
+    };
+    let tempArr = services.map((service, idx) => {
+      const extension = checkExtension(service);
+
+      return {
+        userType: idx === 0 ? 'Me' : 'Guest ' + idx,
+        date: {
+          date: moment(get(service, 'StartDateTimeOffset')).format(
+            'YYYY-MM-DDTHH:mm:ssZ',
+          ),
+          time: {
+            startTime: get(service, 'StartDateTimeOffset'),
+            endTime: get(service, 'EndDateTimeOffset'),
+            timezone: moment()
+              .utcOffset(get(service, 'StartDateTimeOffset'))
+              .utcOffset(),
+          },
+        },
+
+        rooms: get(service, 'RoomID'),
+        employees: get(service, 'EmployeeID'),
+        services: {
+          Name: get(service, 'TreatmentName'),
+          Price: {Amount: get(service, 'Treatment.Price.Amount')},
+          ...service.Treatment,
+        },
+        customer: item.Customer,
+        extension: extension
+          ? {
+              price: get(extensionData, 'TagPrice.Amount', 20),
+              name: 'Yes',
+              room: get(extensionData, 'RoomID'),
+              employee: get(extensionData, 'EmployeeID'),
+            }
+          : undefined,
+      };
+    });
+    dispatch(setLocation(location));
+    dispatch(
+      setExtensionAddon({
+        Name: get(extensionData, 'TreatmentName'),
+        Price: {Amount: get(extensionData, 'Treatment.Price.Amount')},
+        ...get(extensionData, 'Treatment', {}),
+      }),
+    );
+    dispatch(setmemberCount(tempArr));
+    dispatch(
+      setIsEdit({
+        group: item.groupID,
+        appointment: item.appointment.ID,
+        oldLocation: location.bookerLocationId,
+      }),
+    );
+
+    if (past) {
+      navigation.navigate('Book', {screen: 'DateTime'});
+    } else {
+      navigation.navigate('Book', {screen: 'Services'});
+    }
+  };
+
+  const onCancel = (item, location) => {
+    setDeleteItem({
+      item,
+      location,
+    });
+  };
+
+  const handleCancel = () => {
+    if (!deleteItem) return;
+    const {item, location} = deleteItem;
+    if (item.groupID) {
+      dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then(
+        (response) => {
+          if (response.type === 'CANCEL_APPT_SUCCESS') {
+            getAppts();
+          }
+        },
+      );
+    } else {
+      dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
+        if (response.type === 'CANCEL_APPT_SUCCESS') {
+          getAppts();
+        }
+      });
+    }
+    setDeleteItem(null);
   };
 
   const onBrowser = (action) => {
@@ -186,6 +270,34 @@ const Home = ({navigation}) => {
   return (
     <View style={rootStyle.container}>
       <Authheader isCall />
+      <Dialog.Container visible={!!deleteItem}>
+        <Dialog.Title>Cancel Appointment</Dialog.Title>
+        <Dialog.Description>
+          Are you sure you want to cancel?
+        </Dialog.Description>
+
+        <Dialog.Button
+          color="black"
+          style={
+            {
+              // backgroundColor: Colors.dimGray,
+            }
+          }
+          label="Cancel"
+          onPress={() => setDeleteItem(null)}
+        />
+        <Dialog.Button
+          color="black"
+          style={
+            {
+              // backgroundColor: Colors.dimGray,
+            }
+          }
+          label="Confirm"
+          onPress={handleCancel}
+        />
+        {/* <Dialog.Button label="" onPress={handleDelete} /> */}
+      </Dialog.Container>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={false} onRefresh={getAppts} />
@@ -199,12 +311,14 @@ const Home = ({navigation}) => {
             data={upcomingAppt}
             navigation={navigation}
             locationData={data}
+            onEdit={onEdit}
+            onCancel={onCancel}
           />
 
           {pastAppt.length ? (
             <RebookAppts
               item={pastAppt[0]}
-              onRebook={onRebook}
+              onRebook={(item, location) => onEdit(item, location, true)}
               locationData={data}
             />
           ) : null}

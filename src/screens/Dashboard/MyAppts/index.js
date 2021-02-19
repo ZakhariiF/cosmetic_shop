@@ -142,9 +142,19 @@ const MyAppts = ({navigation}) => {
     const {item, location} = cancelItem;
     if (item) {
       if (!item.groupID) {
-        dispatch(cancelAppointment(item.appointment.ID));
+        dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
+          if (response.type === 'CANCEL_APPT_SUCCESS') {
+            getAppts();
+          }
+        });
       } else {
-        dispatch(cancelItinerary(item.groupID, location.bookerLocationId));
+        dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then(
+          (response) => {
+            if (response.type === 'CANCEL_APPT_SUCCESS') {
+              getAppts();
+            }
+          },
+        );
       }
     }
     setCancelItem(null);
