@@ -23,8 +23,7 @@ import {
   setExtensionAddon,
 } from '../../Booking/thunks';
 import Indicator from 'components/Indicator';
-import {Colors} from 'constant';
-import {cancelAppointment} from '../../thunks';
+import {cancelAppointment, cancelItinerary} from '../../thunks';
 import {openMaps} from 'utils';
 import {getAppointments} from '../../thunks';
 
@@ -133,12 +132,22 @@ const ApptDetails = ({route, navigation}) => {
 
   const handleCancel = () => {
     setVisible(false);
-    dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
-      if (response.type === 'CANCEL_APPT_SUCCESS') {
-        navigation.goBack();
-        getAppts();
-      }
-    });
+    if (item.groupID) {
+      dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then((response) => {
+        if (response.type === 'CANCEL_APPT_SUCCESS') {
+          navigation.goBack();
+          getAppts();
+        }
+      });
+    } else {
+      dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
+        if (response.type === 'CANCEL_APPT_SUCCESS') {
+          navigation.goBack();
+          getAppts();
+        }
+      });
+    }
+
   };
 
   const getAppts = () =>
