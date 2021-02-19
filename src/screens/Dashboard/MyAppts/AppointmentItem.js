@@ -14,7 +14,9 @@ const AppointmentItem = ({
 }) => {
   const locationId = get(item.appointment, 'Room.LocationID', 0);
 
-  const location = get(locationData, 'storeCollection.items', []).find(l => l.bookerLocationId === locationId);
+  const location = get(locationData, 'storeCollection.items', []).find(
+    (l) => l.bookerLocationId === locationId,
+  );
 
   const timezone = moment()
     .utcOffset(get(item, 'appointment.StartDateTimeOffset'))
@@ -30,15 +32,11 @@ const AppointmentItem = ({
           styles.dateContainer,
           past && {backgroundColor: Colors.dimGray},
         ]}>
-        <Text style={styles.dateText}>
-          {startTime.format('MMM')}
-        </Text>
+        <Text style={styles.dateText}>{startTime.format('MMM')}</Text>
         <Text style={[styles.dateText, {fontFamily: Fonts.AvenirNextBold}]}>
           {startTime.format('DD')}
         </Text>
-        <Text style={styles.dateText}>
-          {startTime.format('YYYY')}
-        </Text>
+        <Text style={styles.dateText}>{startTime.format('YYYY')}</Text>
         <Text style={[styles.dateText, {fontFamily: Fonts.AvenirNextRegular}]}>
           {startTime.format('hh:mm a')}
         </Text>
@@ -48,9 +46,7 @@ const AppointmentItem = ({
           <View style={{flex: 1}}>
             <Text style={styles.locationText}>Location</Text>
             <Text style={styles.location}>
-              {
-                location ? location.title : ''
-              }
+              {location ? location.title : ''}
             </Text>
           </View>
 
@@ -74,22 +70,25 @@ const AppointmentItem = ({
 
         <View style={{marginTop: past ? 12 : 0}}>
           <Text style={styles.locationText}>
-            {
-              get(item, 'appointment.AppointmentTreatments', []).length > 1 ? 'Services' : 'Service'
-            }
+            {get(item, 'appointment.AppointmentTreatments', []).length > 1
+              ? 'Services'
+              : 'Service'}
           </Text>
           <View style={styles.bottomContainer}>
             <View style={{maxWidth: '75%'}}>
-              {
-                get(item, 'appointment.AppointmentTreatments', []).filter((service) => service.TreatmentName !== 'Extensions').map((service) => (
+              {get(item, 'appointment.AppointmentTreatments', [])
+                .filter((service) => service.TreatmentName !== 'Extensions')
+                .map((service) => (
                   <Text style={styles.details}>
-                    {get(service, 'TreatmentName', '')} (${get(service, 'Treatment.Price.Amount')})
+                    {get(service, 'TreatmentName', '')} ($
+                    {get(service, 'Treatment.Price.Amount')})
                   </Text>
-                ))
-              }
+                ))}
             </View>
             <Text
-              onPress={() => navigation.navigate('ApptDetails', {past, item, location})}
+              onPress={() =>
+                navigation.navigate('ApptDetails', {past, item, location})
+              }
               style={[styles.details, {textDecorationLine: 'underline'}]}>
               View Details
             </Text>
@@ -107,7 +106,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 4,
     minHeight: 100,
-    maxHeight: 300
+    maxHeight: 300,
   },
   dateContainer: {
     width: '25%',

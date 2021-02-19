@@ -209,6 +209,10 @@ export const setLocation = (data) => async (dispatch) => {
   return dispatch(bookingActions.setSelectedLocation(data));
 };
 
+export const setExtensionAddon = (extension) => async (dispatch) => {
+  return dispatch(bookingActions.setExtensionAddon(extension));
+};
+
 export const applyPromoCode = (locId, code) => async (dispatch) => {
   dispatch(bookingActions.promoCodeRequest());
   try {
@@ -331,7 +335,7 @@ export const getMultiUserTimeSlots = (obj) => async (dispatch) => {
   dispatch(bookingActions.getMultiSlotsRequest());
   try {
     const data = await API.multiUserSlots(obj);
-    // console.log('muti user slots >>', data);
+    console.log('muti user slots >>', data);
     if (data) {
       dispatch(bookingActions.getMultiSlotsError());
       return dispatch(bookingActions.getMultiSlotsSuccess(data));
