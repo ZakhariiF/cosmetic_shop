@@ -28,6 +28,7 @@ const BookingForm = ({navigation}) => {
   const [locArr, setLocArr] = useState([]);
   const [preferedTime, setPreferTime] = useState([]);
   const [partySizeArr, setpartySizeArr] = useState([]);
+  const [occasionArr, setOccasionArr] = useState([]);
   const [state, setState] = useState({
     firstName: '',
     lastName: '',
@@ -41,6 +42,7 @@ const BookingForm = ({navigation}) => {
     selectedLoc: '',
     selectedTime: '',
     partySize: '',
+    occasion: '',
     notes: '',
   });
 
@@ -57,6 +59,7 @@ const BookingForm = ({navigation}) => {
     selectedLoc,
     selectedTime,
     partySize,
+    occasion,
     notes,
   } = state;
 
@@ -67,8 +70,9 @@ const BookingForm = ({navigation}) => {
   const getAllFields = async () => {
     const data = await getFieldValues();
     const fields = data?.Fields || [];
-
+    console.log(data);
     let locArr = [],
+      occaArr = [],
       timeArr = [],
       sizeArr = [];
 
@@ -77,7 +81,7 @@ const BookingForm = ({navigation}) => {
         field['Choices'].forEach((e) => {
           locArr.push({label: e.Label, value: e.Label});
         });
-      } else if (field['Title'] === 'Select a Choice') {
+      } else if (field['Title'] === 'Time') {
         field['Choices'].forEach((e) => {
           timeArr.push({label: e.Label, value: e.Label});
         });
@@ -85,12 +89,17 @@ const BookingForm = ({navigation}) => {
         field['Choices'].forEach((e) => {
           sizeArr.push({label: e.Label, value: e.Label});
         });
+      } else if (field['Title'] === 'Occasion') {
+        field['Choices'].forEach((e) => {
+          occaArr.push({label: e.Label, value: e.Label});
+        });
       }
     });
 
     setLocArr(locArr);
     setPreferTime(timeArr);
     setpartySizeArr(sizeArr);
+    setOccasionArr(occaArr);
   };
 
   const onSubmit = () => {
@@ -117,7 +126,8 @@ const BookingForm = ({navigation}) => {
       !phoneNumber ||
       !selectedLoc ||
       !selectedTime ||
-      !partySize
+      !partySize ||
+      !occasion
     ) {
       valid = true;
     }
@@ -234,6 +244,14 @@ const BookingForm = ({navigation}) => {
             placeholder={'Party Size'}
             items={partySizeArr}
             onValueChange={(i) => setState((s) => ({...s, partySize: i}))}
+          />
+
+          <Text style={styles.labelName}>OCCASION</Text>
+          <NativePicker
+            selectedValue={occasion}
+            placeholder={'Occasion'}
+            items={occasionArr}
+            onValueChange={(i) => setState((s) => ({...s, occasion: i}))}
           />
 
           <Text
