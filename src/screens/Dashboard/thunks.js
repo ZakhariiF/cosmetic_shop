@@ -14,18 +14,21 @@ export const getAppointments = (userId) => async (dispatch) => {
           const groupKey = `group_${cur.GroupID}`;
           if (!obj[groupKey]) {
             obj[groupKey] = {
-              bookingNumbers: [],
               appointment: cur,
               groupID: cur.GroupID,
+              appointments: {},
             };
           }
-          obj[groupKey].bookingNumbers.push(cur.BookingNumber);
+          obj[groupKey].appointments[`appoint_${cur.ID}`] = cur;
           return obj;
         }
         obj[`group_${cur.BookingNumber}`] = {
           appointment: cur,
-          bookingNumbers: [cur.BookingNumber],
+          appointments: {},
         };
+        obj[`group_${cur.BookingNumber}`].appointments[
+          `appoint_${cur.ID}`
+        ] = cur;
         return obj;
       }, {});
       return dispatch(homeActions.getApptSuccess(Object.values(groups)));

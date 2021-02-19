@@ -654,7 +654,7 @@ export const bookingActions = {
 
   setExtensionAddon: (payload) => ({
     type: types.SET_EXTENSION_ADDON,
-    payload
+    payload,
   }),
 
   // ---- GET_SERVICES ------

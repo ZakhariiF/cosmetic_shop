@@ -16,7 +16,12 @@ import styles from './styles';
 import {get} from 'lodash';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
-import {setIsEdit, setLocation, setmemberCount} from '../../Booking/thunks';
+import {
+  setIsEdit,
+  setLocation,
+  setmemberCount,
+  setExtensionAddon,
+} from '../../Booking/thunks';
 import Indicator from 'components/Indicator';
 import {Colors} from 'constant';
 import {cancelAppointment} from '../../thunks';
@@ -39,32 +44,73 @@ const ApptDetails = ({route, navigation}) => {
   const services = get(item, 'appointment.AppointmentTreatments', []).filter(
     (service) => service.TreatmentName !== 'Extensions',
   );
-  const onEdit = () => {
-    let tempArr = services.map((service, idx) => ({
-      userType: idx === 0 ? 'Me' : 'Guest ' + idx,
-      date: {
-        date: moment(get(service, 'StartDateTimeOffset')).format(
-          'YYYY-MM-DDTHH:mm:ssZ',
-        ),
-        time: {
-          startTime: get(service, 'StartDateTimeOffset'),
-          endTime: get(service, 'EndDateTimeOffset'),
-          timezone: moment()
-            .utcOffset(get(service, 'StartDateTimeOffset'))
-            .utcOffset(),
-        },
-      },
 
-      rooms: {roomId: get(service, 'RoomID')},
-      employees: {employeeId: get(service, 'EmployeeID')},
-      services: {
-        Name: get(service, 'TreatmentName'),
-        Price: {Amount: get(service, 'Treatment.Price.Amount')},
-        ...service,
-      },
-      customer: item.Customer,
-    }));
+  const extensionData = get(item, 'appointment.AppointmentTreatments', []).find(
+    (service) => service.TreatmentName === 'Extensions',
+  );
+
+  const checkExtension = (service) => {
+    let extension = get(item, 'appointment.AppointmentTreatments', []).find(
+      (s) =>
+        s.AppointmentID === service.AppointmentID &&
+        s.TreatmentName === 'Extensions',
+    );
+
+    if (!extension) {
+      return (
+        get(item, `appointments.appoint_${service.AppointmentID}.Notes`, '') ||
+        ''
+      ).includes('Extensions added.');
+    }
+
+    return extension;
+  };
+
+  const onEdit = () => {
+    let tempArr = services.map((service, idx) => {
+      const extension = checkExtension(service);
+
+      return {
+        userType: idx === 0 ? 'Me' : 'Guest ' + idx,
+        date: {
+          date: moment(get(service, 'StartDateTimeOffset')).format(
+            'YYYY-MM-DDTHH:mm:ssZ',
+          ),
+          time: {
+            startTime: get(service, 'StartDateTimeOffset'),
+            endTime: get(service, 'EndDateTimeOffset'),
+            timezone: moment()
+              .utcOffset(get(service, 'StartDateTimeOffset'))
+              .utcOffset(),
+          },
+        },
+
+        rooms: get(service, 'RoomID'),
+        employees: get(service, 'EmployeeID'),
+        services: {
+          Name: get(service, 'TreatmentName'),
+          Price: {Amount: get(service, 'Treatment.Price.Amount')},
+          ...service.Treatment,
+        },
+        customer: item.Customer,
+        extension: extension
+          ? {
+              price: get(extensionData, 'TagPrice.Amount', 20),
+              name: 'Yes',
+              room: get(extensionData, 'RoomID'),
+              employee: get(extensionData, 'EmployeeID'),
+            }
+          : undefined,
+      };
+    });
     dispatch(setLocation(location));
+    dispatch(
+      setExtensionAddon({
+        Name: get(extensionData, 'TreatmentName'),
+        Price: {Amount: get(extensionData, 'Treatment.Price.Amount')},
+        ...get(extensionData, 'Treatment', {}),
+      }),
+    );
     dispatch(setmemberCount(tempArr));
     dispatch(
       setIsEdit({
@@ -73,7 +119,12 @@ const ApptDetails = ({route, navigation}) => {
         oldLocation: location.bookerLocationId,
       }),
     );
-    navigation.navigate('Book', {screen: 'Services'});
+
+    if (past) {
+      navigation.navigate('Book', {screen: 'DateTime'});
+    } else {
+      navigation.navigate('Book', {screen: 'Services'});
+    }
   };
 
   const onCancel = () => {
@@ -152,14 +203,44 @@ const ApptDetails = ({route, navigation}) => {
             <Text style={styles.headerText}>
               {services.length > 1 ? 'Services' : 'Service'}
             </Text>
-            {services.map((service) => (
-              <Text style={styles.titleText}>
-                {get(service, 'TreatmentName')}{' '}
-                <Text style={styles.price}>
-                  (${get(service, 'Treatment.Price.Amount')})
+            {services.map((service, idx) => (
+              <View>
+                {services.length > 1 && (
+                  <Text>{idx === 0 ? 'Me' : `Guest ${idx}`}</Text>
+                )}
+                <Text style={styles.titleText}>
+                  {get(service, 'TreatmentName')}{' '}
+                  <Text style={styles.price}>
+                    (${get(service, 'Treatment.Price.Amount')})
+                  </Text>
                 </Text>
-              </Text>
+              </View>
             ))}
+          </View>
+
+          <View style={styles.boxContainer}>
+            <Text style={styles.headerText}>
+              {services.length > 1 ? 'Extensions' : 'Extension'}
+            </Text>
+            {services.map((service, idx) => {
+              const extension = checkExtension(service);
+              if (!extension) {
+                return null;
+              }
+              return (
+                <View>
+                  {services.length > 1 && (
+                    <Text>{idx === 0 ? 'Me' : `Guest ${idx}`}</Text>
+                  )}
+                  <Text style={styles.titleText}>
+                    Yes
+                    <Text style={styles.price}>
+                      (${get(service, 'Treatment.Price.Amount')})
+                    </Text>
+                  </Text>
+                </View>
+              );
+            })}
           </View>
 
           {get(item, 'appointment.AddOnItems', []).length ? (

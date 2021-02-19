@@ -96,7 +96,7 @@ const Review = ({navigation, route}) => {
       extensionAddon
     ) {
       items.push({
-        EmployeeID: get(totalGuests[0].extension, 'employees', ''),
+        EmployeeID: get(totalGuests[0].extension, 'employee', ''),
         StartTimeOffset: endTime,
         EndTimeOffset: moment(endTime).add(extensionAddon.TotalDuration, 'minutes').utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
         TreatmentID: extensionAddon.ID,
