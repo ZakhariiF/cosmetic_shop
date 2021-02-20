@@ -2,35 +2,28 @@ import {get} from 'lodash';
 import MParticle from 'react-native-mparticle';
 import {AlertHelper} from 'utils/AlertHelper';
 import {authActions} from './ducks';
-import { getUser, signOut } from "@okta/okta-react-native";
+import {getUser, signOut} from '@okta/okta-react-native';
 import * as API from 'services';
 
 export const _onlogin = (token, email, password) => async (dispatch) => {
   dispatch(authActions.loginRequest());
 
   try {
-    const data = await API._login(token, email, password);
+    const userInfo = await getUser();
 
-    if (data) {
-      const userInfo = await getUser();
-      const request = new MParticle.IdentityRequest();
-      request.email = email;
-      request.setCustomerID(get(userInfo, 'bookerID'));
+    const request = new MParticle.IdentityRequest();
+    request.email = email;
+    request.setCustomerID(get(userInfo, 'bookerID'));
 
-      MParticle.Identity.login(request, (error, userId) => {
-        console.log('MParticle Identify:', error, userId);
-      });
+    MParticle.Identity.login(request, (error, userId) => {
+      console.log('MParticle Identify:', error, userId);
+    });
 
-      MParticle.logEvent('Login Successful', MParticle.EventType.Other, {
-        'Source Page': 'Login',
-      });
+    MParticle.logEvent('Login Successful', MParticle.EventType.Other, {
+      'Source Page': 'Login',
+    });
 
-      let userData = data;
-      userData.userInfo = userInfo;
-      return dispatch(authActions.loginSuccess(userData));
-    } else {
-      return dispatch(authActions.loginError());
-    }
+    return dispatch(loginSuccess(userInfo));
   } catch (error) {
     AlertHelper.showError(get(error, 'detail.message'));
     if (error && error.response) {
@@ -110,10 +103,12 @@ export const getCustomerInfo = (id) => async (dispatch) => {
     if (data.IsSuccess) {
       return dispatch(authActions.getCustomerSuccess(get(data, 'Customer')));
     } else {
+      console.log('Customer Issue:', data);
       AlertHelper.showError(get(data, 'ErrorMessage', 'Server Error'));
       return dispatch(authActions.getCustomerError());
     }
   } catch (error) {
+    console.log('Catch Customer Issue:', error);
     AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
     return dispatch(authActions.getCustomerError());
   }

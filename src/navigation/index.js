@@ -7,7 +7,7 @@ import {navigationRef} from './RootNavigation';
 
 import {createConfig, getAccessToken} from '@okta/okta-react-native';
 import configFile from 'constant/config';
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 
 const Root = createStackNavigator();
 
@@ -16,6 +16,7 @@ const AppContainer = () => {
   const configApp = useCallback(async () => {
     if (Platform.OS === 'ios') {
       await createConfig({
+        // issuer: configFile.issuer,
         clientId: configFile.clientId,
         redirectUri: configFile.redirectUri,
         endSessionRedirectUri: configFile.endSessionRedirectUri,
