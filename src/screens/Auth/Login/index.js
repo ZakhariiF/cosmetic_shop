@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, BackHandler, Platform, Alert} from 'react-native';
 import Button from 'components/Button';
 import Authheader from 'components/Header/Authheader';
@@ -6,7 +6,7 @@ import Header from 'components/Header/Header';
 import Input from 'components/Input';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MParticle from 'react-native-mparticle';
-import {signIn} from '@okta/okta-react-native';
+import {signIn, EventEmitter} from '@okta/okta-react-native';
 
 import {isValidEmail} from 'utils';
 import {onlogin, _onlogin} from '../thunks';
@@ -25,6 +25,15 @@ const Login = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const isValidate = !isValidEmail(email) || password.length < 6 ? true : false;
 
+  useEffect(() => {
+    const onError = EventEmitter.addListener('onError', (e) => {
+      console.log(e);
+    });
+    return () => {
+      onError.remove();
+    }
+  }, []);
+
   const onLogin = async () => {
     MParticle.logEvent('User Attempts to Login', MParticle.EventType.Other, {
       'Source Page': 'Login',
@@ -34,6 +43,7 @@ const Login = ({navigation}) => {
       setLoading(true);
       signIn({username: email, password})
         .then((token) => {
+          console.log('Token:', token);
           dispatch(_onlogin(token, email, password));
           setLoading(false);
         })

@@ -167,7 +167,7 @@ const AuthReducer = (state = authIntialState, action) => {
         getFavItem = getFavItem.find((e) => e.Key == 56378);
 
         if (getFavItem) {
-          favLoc = getFavItem.Value.TextValue.Value;
+          favLoc = get(getFavItem, 'Value.TextValue.Value', '');
         }
       }
       return {
