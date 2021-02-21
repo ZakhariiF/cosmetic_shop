@@ -31,6 +31,8 @@ export const parseJSONFormat = (data) => {
 }
 
 export const parsedJSON2Html = (data) => {
+
+  console.log('ParsedJson2Html:', data);
   let htmlString = '';
   for (let i = 0; i < data.length; i++) {
     if (data[i].type === 'paragraph') {

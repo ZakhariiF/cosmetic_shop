@@ -21,12 +21,15 @@ export default StyleSheet.create({
     marginTop: 12,
     ...rootStyle.shadow,
   },
-  headerText: {
+  a: {
     fontFamily: Fonts.Evan,
     lineHeight: 20,
     fontSize: 15,
     color: Colors.header_title,
     flexBasis: '85%',
+  },
+  p: {
+    ...rootStyle.commonText,
   },
   flexContainer: {
     flexDirection: 'row',
