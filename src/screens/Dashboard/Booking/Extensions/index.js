@@ -15,15 +15,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import rootStyle from 'rootStyle';
 import {setmemberCount, getServices} from '../thunks';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useNavigation} from '@react-navigation/native';
 
-const Extensions = ({navigation, onSkip}) => {
+const Extensions = ({onSkip}) => {
   const [isChecked, setChecked] = useState(false);
   const dispatch = useDispatch();
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const activeTab = useSelector((state) => state.booking.activeGuestTab);
   const extensionAddon = useSelector((state) => state.booking.extensionAddon);
-  const selectedLocation = useSelector((state) => state.booking.selectedLocation);
+  const selectedLocation = useSelector(
+    (state) => state.booking.selectedLocation,
+  );
   const services = useSelector((state) => state.booking.services);
+  const navigation = useNavigation();
 
   const data = [
     {name: 'No', price: 0},
@@ -69,7 +73,6 @@ const Extensions = ({navigation, onSkip}) => {
   };
 
   const onExtension = (item) => {
-
     let tempArr = [...totalGuests];
     tempArr[activeTab].extension = item;
 
@@ -88,10 +91,14 @@ const Extensions = ({navigation, onSkip}) => {
           size={16}
           color={Colors.header_title}
         />
-
         <Text style={styles.noticeText}>
           Learn about our extension policy{' '}
-          <TouchableOpacity onPress={() => Linking.openURL('https://www.drybarshops.com/extension-policy')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('Account', {
+                screen: 'ExtensionPolicy',
+              })
+            }>
             <Text style={{textDecorationLine: 'underline'}}>here.</Text>
           </TouchableOpacity>
         </Text>

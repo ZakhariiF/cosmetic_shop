@@ -39,6 +39,7 @@ import PrivacyPolicy from 'screens/Dashboard/MyAccount/PrivacyPolicy';
 import TermsOfServices from 'screens/Dashboard/MyAccount/TermsOfServices';
 import CaliforniaResidents from 'screens/Dashboard/MyAccount/CaliforniaResidents';
 import AccessibilityPolicy from 'screens/Dashboard/MyAccount/AccessibilityPolicy';
+import ExtensionPolicy from 'screens/Dashboard/MyAccount/ExtensionPolicy';
 import AccountStyle from 'screens/Dashboard/MyAccount/AccountStyle';
 import FindLocation from 'screens/Dashboard/MyAccount/FindLocation';
 import BookingForm from 'screens/Dashboard/Booking/BookingForm';
@@ -98,6 +99,7 @@ const AccountNavigator = () => (
     <AccountStack.Screen name="Contactus" component={Contactus} />
     <AccountStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     <AccountStack.Screen name="TermsOfServices" component={TermsOfServices} />
+    <AccountStack.Screen name="ExtensionPolicy" component={ExtensionPolicy} />
     <AccountStack.Screen name="CaliforniaResidents" component={CaliforniaResidents} />
     <AccountStack.Screen name="AccessibilityPolicy" component={AccessibilityPolicy} />
     <AccountStack.Screen name="AccountStyle" component={AccountStyle} />
