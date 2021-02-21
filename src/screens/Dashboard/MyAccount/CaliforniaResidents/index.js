@@ -5,6 +5,7 @@ import Indicator from 'components/Indicator';
 import {Fonts, Images} from 'constant';
 import {screenPrivacyPolicy} from 'constant/query';
 import {get} from 'lodash';
+import HTMLView from 'react-native-htmlview';
 import {
   Image,
   LayoutAnimation,
@@ -16,15 +17,18 @@ import {
 import rootStyle from 'rootStyle';
 import styles from './styles';
 
+import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
+
 const CaliforniaResidents = () => {
-  const PRIVACY_POLICY = screenPrivacyPolicy("376l34pR33oq4NQoCqdXAc");
+  const PRIVACY_POLICY = screenPrivacyPolicy();
   const {data, error, loading} = useQuery(PRIVACY_POLICY);
   const [policies, setPolicies] = useState([]);
   const [toggleIndex, setToggle] = useState([]);
-  const [description, setDesc] = useState([]);
 
   useMemo(() => {
-    if (loading || error) return null;
+    if (loading || error) {
+      return null;
+    }
     setPolicies(
       get(
         data,
@@ -73,42 +77,18 @@ const CaliforniaResidents = () => {
 
   return (
     <View style={rootStyle.container}>
-      <Header
-        title="CALIFORNIA RESIDENTS: DO NOT SELL MY INFORMATION"
-        isTab
-        isBack
-        isUppercaseTitle
-      />
+      <Header title="PRIVACY POLICY" isTab isBack isUppercaseTitle />
       <ScrollView contentContainerStyle={{paddingTop: 20}}>
         <View style={rootStyle.innerContainer}>
           <View style={[styles.topContainer, {paddingBottom: 30}]}>
-            {get(data, 'screen.description.json.content', []).map((e, i) => {
-              return (
-                <View key={i}>
-                  {get(e, 'content', []).map((item, itemIndex, arr) => {
-                    // console.log('only item>>>>>', item, itemIndex, i);
-                    return (
-                      <View key={itemIndex}>
-                        {get(item, 'content', []).map((element, index) => {
-                          return get(element, 'value') ? (
-                            <Text key={index} style={rootStyle.commonText}>
-                              {get(element, 'value')}
-                            </Text>
-                          ) : null;
-                        })}
-
-                        <Text style={rootStyle.commonText}>
-                          {i == 4 ? combine(arr) : get(item, 'value', '')}
-                        </Text>
-                      </View>
-                    );
-                  })}
-                  {i === 3 && (
-                    <View style={[rootStyle.seprator, {marginBottom: 20}]} />
-                  )}
-                </View>
-              );
-            })}
+            {data && (
+              <HTMLView
+                value={documentToHtmlString(
+                  get(data, 'screen.description.json'),
+                )}
+                stylesheet={styles}
+              />
+            )}
           </View>
 
           {policies.map((e, i) => {

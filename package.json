@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.6",
+    "@contentful/rich-text-html-renderer": "^14.1.2",
     "@okta/configuration-validation": "^1.0.0",
     "@okta/okta-react-native": "^1.8.1",
     "@react-native-async-storage/async-storage": "^1.13.2",
