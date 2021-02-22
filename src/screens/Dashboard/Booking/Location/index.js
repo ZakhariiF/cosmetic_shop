@@ -1,11 +1,12 @@
 import React, {useEffect, useRef, useState, useCallback} from 'react';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {mapStyle} from 'constant/Mapstyle';
+
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
 import CustomMapMarker from 'components/CustomMapMarker';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLocations, setLocation} from '../thunks';
+import {setUseCurrentLocation} from 'screens/Dashboard/thunks';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {requestUserLocationLocation, findStoresFromPointWithTitle} from 'utils';
@@ -45,7 +46,7 @@ const Location = ({navigation}) => {
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+  const useCurrentLocation = useSelector((state) => state.home.useCurrentLocation);
 
   useEffect(() => {
     getUserLocation();
@@ -216,7 +217,7 @@ const Location = ({navigation}) => {
           onSelect={(item) => setCenter(item)}
           currentLocation={currentLocation}
           setUseCurrentLocation={() =>
-            setUseCurrentLocation(!useCurrentLocation)
+            dispatch(setUseCurrentLocation(!useCurrentLocation))
           }
           useCurrentLocation={useCurrentLocation}
         />

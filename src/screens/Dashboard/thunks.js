@@ -4,6 +4,10 @@ import {AlertHelper} from 'utils/AlertHelper';
 import {get} from 'lodash';
 import {logoutSuccess} from 'screens/Auth/thunks';
 
+export const setUseCurrentLocation = (checked) => async (dispatch) => {
+  dispatch(homeActions.setUseCurrentLocation(checked));
+};
+
 export const getAppointments = (userId) => async (dispatch) => {
   dispatch(homeActions.getApptRequest());
   try {
