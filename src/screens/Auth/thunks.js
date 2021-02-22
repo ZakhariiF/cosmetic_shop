@@ -162,9 +162,14 @@ export const forgotpassword = (email) => async (dispatch) => {
       return dispatch(authActions.recoverPasswordError());
     }
   } catch (error) {
-    AlertHelper.showError(
-      get(error, 'response.data.errorCauses[0].errorSummary', 'Server Error'),
-    );
+    let errorMessage = get(error, 'response.data.errorCauses[0].errorSummary');
+    if (!errorMessage) {
+      errorMessage =
+        get(error, 'response.data.errorSummary') ||
+        get(error, 'response.data.message');
+    }
+
+    AlertHelper.showError(errorMessage || 'Server Error');
     return dispatch(authActions.recoverPasswordError());
   }
 };
