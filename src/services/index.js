@@ -1,6 +1,10 @@
 import axios from 'axios';
 import config from 'constant/config';
-import {refreshTokens, getUserFromIdToken, getIdToken} from '@okta/okta-react-native';
+import {
+  refreshTokens,
+  getUserFromIdToken,
+  getIdToken,
+} from '@okta/okta-react-native';
 const checkStatus = (status) => status >= 200 && status < 300;
 
 const client = axios.create({
@@ -14,21 +18,28 @@ const client = axios.create({
 
 client.interceptors.request.use(async (requestConfig) => {
   if (requestConfig.url.includes('/booker/')) {
-    try {
-      const tokens = await refreshTokens();
-      const userClams = await getUserFromIdToken();
+    let retries = 0;
 
-      requestConfig.headers = {
-        ...requestConfig.headers,
-        Authorization: `Bearer ${tokens.id_token}`,
-        clientId: config.clientId,
-      };
+    while (retries < 3) {
+      try {
+        const tokens = await refreshTokens();
+        const userClams = await getUserFromIdToken();
 
-      if (userClams.nonce) {
-        requestConfig.headers.nonce = userClams.nonce;
+        requestConfig.headers = {
+          ...requestConfig.headers,
+          Authorization: `Bearer ${tokens.id_token}`,
+          clientId: config.clientId,
+        };
+
+        if (userClams.nonce) {
+          requestConfig.headers.nonce = userClams.nonce;
+        }
+        break;
+      } catch (e) {
+        retries += 1;
+        console.log('Adding Header Issue:', e);
+        continue;
       }
-    } catch (e) {
-      console.log('Adding Header Issue:', e);
     }
   }
 
