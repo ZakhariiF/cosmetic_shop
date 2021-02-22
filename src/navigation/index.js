@@ -7,12 +7,14 @@ import {navigationRef} from './RootNavigation';
 
 import {createConfig, getAccessToken} from '@okta/okta-react-native';
 import configFile from 'constant/config';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const Root = createStackNavigator();
 
 const AppContainer = () => {
-  const token = useSelector(state => state.auth.userInfo);
+  const userInfo = useSelector((state) => state.auth.userInfo);
+  const [token, setToken] = useState(null);
+
   const configApp = useCallback(async () => {
     if (Platform.OS === 'ios') {
       await createConfig({
@@ -30,6 +32,17 @@ const AppContainer = () => {
   useEffect(() => {
     configApp();
   }, []);
+
+  useEffect(() => {
+    if (userInfo) {
+      try {
+        const t = getAccessToken();
+        setToken(t);
+      } catch (e) {
+        console.log('Get Access Token Error:', e);
+      }
+    }
+  }, [userInfo]);
 
   return (
     <NavigationContainer ref={navigationRef}>

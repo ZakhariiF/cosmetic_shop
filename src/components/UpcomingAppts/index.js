@@ -47,7 +47,7 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
           </Text>
 
           {services.map((service) => (
-            <View style={styles.clock}>
+            <View style={styles.clock} key={service.ID}>
               <View style={styles.box}>
                 <Image
                   source={Images.clock}
