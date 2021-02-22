@@ -41,7 +41,8 @@ import {
 import EmptyContainer from 'components/EmptyContainer';
 import ReviewPopup from 'components/ReviewPopup';
 import {types} from 'screens/Dashboard/Booking/ducks';
-import MParticle from "react-native-mparticle";
+import MParticle from 'react-native-mparticle';
+import CheckBox from 'components/Checkbox';
 
 // import Location from 'screens/Dashboard/Booking/Location';
 
@@ -54,6 +55,8 @@ const LocationModal = forwardRef((props, ref) => {
     locationData,
     onSelect,
     currentLocation,
+    setUseCurrentLocation,
+    useCurrentLocation,
   } = props;
   const dispatch = useDispatch();
   const routes = useNavigationState((state) => state.routes);
@@ -75,7 +78,7 @@ const LocationModal = forwardRef((props, ref) => {
   const [activeTab, setactiveTab] = useState(0);
   const [updatedHeight, setHight] = useState(
     currentRoute === 'Location' ? '40%' : '10%',
-  )
+  );
 
   const [min, setMin] = useState(currentRoute !== 'Location');
 
@@ -237,8 +240,15 @@ const LocationModal = forwardRef((props, ref) => {
       ) : (
         <View style={{flex: 1}}>
           <Text style={styles.title}>Select a Drybar Shop</Text>
-
           <View style={styles.innerContainer}>
+            <View style={{alignItems: 'center'}}>
+              <CheckBox
+                titile={'Use Current Location'}
+                isChecked={useCurrentLocation}
+                onPressed={setUseCurrentLocation}
+              />
+            </View>
+
             {activeTab === 0 ? (
               <SearchBar
                 ref={searchRef}

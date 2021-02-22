@@ -25,13 +25,15 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 var arrayHolder = [];
 
+const defaultPoint = {
+  latitude: 34.0577908,
+  longitude: -118.3622365,
+  latitudeDelta: LATITUDE_DELTA,
+  longitudeDelta: LONGITUDE_DELTA,
+}
+
 const Location = ({navigation}) => {
-  const [coords, setCoords] = useState({
-    latitude: 40.7374255,
-    longitude: -73.9933342812529,
-    latitudeDelta: 0.015 * 8,
-    longitudeDelta: 0.0121 * 8,
-  });
+  const [coords, setCoords] = useState(defaultPoint);
 
   const dispatch = useDispatch();
   const childRef = useRef(null);
@@ -43,41 +45,63 @@ const Location = ({navigation}) => {
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const [currentLocation, setCurrentLocation] = useState(null);
-  
+  const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+
   useEffect(() => {
     getUserLocation();
   }, []);
+
+  useEffect(() => {
+    if (useCurrentLocation && searchVal === '' && currentLocation) {
+      setCoords(currentLocation);
+      searchFilterFunction(currentLocation);
+    } else if (!useCurrentLocation && searchVal === '') {
+      setCoords(defaultPoint);
+      searchFilterFunction(defaultPoint)
+    }
+  }, [useCurrentLocation, searchVal, currentLocation]);
 
   if (error) {
     // return AlertHelper.showError('Server error');
   }
 
-  const searchFilterFunction = useCallback(async () => {
-    const geolocatedPoints = searchVal.length ? await geolocateSearchLocation(searchVal) : null;
+  const searchFilterFunction = useCallback(
+    async (centerPoint = null) => {
+      const geolocatedPoints =
+        searchVal.length && !centerPoint
+          ? await geolocateSearchLocation(searchVal)
+          : null;
 
-    const {data: newData} = findStoresFromPointWithTitle(
-      arrayHolder,
-      geolocatedPoints,
-      searchVal,
-      {
-        lat: coords.latitude,
-        lng: coords.longitude,
-      },
-    );
-    dispatch(getLocations(newData));
+      const {data: newData} = findStoresFromPointWithTitle(
+        arrayHolder,
+        geolocatedPoints,
+        searchVal,
+        centerPoint
+          ? {
+              lat: centerPoint.latitude,
+              lng: centerPoint.longitude,
+            }
+          : {
+              lat: coords.latitude,
+              lng: coords.longitude,
+            },
+      );
+      dispatch(getLocations(newData));
 
-    if (newData.length) {
-      setCoords({
-        ...coords,
-        latitude: newData[0].contact.coordinates[0],
-        longitude: newData[0].contact.coordinates[1],
-      });
-    }
-  }, [searchVal, arrayHolder, currentLocation]);
+      if (newData.length) {
+        setCoords({
+          ...coords,
+          latitude: newData[0].contact.coordinates[0],
+          longitude: newData[0].contact.coordinates[1],
+        });
+      }
+    },
+    [searchVal, arrayHolder],
+  );
 
   useEffect(() => {
     searchFilterFunction();
-  }, [searchVal, currentLocation]);
+  }, [searchVal]);
 
   const cachedMutatedData = React.useMemo(() => {
     if (loading || error) {
@@ -95,12 +119,12 @@ const Location = ({navigation}) => {
       const position = await requestUserLocationLocation();
       const latitude = get(position, 'coords.latitude');
       const longitude = get(position, 'coords.longitude');
-      setCoords({
-        latitude,
-        longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      });
+      // setCoords({
+      //   latitude,
+      //   longitude,
+      //   latitudeDelta: LATITUDE_DELTA,
+      //   longitudeDelta: LONGITUDE_DELTA,
+      // });
       setCurrentLocation({
         latitude,
         longitude,
@@ -191,6 +215,10 @@ const Location = ({navigation}) => {
           locationData={arrayHolder}
           onSelect={(item) => setCenter(item)}
           currentLocation={currentLocation}
+          setUseCurrentLocation={() =>
+            setUseCurrentLocation(!useCurrentLocation)
+          }
+          useCurrentLocation={useCurrentLocation}
         />
       ) : null}
 
