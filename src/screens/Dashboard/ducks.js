@@ -13,12 +13,16 @@ export const types = {
   CANCEL_APPT_REQUEST: 'CANCEL_APPT_REQUEST',
   CANCEL_APPT_SUCCESS: 'CANCEL_APPT_SUCCESS',
   CANCEL_APPT_ERROR: 'CANCEL_APPT_ERROR',
+
+  // ---- SET USE CURRENT LOCATION ---
+  SET_USE_CURRENT_LOCATION: 'SET_USE_CURRENT_LOCATION',
 };
 
 export const homeIntialState = {
   appointments: [],
   pastAppt: [],
   apptLoading: false,
+  useCurrentLocation: true,
 };
 
 // Reducer
@@ -76,6 +80,11 @@ const HomeReducer = (state = homeIntialState, action) => {
         apptLoading: false,
       };
 
+    case types.SET_USE_CURRENT_LOCATION:
+      return {
+        ...state,
+        useCurrentLocation: action.payload,
+      };
     default:
       return state;
   }
@@ -112,5 +121,12 @@ export const homeActions = {
 
   cancelApptError: () => ({
     type: types.CANCEL_APPT_ERROR,
+  }),
+
+  // ---- SET CURRENT USE LOCATION ------
+
+  setUseCurrentLocation: (payload) => ({
+    type: types.SET_USE_CURRENT_LOCATION,
+    payload,
   }),
 };
