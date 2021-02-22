@@ -5,9 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ImageBackground,
   RefreshControl,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import MParticle from 'react-native-mparticle';
 
@@ -66,7 +64,6 @@ const Home = ({navigation}) => {
       getAppts();
       getCustomerDetails();
       getHomeData();
-      hasRadarPermission();
     } else {
       getUserInfo();
     }
@@ -86,35 +83,6 @@ const Home = ({navigation}) => {
       const d = await gqlLoadHome();
       setHomeData(d);
     } catch (error) {}
-  };
-  const hasRadarPermission = () => {
-    Radar.setUserId('00uca8ebhdc27qHNh1d6');
-    Radar.getPermissionsStatus().then((status) => {
-      switch (status) {
-        case 'GRANTED_BACKGROUND':
-          console.log('GRANTED_BACKGROUND Permission granted');
-          setbackpermission(true);
-          break;
-        case 'GRANTED_FOREGROUND':
-          console.log('GRANTED_FOREGROUND Permission granted');
-          requestRadarPermission();
-          break;
-        case 'DENIED':
-          console.log('Radar Denied');
-          requestRadarPermission();
-          break;
-        case 'UNKNOWN':
-          console.log('UNKWOWN');
-          requestRadarPermission();
-          break;
-        default:
-          break;
-      }
-    });
-  };
-  const requestRadarPermission = () => {
-    let permisson = Radar.requestPermissions(true);
-    console.log('Request Permission Result', permisson);
   };
 
   const onEdit = (item, location, past) => {
