@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   Image,
   StyleSheet,
-} from 'react-native'
+} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 
 import {Colors, Fonts} from '../constant';
@@ -45,7 +45,7 @@ const CustomTabbar = ({state, descriptors, navigation}) => {
                 CommonActions.reset({
                   index: 0,
                   key: null,
-                  routes: [{ name: route.name }],
+                  routes: [{name: route.name}],
                 }),
               );
             }

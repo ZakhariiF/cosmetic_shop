@@ -384,14 +384,11 @@ const BookingReducer = (state = bookingIntialState, action) => {
           availbilityTimes1.push({
             ...item,
             timezone,
-            startDateTime: startTime.utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ')
-          })
-          startTime = startTime.add(15, 'minutes')
+            startDateTime: startTime.utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
+          }),
+          startTime = startTime.add(15, 'minutes');
         }
-
-      })
-      console.log('availbilityTimes:', availbilityTimes1)
-
+      });
       return {
         ...state,
         multiUserSlots: availbilityTimes1,
@@ -575,9 +572,9 @@ const BookingReducer = (state = bookingIntialState, action) => {
       const availbilityTimes = []
       get(action.payload, 'availability').forEach((item) => {
         let startTime = moment(item.startDateTime);
-        let endTime = moment(item.endDateTime)
+        let endTime = moment(item.endDateTime);
 
-        const timezone = moment().utcOffset(item.startDateTime).utcOffset()
+        const timezone = moment().utcOffset(item.startDateTime).utcOffset();
 
         while (startTime < endTime) {
           availbilityTimes.push({
@@ -588,9 +585,7 @@ const BookingReducer = (state = bookingIntialState, action) => {
           startTime = startTime.add(15, 'minutes')
         }
 
-      })
-
-      console.log('availbilityTimes:', availbilityTimes)
+      });
       return {
         ...state,
         slotsLoading: false,
