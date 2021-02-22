@@ -41,6 +41,8 @@ const AppContainer = () => {
       } catch (e) {
         console.log('Get Access Token Error:', e);
       }
+    } else {
+      setToken(null);
     }
   }, [userInfo]);
 
