@@ -23,6 +23,7 @@ import {types} from 'screens/Dashboard/Booking/ducks';
 import CustomMapMarker from 'components/CustomMapMarker';
 import {geolocateSearchLocation} from 'services/Google';
 import CheckBox from 'components/Checkbox';
+import {setUseCurrentLocation} from 'screens/Dashboard/thunks';
 
 const window = Dimensions.get('window');
 const {width, height} = window;
@@ -38,7 +39,7 @@ const defaultPoint = {
   longitude: -118.3622365,
   latitudeDelta: LATITUDE_DELTA,
   longitudeDelta: LONGITUDE_DELTA,
-}
+};
 
 const FindLocation = ({navigation}) => {
   const dispatch = useDispatch();
@@ -63,7 +64,9 @@ const FindLocation = ({navigation}) => {
   });
 
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [useCurrentLocation, setUseCurrentLocation] = useState(null);
+  const useCurrentLocation = useSelector(
+    (state) => state.home.useCurrentLocation,
+  );
 
   if (error) {
     // return AlertHelper.showError('Server error');
@@ -196,7 +199,7 @@ const FindLocation = ({navigation}) => {
       searchFilterFunction(currentLocation);
     } else if (!useCurrentLocation && searchVal === '') {
       setCoords(defaultPoint);
-      searchFilterFunction(defaultPoint)
+      searchFilterFunction(defaultPoint);
     }
   }, [useCurrentLocation, searchVal, currentLocation]);
 
@@ -257,7 +260,7 @@ const FindLocation = ({navigation}) => {
           <CheckBox
             titile={'Use Current Location'}
             isChecked={useCurrentLocation}
-            onPressed={() => setUseCurrentLocation(!useCurrentLocation)}
+            onPressed={() => dispatch(setUseCurrentLocation(!useCurrentLocation))}
           />
         </View>
         <SearchBar
