@@ -226,7 +226,7 @@ const FindLocation = ({navigation}) => {
         provider={null}
         ref={mapRef}
         style={{
-          flex: 1,
+          flex: 0.8,
         }}
         initialRegion={searchVal.length ? coords : currentLocation}
         region={coords}>
@@ -261,6 +261,7 @@ const FindLocation = ({navigation}) => {
             titile={'Use Current Location'}
             isChecked={useCurrentLocation}
             onPressed={() => dispatch(setUseCurrentLocation(!useCurrentLocation))}
+            containerStyle={{marginVertical: 10}}
           />
         </View>
         <SearchBar

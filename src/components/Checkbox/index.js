@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import {Colors, Fonts} from 'constant';
 
-const CheckBox = ({titile, isChecked, onPressed}) => (
-  <TouchableOpacity style={styles.container} onPress={onPressed}>
+const CheckBox = ({titile, isChecked, onPressed, containerStyle}) => (
+  <TouchableOpacity style={[styles.container, containerStyle || {}]} onPress={onPressed}>
     <View style={styles.checkBox}>
       {isChecked ? <View style={styles.box} /> : null}
     </View>
