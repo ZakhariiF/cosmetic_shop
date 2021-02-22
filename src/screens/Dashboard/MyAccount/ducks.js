@@ -95,13 +95,13 @@ const AccountReducer = (state = accountIntialState, action) => {
     case types.UPDATE_CUSTOMER_DETAILS_FAIL:
       return {
         ...state,
-        accountLoading: false
+        accountLoading: false,
       }
 
     case types.SET_MEMBERSHIP_LOCATION:
       return {
         ...state,
-        location: action.payload
+        location: action.payload,
       }
 
     default:
@@ -119,7 +119,6 @@ export const accountActions = {
 
   getCustomerMembershipSuccess: () => ({
     type: types.GET_CUSTOMER_MEMBERSHIP_SUCCESS,
-    payload,
   }),
 
   getCustomerMembershipError: () => ({
@@ -154,12 +153,11 @@ export const accountActions = {
     type: types.UPDATE_CUSTOMER_DETAILS_FAIL,
   }),
 
-  
 
   // ---- Set Location ------
   setMembershipLocation: (payload) => ({
     type: types.SET_MEMBERSHIP_LOCATION,
-    payload
+    payload,
   }),
 
 };

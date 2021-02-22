@@ -1,4 +1,5 @@
 import {get} from 'lodash';
+import moment from 'moment';
 
 // Types
 export const types = {
@@ -36,10 +37,16 @@ const HomeReducer = (state = homeIntialState, action) => {
         ...state,
         apptLoading: false,
         appointments: action.payload.filter(
-          (e) => !e.appointment.IsPastDue && !e.appointment.IsCancelled,
+          (e) =>
+            !e.appointment.IsPastDue &&
+            !e.appointment.IsCancelled &&
+            moment(e.appointment.StartDateTimeOffset) >= moment(new Date()),
         ),
         pastAppt: action.payload.filter(
-          (e) => e.appointment.IsPastDue || e.appointment.IsCancelled,
+          (e) =>
+            e.appointment.IsPastDue ||
+            e.appointment.IsCancelled ||
+            moment(e.appointment.StartDateTimeOffset) < moment(new Date()),
         ),
       };
 
