@@ -77,7 +77,7 @@ const LocationModal = forwardRef((props, ref) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const [activeTab, setactiveTab] = useState(0);
   const [updatedHeight, setHight] = useState(
-    currentRoute === 'Location' ? '40%' : '10%',
+    currentRoute === 'Location' ? '50%' : '10%',
   );
 
   const [min, setMin] = useState(currentRoute !== 'Location');
@@ -99,7 +99,7 @@ const LocationModal = forwardRef((props, ref) => {
 
   //     if (min) {
   //       currentRoute !== 'Location' ? navigation.navigate('Location') : null;
-  //       setHight('40%');
+  //       setHight('50%');
   //     } else {
   //       setHight('10%');
   //     }
@@ -133,7 +133,7 @@ const LocationModal = forwardRef((props, ref) => {
 
   const _keyboardDidHide = () => {
     collapse();
-    setHight('40%');
+    setHight('50%');
   };
 
   const collapse = () => {
@@ -146,7 +146,7 @@ const LocationModal = forwardRef((props, ref) => {
     if (min && showReview) {
       setHight('80%');
     } else if (min && !showReview) {
-      setHight('40%');
+      setHight('50%');
     } else {
       setHight('10%');
     }
@@ -246,6 +246,7 @@ const LocationModal = forwardRef((props, ref) => {
                 titile={'Use Current Location'}
                 isChecked={useCurrentLocation}
                 onPressed={setUseCurrentLocation}
+                containerStyle={{marginVertical: 10}}
               />
             </View>
 
