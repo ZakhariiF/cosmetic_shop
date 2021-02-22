@@ -7,6 +7,7 @@
 #import "RNSplashScreen.h"
 #import <mParticle-Apple-SDK/mParticle.h>
 #import "mParticle.h"
+#import <RadarSDK/RadarSDK.h>
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -44,6 +45,8 @@ static void InitializeMParticle(UIApplication *application) {
 #endif
   
   InitializeMParticle(application);
+  
+  [Radar initializeWithPublishableKey:@"[Radar initializeWithPublishableKey:publishableKey];"];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
