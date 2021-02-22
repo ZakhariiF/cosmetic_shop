@@ -38,7 +38,6 @@ client.interceptors.request.use(async (requestConfig) => {
       } catch (e) {
         retries += 1;
         console.log('Adding Header Issue:', e);
-        continue;
       }
     }
   }
