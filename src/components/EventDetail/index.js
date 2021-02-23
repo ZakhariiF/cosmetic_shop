@@ -57,38 +57,39 @@ const EventDetail = ({
 }) => {
   const onSubmit = (values, {resetForm}) => {
     console.log('Values:', values);
-    let formData = {
-      Field1: values.firstName,
-      Field2: values.lastName,
-      Field3: values.email,
-      Field10: values.phoneNumber,
-      Field4: values.address1,
-      Field5: values.address2,
-      Field6: values.city,
-      Field7: values.state,
-      Field8: values.postalCode,
-      Field12: values.preferredShop,
-      // Field29: values.preferredDate,
-      Field15: values.preferredStartTime,
-      Field17: values.partySize,
-      Field19: values.notes,
-      Field25: values.occasion,
-      Field21: (title || '').toUpperCase(),
-    };
 
-    axios
-      .post(
-        `https://${config.wufoo.subDomain}.wufoo.com/api/v3/forms/${config.wufoo.genericPartyFormId}/entries.json`,
-        formData,
-        {
-          headers: {
-            Authorization: `Basic ${btoa(config.wufoo.apiKey + ':password')}`,
-          },
+    let formdata = new FormData();
+    formdata.append('Field1', values.firstName);
+    formdata.append('Field2', values.lastName);
+    formdata.append('Field3', values.email);
+    formdata.append('Field10', values.phoneNumber);
+    formdata.append('Field4', values.address1);
+    formdata.append('Field5', values.address2);
+    formdata.append('Field6', values.city);
+    formdata.append('Field7', values.states);
+    formdata.append('Field8', values.postalCode);
+    formdata.append('Field12', values.preferredShop);
+    formdata.append('Field15', values.preferredStartTime);
+    formdata.append('Field17', values.partySize);
+    formdata.append('Field19', values.notes);
+    formdata.append('Field25', values.occasion);
+    formdata.append('Field21', (title || '').toUpperCase());
+
+    return fetch(
+      `https://${config.wufoo.subDomain}.wufoo.com/api/v3/forms/${config.wufoo.genericPartyFormId}/entries.json`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${btoa(config.wufoo.apiKey + ':password')}`,
         },
-      )
+        body: formdata,
+        redirect: 'follow',
+      },
+    )
+      .then((response) => response.json())
       .then((res) => {
         console.log('Wuffo response:', res);
-        if (res.data.Success) {
+        if (res.Success) {
           AlertHelper.showSuccess(
             'Someone from the Drybar team will contact you shortly!',
           );
@@ -100,6 +101,7 @@ const EventDetail = ({
         }
       })
       .catch((error) => console.log('Error:', error));
+
   };
 
   return (
@@ -266,20 +268,7 @@ const EventDetail = ({
                   )}
                 </Field>
               </View>
-              {/*<View style={[styles.inputContainer]}>*/}
-              {/*  <Text style={styles.inputLabel}>Preferred Date</Text>*/}
-              {/*  <Field name="preferredDate">*/}
-              {/*    {({field, form: {setFieldValue}}) => (*/}
-              {/*      <NativePicker*/}
-              {/*        selectedValue={field.value}*/}
-              {/*        onValueChange={(itemValue) =>*/}
-              {/*          setFieldValue('preferredDate', itemValue)*/}
-              {/*        }*/}
-              {/*        items={preferredDateChoices}>*/}
-              {/*      </NativePicker>*/}
-              {/*    )}*/}
-              {/*  </Field>*/}
-              {/*</View>*/}
+
               <View style={[styles.inputContainer]}>
                 <Text style={styles.inputLabel}>Preferred Start Time</Text>
                 <Field name="preferredStartTime">
