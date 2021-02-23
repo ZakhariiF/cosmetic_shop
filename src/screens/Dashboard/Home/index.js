@@ -380,6 +380,7 @@ const Home = ({navigation}) => {
               if (imgUrl) {
                 img = (
                   <Image
+                    key={imgUrl}
                     source={{uri: imgUrl}}
                     resizeMode="contain"
                     style={styles.cardImage}
