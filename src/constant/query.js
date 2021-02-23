@@ -101,19 +101,18 @@ export const screenPrivacyPolicy = (id = '3M4G7zZEh7x6gdjhOOTKVA') => gql`
   }
 `;
 
-
-
 export const screenExtensionPolicy = () => gql`
-{
-  screenCollection(where: {slug: "extension-policy"}) {
-    items {
-      title
-      description{
+  {
+    screenCollection(where: {slug: "extension-policy"}) {
+      items {
+        title
+        description {
           json
+        }
       }
     }
   }
-}`;
+`;
 
 const id = '3Aw4uPJ7h8eRHBavDxoh0t';
 
@@ -218,3 +217,5 @@ export const bannerQuery = () => gql`
     }
   }
 `;
+
+

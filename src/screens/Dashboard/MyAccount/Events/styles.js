@@ -6,6 +6,13 @@ export default StyleSheet.create({
     height: 230,
     width: '100%',
   },
+  eventSlickWrapper: {
+    paddingHorizontal: 15,
+    maxHeight: 50,
+  },
+  eventSlickItem: {
+    backgroundColor: Colors.white,
+  },
   topText: {
     alignSelf: 'center',
     marginTop: 20,
@@ -13,7 +20,6 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontFamily: Fonts.DCondensed,
     lineHeight: 64,
-    color: Colors.input_text,
   },
   desc: {
     textAlign: 'center',
@@ -23,6 +29,7 @@ export default StyleSheet.create({
     fontSize: 18,
     color: Colors.header_title,
   },
+
   swiperTextStyle: {
     fontSize: 30,
     fontFamily: Fonts.DCondensed,
@@ -30,6 +37,9 @@ export default StyleSheet.create({
     color: '#42413D',
     textAlign: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
   swiperContainer: {
     height: 420,
@@ -40,7 +50,6 @@ export default StyleSheet.create({
     height: 350,
     width: '100%',
     marginBottom: 30,
-    position: 'relative',
   },
   buttonStyle: {
     width: '55%',
