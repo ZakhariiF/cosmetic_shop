@@ -35,6 +35,7 @@ import ShopDetail from 'screens/Dashboard/Booking/ShopDetail';
 import AccountService from 'screens/Dashboard/MyAccount/AccountService';
 import AccountAddon from 'screens/Dashboard/MyAccount/AccountAddon';
 import Contactus from 'screens/Dashboard/MyAccount/Contactus';
+import Events from 'screens/Dashboard/MyAccount/Events';
 import PrivacyPolicy from 'screens/Dashboard/MyAccount/PrivacyPolicy';
 import TermsOfServices from 'screens/Dashboard/MyAccount/TermsOfServices';
 import CaliforniaResidents from 'screens/Dashboard/MyAccount/CaliforniaResidents';
@@ -97,6 +98,7 @@ const AccountNavigator = () => (
     <AccountStack.Screen name="AccountService" component={AccountService} />
     <AccountStack.Screen name="AccountAddon" component={AccountAddon} />
     <AccountStack.Screen name="Contactus" component={Contactus} />
+    <AccountStack.Screen name="Events" component={Events} />
     <AccountStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     <AccountStack.Screen name="TermsOfServices" component={TermsOfServices} />
     <AccountStack.Screen name="ExtensionPolicy" component={ExtensionPolicy} />

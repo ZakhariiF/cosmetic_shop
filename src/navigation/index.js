@@ -2,7 +2,7 @@ import React, {useEffect, useCallback, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {AuthNavigator, TabStack} from './routes';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Platform, Alert} from 'react-native';
+import {Platform} from 'react-native';
 import Radar from 'react-native-radar';
 import {navigationRef} from './RootNavigation';
 
@@ -20,14 +20,14 @@ const AppContainer = () => {
 
     // do something with result.location
     console.log('Radar clientLocation:', result);
-    Alert.alert('Radar ClientLocation', JSON.stringify(result));
+    // Alert.alert('Radar ClientLocation', JSON.stringify(result));
   });
 
   Radar.on('location', (result) => {
 
     // do something with result.location, result.user
     console.log('radar clientLocation:', result);
-    Alert.alert('Radar Location', JSON.stringify(result));
+    // Alert.alert('Radar Location', JSON.stringify(result));
   });
 
   const hasRadarPermission = () => {

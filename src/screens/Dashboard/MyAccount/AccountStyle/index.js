@@ -8,22 +8,18 @@ import {Images, Colors} from 'constant';
 import {gqlLoadTheStyles} from 'constant/contentfulTheStylesActions';
 import {
   Image,
-  ImageBackground,
   ScrollView,
   Text,
-  TouchableWithoutFeedback,
   View,
   Modal,
-  Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import Swiper from 'react-native-swiper';
 import rootStyle from 'rootStyle';
 import styles from './styles';
-import {get, indexOf} from 'lodash';
+import {get} from 'lodash';
 import {playVideo} from 'utils';
 import Indicator from 'components/Indicator';
-const windowHeight = Dimensions.get('window').height;
+
 import Slick from 'react-native-slick';
 
 const AccountStyle = ({navigation}) => {

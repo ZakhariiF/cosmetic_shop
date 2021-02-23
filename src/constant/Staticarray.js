@@ -23,6 +23,7 @@ export const AccounData = [
       {name: 'The Styles', route: 'AccountStyle'},
       {name: 'Add-ons', route: 'AccountAddon'},
       {name: 'Contact Us', route: 'Contactus'},
+      {name: 'Events', route: 'Events'},
     ],
     icon: Images.setting,
   },

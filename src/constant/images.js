@@ -67,4 +67,7 @@ export default {
   tip_img: require('assets/images/tip_img.png'),
   square_heart: require('assets/images/square_heart.png'),
   black_heart: require('assets/images/black_heart.png'),
+  devider1: require('assets/images/ic-divider-1.png'),
+  devider2: require('assets/images/ic-divider-2.png'),
+  devider3: require('assets/images/ic-divider-3.png'),
 };
