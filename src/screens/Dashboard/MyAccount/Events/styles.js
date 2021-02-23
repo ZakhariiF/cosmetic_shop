@@ -7,8 +7,8 @@ export default StyleSheet.create({
     width: '100%',
   },
   eventSlickWrapper: {
-    paddingHorizontal: 15,
-    maxHeight: 50,
+    minHeight: 200,
+    maxHeight: 700,
   },
   eventSlickItem: {
     backgroundColor: Colors.white,
@@ -16,6 +16,7 @@ export default StyleSheet.create({
   topText: {
     alignSelf: 'center',
     marginTop: 20,
+    marginBottom: 27,
     fontSize: 50,
     textAlign: 'center',
     fontFamily: Fonts.DCondensed,
@@ -33,18 +34,10 @@ export default StyleSheet.create({
   swiperTextStyle: {
     fontSize: 30,
     fontFamily: Fonts.DCondensed,
-    padding: 10,
     color: '#42413D',
     textAlign: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    position: 'absolute',
-    bottom: 0,
     width: '100%',
-  },
-  swiperContainer: {
-    height: 420,
-    width: '100%',
-    marginTop: 30,
+    marginBottom: 10,
   },
   imageStyle: {
     height: 350,
