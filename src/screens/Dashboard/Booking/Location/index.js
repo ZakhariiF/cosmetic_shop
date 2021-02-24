@@ -118,14 +118,8 @@ const Location = ({navigation}) => {
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
-      const latitude = get(position, 'coords.latitude');
-      const longitude = get(position, 'coords.longitude');
-      // setCoords({
-      //   latitude,
-      //   longitude,
-      //   latitudeDelta: LATITUDE_DELTA,
-      //   longitudeDelta: LONGITUDE_DELTA,
-      // });
+      const latitude = get(position, 'latitude');
+      const longitude = get(position, 'longitude');
       setCurrentLocation({
         latitude,
         longitude,

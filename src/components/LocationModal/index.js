@@ -265,7 +265,7 @@ const LocationModal = forwardRef((props, ref) => {
               />
             ) : null}
 
-            <FlatList
+            {currentLocation && <FlatList
               ref={flatRef}
               initialScrollIndex={selectedIndex > -1 ? selectedIndex : 0}
               onScrollToIndexFailed={(info) => {
@@ -329,7 +329,7 @@ const LocationModal = forwardRef((props, ref) => {
                 <EmptyContainer emptyText="No Data Found" />
               )}
               extraData={[favItem]}
-            />
+            />}
           </View>
         </View>
       )}

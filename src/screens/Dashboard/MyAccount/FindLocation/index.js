@@ -75,17 +75,18 @@ const FindLocation = ({navigation}) => {
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
-      const latitude = get(position, 'coords.latitude');
-      const longitude = get(position, 'coords.longitude');
+      console.log("&&&&&&&&&", position);
+      const latitude = get(position, 'latitude');
+      const longitude = get(position, 'longitude');
 
       setCurrentLocation({
-        latitude,
-        longitude,
+        latitude: latitude,
+        longitude: longitude,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       });
     } catch (e) {
-      console.log('Can not get the current user location');
+      console.log('Can not get the current user location', e);
     }
   };
 
@@ -215,10 +216,11 @@ const FindLocation = ({navigation}) => {
       }
     });
   };
-
+  console.log("&&&&&&&&", currentLocation);
   return (
     <View style={styles.container}>
       <Header title="FIND LOCATION" isTab isBack />
+      {currentLocation ? 
       <MapView
         showsUserLocation
         // customMapStyle={mapStyle}
@@ -254,8 +256,8 @@ const FindLocation = ({navigation}) => {
             />
           </MapView.Marker>
         ))}
-      </MapView>
-      <View style={rootStyle.innerContainer}>
+      </MapView>: <View/>}
+      {currentLocation ? <View style={rootStyle.innerContainer}>
         <View style={{alignItems: 'center'}}>
           <CheckBox
             titile={'Use Current Location'}
@@ -296,7 +298,7 @@ const FindLocation = ({navigation}) => {
           )}
           extraData={[locationItems, searchVal]}
         />
-      </View>
+      </View> : <View/>}
       {loading || isFavLoad ? <Indicator /> : null}
     </View>
   );
