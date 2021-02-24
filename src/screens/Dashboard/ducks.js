@@ -48,9 +48,9 @@ const HomeReducer = (state = homeIntialState, action) => {
         ),
         pastAppt: action.payload.filter(
           (e) =>
-            e.appointment.IsPastDue ||
-            e.appointment.IsCancelled ||
-            moment(e.appointment.StartDateTimeOffset) < moment(new Date()),
+            (e.appointment.IsPastDue ||
+              moment(e.appointment.StartDateTimeOffset) < moment(new Date())) &&
+            !e.appointment.IsCancelled,
         ),
       };
 
