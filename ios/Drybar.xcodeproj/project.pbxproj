@@ -534,6 +534,10 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Drybar-DrybarTests/Pods-Drybar-DrybarTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Appboy-iOS-SDK/AppboyUI.ContentCards.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Appboy-iOS-SDK/Appboy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Appboy-iOS-SDK/AppboyUI.InAppMessage.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Appboy-iOS-SDK/AppboyUI.NewsFeed.bundle",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -555,6 +559,10 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppboyUI.ContentCards.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Appboy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppboyUI.InAppMessage.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppboyUI.NewsFeed.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
@@ -608,6 +616,10 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Drybar/Pods-Drybar-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Appboy-iOS-SDK/AppboyUI.ContentCards.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Appboy-iOS-SDK/Appboy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Appboy-iOS-SDK/AppboyUI.InAppMessage.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Appboy-iOS-SDK/AppboyUI.NewsFeed.bundle",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -629,6 +641,10 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppboyUI.ContentCards.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Appboy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppboyUI.InAppMessage.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppboyUI.NewsFeed.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
