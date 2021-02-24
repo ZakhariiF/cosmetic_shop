@@ -26,7 +26,7 @@ import {
 import Indicator from 'components/Indicator';
 import {getAppointments} from 'screens/Dashboard/thunks';
 import {cancelItinerary, cancelAppt} from 'services';
-import MParticle from "react-native-mparticle";
+import MParticle from 'react-native-mparticle';
 
 const Review = ({navigation, route}) => {
   const [isChecked, setChecked] = useState(false);
@@ -68,7 +68,12 @@ const Review = ({navigation, route}) => {
         );
       }
 
-      return acc + get(e.services, 'Price.Amount', 0) + addonPrice;
+      return (
+        acc +
+        get(e.services, 'Price.Amount', 0) +
+        addonPrice -
+        get(promoInfo, 'DiscountAmount', 0)
+      );
     }, 0);
 
     setTotal(totalPrice);
@@ -82,13 +87,15 @@ const Review = ({navigation, route}) => {
       .utcOffset(timezone)
       .format('YYYY-MM-DDTHH:mm:ssZ');
 
-    const items = [{
+    const items = [
+      {
         EmployeeID: get(totalGuests, '[0].employees', ''),
         StartTimeOffset: startTime,
         EndTimeOffset: endTime,
         TreatmentID: get(totalGuests, '[0].services.ID'),
         RoomID: get(totalGuests, '[0].rooms'),
-    }];
+      },
+    ];
 
     if (
       totalGuests[0].extension &&
@@ -98,7 +105,10 @@ const Review = ({navigation, route}) => {
       items.push({
         EmployeeID: get(totalGuests[0].extension, 'employee', ''),
         StartTimeOffset: endTime,
-        EndTimeOffset: moment(endTime).add(extensionAddon.TotalDuration, 'minutes').utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
+        EndTimeOffset: moment(endTime)
+          .add(extensionAddon.TotalDuration, 'minutes')
+          .utcOffset(timezone)
+          .format('YYYY-MM-DDTHH:mm:ssZ'),
         TreatmentID: extensionAddon.ID,
         RoomID: get(totalGuests[0].extension, 'rooms'),
       });
@@ -119,9 +129,9 @@ const Review = ({navigation, route}) => {
         ID: get(userInfo, 'bookerID', ''),
         SendEmail: true,
       },
-      // AppointmentPayment: {
-      //   CouponCode: get(promoInfo, 'CouponCode', ''),
-      // },
+      AppointmentPayment: {
+        CouponCode: get(promoInfo, 'CouponCode', ''),
+      },
       ResourceTypeID: 1,
       LocationID: get(selectedLocation, 'bookerLocationId', ''),
       // LocationID:'1639',
@@ -212,10 +222,14 @@ const Review = ({navigation, route}) => {
   };
 
   const onEdit = () => {
-    MParticle.logEvent('Change their booking information', MParticle.EventType.Other, {
-      'Source Page': 'Review',
-    });
-  }
+    MParticle.logEvent(
+      'Change their booking information',
+      MParticle.EventType.Other,
+      {
+        'Source Page': 'Review',
+      },
+    );
+  };
 
   // console.log('selectedLocation', selectedLocation);
   // console.log('CouponCode', promoInfo);
@@ -227,7 +241,9 @@ const Review = ({navigation, route}) => {
 
       <View style={rootStyle.innerContainer}>
         <ScrollView>
-          <Text>Please confirm your details and book your Appointment below</Text>
+          <Text>
+            Please confirm your details and book your Appointment below
+          </Text>
           <View style={styles.locContainer}>
             <Text style={styles.headerText}>Location</Text>
 
@@ -266,7 +282,7 @@ const Review = ({navigation, route}) => {
               style={styles.editContainer}
               onPress={() => {
                 onEdit();
-                navigation.navigate('Services')
+                navigation.navigate('Services');
               }}>
               <Image source={Images.edit} />
             </TouchableOpacity>
@@ -308,7 +324,7 @@ const Review = ({navigation, route}) => {
               style={styles.editContainer}
               onPress={() => {
                 onEdit();
-                navigation.navigate('Addons')
+                navigation.navigate('Addons');
               }}>
               <Image source={Images.edit} />
             </TouchableOpacity>
@@ -366,7 +382,7 @@ const Review = ({navigation, route}) => {
           <View style={styles.totalContainer}>
             <Text style={styles.titleText}>Estimated Total *</Text>
             <Text style={[styles.headerText, styles.price, {fontSize: 18}]}>
-              ${estimateTotal - get(promoInfo, 'DiscountAmount', 0)}
+              ${estimateTotal}
             </Text>
           </View>
           <TouchableOpacity onPress={onToggleCancel}>
@@ -389,12 +405,16 @@ const Review = ({navigation, route}) => {
                 Cancellation & No-Show Policy
               </Text>
             </View>
-            {
-              showCancel && <Text style={styles.notice}>
-                You may cancel up to 2 hours before the start of your appointment. By entering your credit card information, you agree to accept a $20 cancellation fee if you cancel within 2 hours of the start of your appointment or do not show up. For group appointments of six or less, your card will be charged for any in the party who cancel within 2 hours or do not show up.
+            {showCancel && (
+              <Text style={styles.notice}>
+                You may cancel up to 2 hours before the start of your
+                appointment. By entering your credit card information, you agree
+                to accept a $20 cancellation fee if you cancel within 2 hours of
+                the start of your appointment or do not show up. For group
+                appointments of six or less, your card will be charged for any
+                in the party who cancel within 2 hours or do not show up.
               </Text>
-            }
-
+            )}
           </TouchableOpacity>
 
           <CheckBox
@@ -425,7 +445,8 @@ const Review = ({navigation, route}) => {
           <View style={styles.bottomContainer}>
             <Text style={styles.notice}>*</Text>
             <Text style={[styles.notice, {marginLeft: 10}]}>
-              If you're a Barfly, your additional discounts will be taken in-shop at time of appointment.
+              If you're a Barfly, your additional discounts will be taken
+              in-shop at time of appointment.
             </Text>
           </View>
         </ScrollView>
