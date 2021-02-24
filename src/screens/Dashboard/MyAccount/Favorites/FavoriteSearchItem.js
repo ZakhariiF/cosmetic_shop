@@ -1,10 +1,30 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
 import {Colors, Fonts, Images} from 'constant';
 import {get} from 'lodash';
-import {call, distance} from 'utils';
+import {call} from 'utils';
+import {distance} from 'utils/RadarHelper';
 
 const FavoriteSearchItem = ({item, onFavIcon, isFav, currentLocation}) => {
+  const [dis, setDis] = useState(null);
+  useEffect(() => {
+    getDistance();
+  }, []);
+  const getDistance = async () => {
+    const _dis = await distance(
+      {
+        latitude: Number(currentLocation.latitude),
+        longitude: Number(currentLocation.longitude),
+      },
+      {
+        latitude: Number(get(item, 'contact.coordinates[0]')),
+        longitude: Number(get(item, 'contact.coordinates[1]'))
+      }
+    );
+    setDis(_dis);
+  }
+  console.log(dis);
+  console.log(currentLocation);
   return (
     <View style={styles.container}>
       <Image source={Images.notice} style={styles.noticeIcon} />
@@ -37,17 +57,15 @@ const FavoriteSearchItem = ({item, onFavIcon, isFav, currentLocation}) => {
 
         <View style={styles.bottomContainer}>
           {
-            currentLocation && <Text style={styles.miles}>
-              {Math.round(
-                distance(
-                  currentLocation.latitude,
-                  currentLocation.longitude,
-                  get(item, 'contact.coordinates[0]', 34.1434376),
-                  get(item, 'contact.coordinates[1]', 34.1434376),
-                ),
-              )}{' '}
-              miles away
-            </Text>
+            dis && (
+              <Text style={styles.miles}>
+                {dis.status === "SUCCESS" ?
+                  dis.routes.car.distance.text
+                :
+                  ""
+                }
+              </Text>
+            )
           }
 
           <View

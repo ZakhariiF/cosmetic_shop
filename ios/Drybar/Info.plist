@@ -57,8 +57,6 @@
 	<string>$(PRODUCT_NAME) will have access your contact to creat event.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) will have access your location while running and in background to search nearby salon.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME) will have access your location while running and in background to search nearby salon.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to access your location while you use the app to search nearby salon.</string>
 	<key>UIAppFonts</key>
@@ -86,6 +84,11 @@
 		<string>AvenirNext-Medium.ttf</string>
 		<string>Dincondensed-Bold.ttf</string>
 		<string>MrsEavesSmallCaps.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

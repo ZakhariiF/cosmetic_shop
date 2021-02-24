@@ -26,8 +26,8 @@ const ShopDetail = ({navigation, route}) => {
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
-      const latitude = get(position, 'coords.latitude');
-      const longitude = get(position, 'coords.longitude');
+      const latitude = get(position, 'latitude');
+      const longitude = get(position, 'longitude');
 
       setCurrentLocation({
         latitude,
