@@ -18,7 +18,6 @@ import Button from 'components/Button';
 import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
 import NativePicker from 'components/NativePicker';
 import config from 'constant/config';
-import axios from 'axios';
 
 const WufooSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -88,7 +87,6 @@ const EventDetail = ({
     )
       .then((response) => response.json())
       .then((res) => {
-        console.log('Wuffo response:', res);
         if (res.Success) {
           AlertHelper.showSuccess(
             'Someone from the Drybar team will contact you shortly!',
