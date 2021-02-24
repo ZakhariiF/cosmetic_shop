@@ -160,7 +160,6 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
             }}>
             <Text style={styles.editText}>Get Directions</Text>
           </TouchableOpacity>
-
         </View>
       </View>
     );
@@ -246,11 +245,13 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
       <Text style={styles.upcoming}>UPCOMING APPOINTMENTS</Text>
       <FlatList
         data={
-          data.sort(
-            (a, b) =>
-              new Date(a.StartDateTimeOffset).getTime() -
-              new Date(b.StartDateTimeOffset).getTime(),
-          )
+          data
+            .sort(
+              (a, b) =>
+                new Date(a.appointment.StartDateTimeOffset).getTime() -
+                new Date(b.appointment.StartDateTimeOffset).getTime(),
+            )
+            .slice(0, 1)
           // arr
           // data
           // data.sort(
