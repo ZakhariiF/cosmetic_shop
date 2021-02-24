@@ -220,7 +220,6 @@ const FindLocation = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Header title="FIND LOCATION" isTab isBack />
-      {currentLocation ? 
       <MapView
         showsUserLocation
         // customMapStyle={mapStyle}
@@ -256,8 +255,8 @@ const FindLocation = ({navigation}) => {
             />
           </MapView.Marker>
         ))}
-      </MapView>: <View/>}
-      {currentLocation ? <View style={rootStyle.innerContainer}>
+      </MapView>
+      <View style={rootStyle.innerContainer}>
         <View style={{alignItems: 'center'}}>
           <CheckBox
             titile={'Use Current Location'}
@@ -298,7 +297,7 @@ const FindLocation = ({navigation}) => {
           )}
           extraData={[locationItems, searchVal]}
         />
-      </View> : <View/>}
+      </View>
       {loading || isFavLoad ? <Indicator /> : null}
     </View>
   );
