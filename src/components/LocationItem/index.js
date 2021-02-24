@@ -13,7 +13,7 @@ import rootStyle from 'rootStyle';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {get} from 'lodash';
 import {openMaps} from 'utils';
-import {distance, requestUserLocationLocation} from 'utils';
+import {distance} from 'utils/RadarHelper';
 
 const LocationItem = ({
   navigation,
@@ -26,7 +26,24 @@ const LocationItem = ({
   fromFindLoc = false,
   onSelect,
   currentLocation,
-}) => {
+}) =>  {
+  const [dis, setDis] = useState(null);
+  useEffect(() => {
+    getDistance();
+  }, []);
+  const getDistance = async () => {
+    const _dis = await distance(
+      {
+        latitude: parseFloat(currentLocation.latitude),
+        longitude: parseFloat(currentLocation.longitude),
+      },
+      {
+        latitude: parseFloat(get(item, 'contact.coordinates[0]')),
+        longitude: parseFloat(get(item, 'contact.coordinates[1]'))
+      }
+    );
+    setDis(_dis);
+  }
   const window = Dimensions.get('window');
   const {width, height} = window;
   const ASPECT_RATIO = width / height;
@@ -52,7 +69,7 @@ const LocationItem = ({
           : Number(0),
     };
   }
-
+  
   const operatingMessage = get(item, 'settings.operatingMessage', '');
   const arrivalInformation = get(item, 'arrivalInformation', '');
 
@@ -61,6 +78,7 @@ const LocationItem = ({
     item.bookerLocationId &&
     item.type === 'Drybar Shop' &&
     get(item, 'settings.bookable', false);
+  console.log("************",dis);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -123,17 +141,13 @@ const LocationItem = ({
         </View>
 
         <View style={[styles.flexContainer, {marginTop: 10, marginLeft: 35}]}>
-          {currentLocation && (
+          {dis && (
             <Text style={styles.miles}>
-              {Math.round(
-                distance(
-                  currentLocation.latitude,
-                  currentLocation.longitude,
-                  get(item, 'contact.coordinates[0]'),
-                  get(item, 'contact.coordinates[1]'),
-                ),
-              )}{' '}
-              miles away
+              {dis.status === "SUCCESS" ?
+                dis.routes.car.distance.text
+              :
+                ""
+              }
             </Text>
           )}
 

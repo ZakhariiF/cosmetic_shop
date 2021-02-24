@@ -36,8 +36,9 @@ const Favorites = () => {
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
-      const latitude = get(position, 'coords.latitude');
-      const longitude = get(position, 'coords.longitude');
+      console.log("&&&&&&&&&", position);
+      const latitude = get(position, 'latitude');
+      const longitude = get(position, 'longitude');
 
       setCurrentLocation({
         latitude,
@@ -120,7 +121,7 @@ const Favorites = () => {
         <Text style={styles.headerTitle}>YOUR FAVORITE SHOP</Text>
 
         {selectedFav ? (
-          <FavoriteItem item={selectedFav} currentLocation={currentLocation} />
+          currentLocation && <FavoriteItem item={selectedFav} currentLocation={currentLocation} />
         ) : (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
@@ -136,7 +137,7 @@ const Favorites = () => {
           onSearch={searchFilterFunction}
         />
 
-        {isVisible ? (
+        {isVisible && currentLocation ? (
           <FlatList
             data={locData}
             renderItem={({item}) => (

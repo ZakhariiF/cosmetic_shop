@@ -204,6 +204,7 @@ const MyAppts = ({navigation}) => {
                 scrollEnabled={false}
                 renderItem={({item, index}) => (
                   <AppointmentItem
+                    key={index}
                     past={true}
                     navigation={navigation}
                     item={item}

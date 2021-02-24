@@ -46,7 +46,7 @@ static void InitializeMParticle(UIApplication *application) {
   
   InitializeMParticle(application);
   
-  [Radar initializeWithPublishableKey:@"[Radar initializeWithPublishableKey:publishableKey];"];
+  [Radar initializeWithPublishableKey:@"prj_test_pk_5cd967ae3386d2ef739928d63e434350ef07e822"];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
