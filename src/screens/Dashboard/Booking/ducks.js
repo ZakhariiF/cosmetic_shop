@@ -376,7 +376,7 @@ const BookingReducer = (state = bookingIntialState, action) => {
       const availbilityTimes1 = []
       get(action.payload, 'availability').forEach((item) => {
         let startTime = moment(item.startDateTime);
-        let endTime = moment(item.endDateTime)
+        let endTime = moment(item.endDateTime);
 
         const timezone = moment().utcOffset(item.startDateTime).utcOffset()
 
