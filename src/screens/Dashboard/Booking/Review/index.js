@@ -292,7 +292,7 @@ const Review = ({navigation, route}) => {
             <Text style={styles.headerText}>Add-ons</Text>
 
             {!isAddon ? (
-              <Text style={styles.titleText}>Empty </Text>
+              <Text style={styles.titleText}>None </Text>
             ) : (
               totalGuests.map((e, i, arr) => {
                 if (get(e, 'addons')) {
