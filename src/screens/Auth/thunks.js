@@ -74,11 +74,11 @@ export const onlogin = (email, password) => async (dispatch) => {
   }
 };
 
-export const updateUserInfo = (id, obj) => async (dispatch) => {
+export const updateUserInfo = (obj) => async (dispatch) => {
   dispatch(authActions.updateUserRequest());
 
   try {
-    const data = await API.updateUser(id, obj);
+    const data = await API.updateUser(obj);
     console.log('update  data data>>>', data);
     if (data) {
       AlertHelper.showSuccess('User Updated Successfully');
@@ -87,6 +87,7 @@ export const updateUserInfo = (id, obj) => async (dispatch) => {
       return dispatch(authActions.updateUserError());
     }
   } catch (error) {
+    console.log('UpdateUserInfo:', error, get(error, 'response'));
     AlertHelper.showError(
       get(error, 'response.data.errorCauses[0].errorSummary', 'Server Error'),
     );
