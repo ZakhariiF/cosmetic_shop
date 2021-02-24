@@ -1,20 +1,20 @@
 import Radar from 'react-native-radar';
 
 export const trigerListener = () => {
-    // const stringify = obj => (
-    // JSON.stringify(obj, null, 2)
-    // );
-    // Radar.on('location', (result) => {
-    //     console.log('location:', stringify(result));
-    // });
+    const stringify = obj => (
+    JSON.stringify(obj, null, 2)
+    );
+    Radar.on('location', (result) => {
+        console.log('location:', stringify(result));
+    });
     
-    // Radar.on('error', (err) => {
-    //     console.log('error:', stringify(err));
-    // });
+    Radar.on('error', (err) => {
+        console.log('error:', stringify(err));
+    });
     
-    // Radar.on('log', (result) => {
-    //     console.log('log:', stringify(result));
-    // });
+    Radar.on('log', (result) => {
+        console.log('log:', stringify(result));
+    });
 }
 const requestRadarPermission = (bakcground) => {
     Radar.requestPermissions(bakcground);
