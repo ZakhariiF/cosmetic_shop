@@ -30,7 +30,7 @@ const LocationItem = ({
   const [dis, setDis] = useState(null);
   useEffect(() => {
     if(currentLocation) {
-      // getDistance();
+      getDistance();
     }
   }, []);
   const getDistance = async () => {
