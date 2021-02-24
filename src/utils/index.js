@@ -4,7 +4,7 @@ import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 // import {createConfig, signIn, getUser} from '@okta/okta-react-native';
 import config from 'constant/config';
-
+import {trackOnce} from 'utils/RadarHelper';
 export const renderTabImages = (index) => {
   switch (index) {
     case 0:
@@ -93,15 +93,16 @@ export const requestUserLocationLocation = () => {
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
     ).then((response) => {
       if (response === RESULTS.GRANTED) {
-        Geolocation.getCurrentPosition(
-          (position) => {
-            resolve(position);
-          },
-          (error) => {
-            console.log(error.code, error.message);
-          },
-          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-        );
+        // Geolocation.getCurrentPosition(
+        //   (position) => {
+        //     resolve(position);
+        //   },
+        //   (error) => {
+        //     console.log(error.code, error.message);
+        //   },
+        //   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        // );
+        trackOnce(resolve, reject);
       } else if (response === RESULTS.UNAVAILABLE) {
         // Alert.alert(
         //   'Error',

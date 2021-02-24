@@ -21,7 +21,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {getCustomerInfo, loginSuccess} from 'screens/Auth/thunks';
-
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
 import {
   getLocations,
@@ -33,9 +32,9 @@ import {
 import moment from 'moment';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
-import Radar from 'react-native-radar';
 import {getUser} from '@okta/okta-react-native';
 import Dialog from 'react-native-dialog';
+import {hasRadarPermission, trigerListener} from 'utils/RadarHelper';
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
@@ -49,7 +48,7 @@ const Home = ({navigation}) => {
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const customerId = get(userInfo, 'bookerID');
   const [deleteItem, setDeleteItem] = useState(null);
-
+  console.log(userInfo);
   React.useMemo(() => {
     if (loading || error) {
       return null;
@@ -59,7 +58,10 @@ const Home = ({navigation}) => {
     return data;
   }, [loading, error, data]);
 
+
   useEffect(() => {
+    hasRadarPermission(customerId);
+    trigerListener()
     if (customerId) {
       getAppts();
       getCustomerDetails();
@@ -333,7 +335,7 @@ const Home = ({navigation}) => {
             <Text style={styles.shopText}>Shop Mixologist</Text>
           </View> */}
 
-          {homeData.map((item) => {
+          {homeData.map((item, index) => {
             if (item.marketingStyles) {
               let action = get(
                 item,
@@ -341,6 +343,7 @@ const Home = ({navigation}) => {
               );
               return (
                 <StyleSwiper
+                  key={index}
                   title={item.marketingStyles.title}
                   imageSource={Images.lady}
                   data={item.marketingStyles.stylesCollection}
@@ -358,6 +361,7 @@ const Home = ({navigation}) => {
               );
               return (
                 <StyleSwiper
+                  key={index}
                   title={item.marketingProducts.title}
                   imageSource={Images.lady}
                   data={item.marketingProducts.productsCollection}
@@ -380,6 +384,7 @@ const Home = ({navigation}) => {
               if (imgUrl) {
                 img = (
                   <Image
+                    key={index}
                     source={{uri: imgUrl}}
                     resizeMode="contain"
                     style={styles.cardImage}
@@ -389,7 +394,7 @@ const Home = ({navigation}) => {
 
               if (img && action) {
                 return (
-                  <TouchableOpacity onPress={() => onBrowser(action)}>
+                  <TouchableOpacity onPress={() => onBrowser(action)} key={index}>
                     {img}
                   </TouchableOpacity>
                 );
