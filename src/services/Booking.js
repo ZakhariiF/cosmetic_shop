@@ -102,12 +102,12 @@ export const updateAppt = (data) =>
     })
     .then((response) => response.data);
 
-export const promoCode = (locId, code) =>
+export const promoCode = (locationId, code) =>
   client
     .post('/booker/GetSpecialByCode', {
       method: 'GET',
       urlParams: {
-        id: locId,
+        locationId,
       },
       data: {
         couponcode: code,
