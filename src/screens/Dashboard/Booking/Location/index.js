@@ -118,6 +118,7 @@ const Location = ({navigation}) => {
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
+      console.log(position);
       const latitude = get(position, 'latitude');
       const longitude = get(position, 'longitude');
       setCurrentLocation({
@@ -156,7 +157,7 @@ const Location = ({navigation}) => {
       longitudeDelta: 0.0121 * 8,
     });
   };
-
+  console.log("booking location screen", currentLocation)
   return (
     <>
       <BookingTab />

@@ -121,7 +121,7 @@ const Favorites = () => {
         <Text style={styles.headerTitle}>YOUR FAVORITE SHOP</Text>
 
         {selectedFav ? (
-          currentLocation && <FavoriteItem item={selectedFav} currentLocation={currentLocation} />
+          <FavoriteItem item={selectedFav} currentLocation={currentLocation} />
         ) : (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
@@ -137,7 +137,7 @@ const Favorites = () => {
           onSearch={searchFilterFunction}
         />
 
-        {isVisible && currentLocation ? (
+        {isVisible ? (
           <FlatList
             data={locData}
             renderItem={({item}) => (
