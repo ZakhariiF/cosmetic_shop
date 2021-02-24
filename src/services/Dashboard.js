@@ -1,6 +1,6 @@
 import {client} from 'services';
 
-export const getAppts = (userId, pageSize=10) =>
+export const getAppts = (userId, pageSize=10, fromStartDate=null) =>
   client
     .post('/booker/GetCustomerAppointments', {
       method: 'GET',
@@ -11,6 +11,7 @@ export const getAppts = (userId, pageSize=10) =>
         Count: pageSize,
         PageNumber: 1,
         ShowAppointmentIconFlags: true,
+        fromStartDate,
       },
     })
     .then((response) => response.data);
