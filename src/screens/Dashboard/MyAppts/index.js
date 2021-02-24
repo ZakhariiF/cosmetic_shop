@@ -21,6 +21,8 @@ import {storeCollectionQuery} from 'constant/query';
 import Dialog from 'react-native-dialog';
 
 import Button from 'components/Button';
+import {getUser} from '@okta/okta-react-native';
+import {loginSuccess} from 'screens/Auth/thunks';
 
 const MyAppts = ({navigation}) => {
   const dispatch = useDispatch();
@@ -34,12 +36,23 @@ const MyAppts = ({navigation}) => {
 
   const [cancelItem, setCancelItem] = useState(null);
 
+  const customerId = get(userInfo, 'bookerID');
+
   useEffect(() => {
-    getAppts();
-  }, []);
+    if (customerId) {
+      getAppts();
+    } else {
+      getUserInfo();
+    }
+  }, [customerId]);
+
+  const getUserInfo = async () => {
+    const user = await getUser();
+    dispatch(loginSuccess(user));
+  };
 
   const getAppts = () =>
-    dispatch(getAppointments(get(userInfo, 'bookerID', '')));
+    dispatch(getAppointments(customerId));
 
   const onEdit = (item, location, isRebook = false) => {
     const services = get(item, 'appointment.AppointmentTreatments', []).filter(
