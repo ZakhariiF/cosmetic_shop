@@ -1,21 +1,24 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, Text, View, Image} from 'react-native';
 import {Formik, Field} from 'formik';
-import axios from 'axios';
+
 import * as Yup from 'yup';
-import {Picker} from '@react-native-picker/picker';
+
 import {get} from 'lodash';
 import Input from 'components/Input';
 import HTMLView from 'react-native-htmlview';
 
 import {Colors, Fonts} from 'constant';
 import rootStyle from 'rootStyle';
-import appConfig from 'constant/config';
+
 import {AlertHelper} from 'utils/AlertHelper';
 
 import Button from 'components/Button';
 
 import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
+import NativePicker from 'components/NativePicker';
+import config from 'constant/config';
+import axios from 'axios';
 
 const WufooSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -32,7 +35,6 @@ const WufooSchema = Yup.object().shape({
   state: Yup.string().required('This field is required'),
   postalCode: Yup.string().required('This field is required'),
   preferredShop: Yup.string().required('This field is required'),
-  preferredDate: Yup.string().required('This field is required'),
   preferredStartTime: Yup.string().required('This field is required'),
   occasion: Yup.string().required('This field is required'),
   partySize: Yup.string().required('This field is required'),
@@ -44,7 +46,7 @@ const WufooSchema = Yup.object().shape({
 
 const EventDetail = ({
   preferredShopChoices,
-  preferredDateChoices,
+  // preferredDateChoices,
   preferredStartTimeChoices,
   partySizeChoices,
   occasions,
@@ -54,6 +56,7 @@ const EventDetail = ({
   action,
 }) => {
   const onSubmit = (values, {resetForm}) => {
+    console.log('Values:', values);
     let formData = {
       Field1: values.firstName,
       Field2: values.lastName,
@@ -65,50 +68,54 @@ const EventDetail = ({
       Field7: values.state,
       Field8: values.postalCode,
       Field12: values.preferredShop,
-      Field29: values.preferredDate,
+      // Field29: values.preferredDate,
       Field15: values.preferredStartTime,
       Field17: values.partySize,
       Field19: values.notes,
       Field25: values.occasion,
-      Field21: this.props.title.toUpperCase(),
+      Field21: (title || '').toUpperCase(),
     };
 
     axios
       .post(
-        'https://209v02rl78.execute-api.us-west-1.amazonaws.com/dev/postForms',
+        `https://${config.wufoo.subDomain}.wufoo.com/api/v3/forms/${config.wufoo.genericPartyFormId}/entries.json`,
+        formData,
         {
-          subDomain: appConfig.wufoo.subDomain,
-          formId: appConfig.wufoo.genericPartyFormId,
-          key: btoa(appConfig.wufoo.apiKey + ':password'),
-          formData,
+          headers: {
+            Authorization: `Basic ${btoa(config.wufoo.apiKey + ':password')}`,
+          },
         },
       )
       .then((res) => {
+        console.log('Wuffo response:', res);
         if (res.data.Success) {
           AlertHelper.showSuccess(
             'Someone from the Drybar team will contact you shortly!',
           );
+          resetForm({});
         } else {
           AlertHelper.showError(
             'Sorry it looks like some information is not quite right.',
           );
         }
-        resetForm({});
       })
-      .catch((error) => console.log('error in wufoo api ', error));
+      .catch((error) => console.log('Error:', error));
   };
 
   return (
     <View style={styles.container}>
-      <View style={{alignItems: 'center'}}>
+      <View style={{alignItems: 'center', flexDirection: 'row'}}>
         <View style={styles.dashedLine} />
         <Image source={dividerIcon} />
         <View style={styles.dashedLine} />
       </View>
-      <Text style={styles.detailHeaderText}>{title}</Text>
+      <Text style={styles.detailHeaderText}>{(title || '').toUpperCase()}</Text>
       <View style={styles.detailDescWrapper}>
         {description && (
-          <HTMLView value={documentToHtmlString(get(description, 'json'))} stylesheet={DescriptionStyle} />
+          <HTMLView
+            value={documentToHtmlString(get(description, 'json'))}
+            stylesheet={DescriptionStyle}
+          />
         )}
       </View>
       <View style={styles.formWrapper}>
@@ -116,8 +123,9 @@ const EventDetail = ({
           initialValues={{}}
           onSubmit={onSubmit}
           validationSchema={WufooSchema}>
-          {({submitForm, isSubmitting}) => (
+          {({submitForm, isSubmitting, errors}) => (
             <>
+
               <Field name={'firstName'}>
                 {({field, meta, form: {setFieldValue}}) => (
                   <View style={styles.inputContainer}>
@@ -248,67 +256,55 @@ const EventDetail = ({
                 <Text style={styles.inputLabel}>Preferred Shop</Text>
                 <Field name="preferredShop">
                   {({field, form: {setFieldValue}}) => (
-                    <Picker
+                    <NativePicker
                       selectedValue={field.value}
                       onValueChange={(itemValue) =>
                         setFieldValue('preferredShop', itemValue)
                       }
-                      style={styles.innerContainer}>
-                      {preferredShopChoices.map((s) => (
-                        <Picker.Item value={s} key={s} label={s} />
-                      ))}
-                    </Picker>
+                      items={preferredShopChoices}
+                    />
                   )}
                 </Field>
               </View>
-              <View style={[styles.inputContainer]}>
-                <Text style={styles.inputLabel}>Preferred Date</Text>
-                <Field name="preferredDate">
-                  {({field, form: {setFieldValue}}) => (
-                    <Picker
-                      selectedValue={field.value}
-                      onValueChange={(itemValue) =>
-                        setFieldValue('preferredDate', itemValue)
-                      }
-                      style={styles.innerContainer}>
-                      {preferredDateChoices.map((s) => (
-                        <Picker.Item value={s} key={s} label={s} />
-                      ))}
-                    </Picker>
-                  )}
-                </Field>
-              </View>
+              {/*<View style={[styles.inputContainer]}>*/}
+              {/*  <Text style={styles.inputLabel}>Preferred Date</Text>*/}
+              {/*  <Field name="preferredDate">*/}
+              {/*    {({field, form: {setFieldValue}}) => (*/}
+              {/*      <NativePicker*/}
+              {/*        selectedValue={field.value}*/}
+              {/*        onValueChange={(itemValue) =>*/}
+              {/*          setFieldValue('preferredDate', itemValue)*/}
+              {/*        }*/}
+              {/*        items={preferredDateChoices}>*/}
+              {/*      </NativePicker>*/}
+              {/*    )}*/}
+              {/*  </Field>*/}
+              {/*</View>*/}
               <View style={[styles.inputContainer]}>
                 <Text style={styles.inputLabel}>Preferred Start Time</Text>
                 <Field name="preferredStartTime">
                   {({field, form: {setFieldValue}}) => (
-                    <Picker
+                    <NativePicker
                       selectedValue={field.value}
                       onValueChange={(itemValue) =>
-                        setFieldValue('State', itemValue)
+                        setFieldValue('preferredStartTime', itemValue)
                       }
-                      style={styles.innerContainer}>
-                      {preferredStartTimeChoices.map((s) => (
-                        <Picker.Item value={s} key={s} label={s} />
-                      ))}
-                    </Picker>
+                      items={preferredStartTimeChoices}
+                    />
                   )}
                 </Field>
               </View>
               <View style={[styles.inputContainer]}>
                 <Text style={styles.inputLabel}>Party Size</Text>
-                <Field name="preferredStartTime">
+                <Field name="partySize">
                   {({field, form: {setFieldValue}}) => (
-                    <Picker
+                    <NativePicker
                       selectedValue={field.value}
                       onValueChange={(itemValue) =>
-                        setFieldValue('preferredStartTime', itemValue)
+                        setFieldValue('partySize', itemValue)
                       }
-                      style={styles.innerContainer}>
-                      {partySizeChoices.map((s) => (
-                        <Picker.Item value={s} key={s} label={s} />
-                      ))}
-                    </Picker>
+                      items={partySizeChoices}
+                    />
                   )}
                 </Field>
               </View>
@@ -316,16 +312,13 @@ const EventDetail = ({
                 <Text style={styles.inputLabel}>Occasion</Text>
                 <Field name="occasion">
                   {({field, form: {setFieldValue}}) => (
-                    <Picker
+                    <NativePicker
                       selectedValue={field.value}
+                      items={occasions}
                       onValueChange={(itemValue) =>
                         setFieldValue('occasion', itemValue)
                       }
-                      style={styles.innerContainer}>
-                      {partySizeChoices.map((s) => (
-                        <Picker.Item value={s} key={s} label={s} />
-                      ))}
-                    </Picker>
+                    />
                   )}
                 </Field>
               </View>
@@ -369,12 +362,12 @@ const styles = StyleSheet.create({
     lineHeight: 51,
     textAlign: 'center',
     marginVertical: 20,
+    fontFamily: Fonts.DCondensed,
   },
   detailDescWrapper: {
     padding: 15,
     backgroundColor: Colors.white,
     marginBottom: 15,
-
   },
   formWrapper: {
     padding: 15,
@@ -384,8 +377,9 @@ const styles = StyleSheet.create({
     height: 1,
     flex: 1,
     borderStyle: 'dashed',
-    borderTopColor: Colors.dashed,
-    borderTopWidth: 1,
+    borderColor: Colors.dashed,
+    borderWidth: 1,
+    marginHorizontal: 10,
   },
   inputLabel: {
     fontSize: 15,
@@ -394,7 +388,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.AvenirNextRegular,
   },
 });
-
 
 const DescriptionStyle = StyleSheet.create({
   p: {
