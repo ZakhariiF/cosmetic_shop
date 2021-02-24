@@ -163,19 +163,9 @@ export const getToken = (code, codeVerifier, state) => {
   return axios.post(`${config.issuer}/oauth2/default/v1/token`, params);
 };
 
-export const updateUser = (id, data) => {
-  return axios
-    .post(
-      `${config.oktaBaseurl}/api/v1/users/${id}`,
-      {
-        profile: data,
-      },
-      {
-        headers: {
-          Authorization: `SSWS ${config.oktaToken}`,
-        },
-      },
-    )
+export const updateUser = (data) => {
+  return client
+    .post('/okta/update-user', data)
     .then((response) => response.data);
 };
 
