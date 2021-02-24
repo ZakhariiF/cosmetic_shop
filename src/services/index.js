@@ -17,7 +17,10 @@ const client = axios.create({
 });
 
 client.interceptors.request.use(async (requestConfig) => {
-  if (requestConfig.url.includes('/booker/')) {
+  if (
+    requestConfig.url.includes('/booker/') ||
+    requestConfig.url.includes('/okta/update-user')
+  ) {
     let retries = 0;
 
     while (retries < 3) {

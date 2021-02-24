@@ -3,6 +3,7 @@ import {View, Text} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Header from 'components/Header/Header';
 import Input from 'components/Input';
+import Button from 'components/Button';
 import rootStyle from 'rootStyle';
 import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
@@ -30,11 +31,10 @@ const AccountInfo = ({navigation}) => {
     const obj = {
       firstName,
       lastName,
-      email: email,
       mobilePhone: phoneNumber,
     };
 
-    dispatch(updateUserInfo(get(userInfo, 'id', ''), obj)).then((response) => {
+    dispatch(updateUserInfo(obj)).then((response) => {
       console.log('response>?>?', response);
       if (response.type == 'UPDATE_LOGIN_DETAILS_SUCCESS') {
         navigation.goBack();
@@ -42,13 +42,9 @@ const AccountInfo = ({navigation}) => {
     });
   };
 
-  console.log('userInfo', userInfo);
-
-  console.log('token', token);
-
   return (
     <View style={[rootStyle.container, styles.container]}>
-      <Header title="ACCOUNT INFORMATION" isTab isSave onSave={onUpdate} />
+      <Header title="ACCOUNT INFORMATION" isTab />
 
       <KeyboardAwareScrollView>
         <View style={rootStyle.innerContainer}>
@@ -89,6 +85,7 @@ const AccountInfo = ({navigation}) => {
             hide
             onEdit={() => navigation.navigate('ChangePassword')}
           />
+          <Button onButtonPress={onUpdate} name={"Save"} />
         </View>
       </KeyboardAwareScrollView>
 
