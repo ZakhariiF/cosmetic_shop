@@ -9,7 +9,9 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
   const navigation = useNavigation();
   const [dis, setDis] = useState(null);
   useEffect(() => {
-    getDistance();
+    if (currentLocation) {
+      getDistance();
+    }
   }, []);
   const getDistance = async () => {
     const _dis = await distance(

@@ -29,19 +29,22 @@ const LocationItem = ({
 }) =>  {
   const [dis, setDis] = useState(null);
   useEffect(() => {
-    getDistance();
+    if(currentLocation) {
+      getDistance();
+    }
   }, []);
   const getDistance = async () => {
     const _dis = await distance(
       {
-        latitude: parseFloat(currentLocation.latitude),
-        longitude: parseFloat(currentLocation.longitude),
+        latitude: Number(currentLocation.latitude),
+        longitude: Number(currentLocation.longitude),
       },
       {
-        latitude: parseFloat(get(item, 'contact.coordinates[0]')),
-        longitude: parseFloat(get(item, 'contact.coordinates[1]'))
+        latitude: Number(get(item, 'contact.coordinates[0]')),
+        longitude: Number(get(item, 'contact.coordinates[1]'))
       }
     );
+    console.log(_dis);
     setDis(_dis);
   }
   const window = Dimensions.get('window');
@@ -78,7 +81,8 @@ const LocationItem = ({
     item.bookerLocationId &&
     item.type === 'Drybar Shop' &&
     get(item, 'settings.bookable', false);
-  console.log("************",dis);
+  console.log("&&&&&&&&&&",currentLocation);
+  console.log("&&&&&&&&&&",dis);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
