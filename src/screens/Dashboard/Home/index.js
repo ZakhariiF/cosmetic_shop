@@ -76,7 +76,7 @@ const Home = ({navigation}) => {
 
   const getCustomerDetails = () => dispatch(getCustomerInfo(customerId));
 
-  const getAppts = () => dispatch(getAppointments(customerId));
+  const getAppts = () => dispatch(getAppointments(customerId, 5));
 
   const getHomeData = async () => {
     try {

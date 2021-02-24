@@ -8,10 +8,10 @@ export const setUseCurrentLocation = (checked) => async (dispatch) => {
   dispatch(homeActions.setUseCurrentLocation(checked));
 };
 
-export const getAppointments = (userId) => async (dispatch) => {
+export const getAppointments = (userId, pageSize=10) => async (dispatch) => {
   dispatch(homeActions.getApptRequest());
   try {
-    const data = await API.getAppts(userId);
+    const data = await API.getAppts(userId, pageSize);
     if (data.IsSuccess) {
       const groups = data.Appointments.reduce((obj, cur) => {
         if (cur.GroupID) {
