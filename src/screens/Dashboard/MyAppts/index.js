@@ -189,8 +189,8 @@ const MyAppts = ({navigation}) => {
                 // scrollEnabled={false}
                 data={data.sort(
                   (a, b) =>
-                    new Date(b.appointment.DateBookedOffset) -
-                    new Date(a.appointment.DateBookedOffset),
+                    new Date(a.appointment.StartDateTimeOffset).getTime() -
+                    new Date(b.appointment.StartDateTimeOffset).getTime(),
                 )}
                 renderItem={({item}) => (
                   <AppointmentItem
