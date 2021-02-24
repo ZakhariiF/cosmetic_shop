@@ -8,7 +8,9 @@ import {distance} from 'utils/RadarHelper';
 const FavoriteSearchItem = ({item, onFavIcon, isFav, currentLocation}) => {
   const [dis, setDis] = useState(null);
   useEffect(() => {
-    getDistance();
+    if (currentLocation) {
+      getDistance();
+    }
   }, []);
   const getDistance = async () => {
     const _dis = await distance(
@@ -23,8 +25,6 @@ const FavoriteSearchItem = ({item, onFavIcon, isFav, currentLocation}) => {
     );
     setDis(_dis);
   }
-  console.log(dis);
-  console.log(currentLocation);
   return (
     <View style={styles.container}>
       <Image source={Images.notice} style={styles.noticeIcon} />

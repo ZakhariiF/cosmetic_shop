@@ -202,7 +202,7 @@ const LocationModal = forwardRef((props, ref) => {
       }
     });
   };
-
+  console.log(currentLocation);
   return (
     <View style={[styles.container, {height: updatedHeight}]}>
       <TouchableOpacity onPress={onMin}>
@@ -265,7 +265,7 @@ const LocationModal = forwardRef((props, ref) => {
               />
             ) : null}
 
-            {currentLocation && <FlatList
+            <FlatList
               ref={flatRef}
               initialScrollIndex={selectedIndex > -1 ? selectedIndex : 0}
               onScrollToIndexFailed={(info) => {
@@ -329,7 +329,7 @@ const LocationModal = forwardRef((props, ref) => {
                 <EmptyContainer emptyText="No Data Found" />
               )}
               extraData={[favItem]}
-            />}
+            />
           </View>
         </View>
       )}
