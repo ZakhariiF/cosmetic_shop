@@ -1,35 +1,34 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-  Linking,
-} from 'react-native';
+import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
+import {get} from 'lodash';
 import {Colors, Fonts, Images} from 'constant';
 import {call} from 'utils';
+import {useSelector} from 'react-redux';
 
-const Authheader = ({isCall}) => (
-  <View style={styles.container}>
-    <View style={styles.leftContainer} />
-    <Image
-      resizeMode="contain"
-      source={Images.welcome_logo}
-      style={styles.logo}
-    />
-    {isCall ? (
-      <TouchableOpacity
-        onPress={() => call('888-555-1212')}
-        style={styles.rightContainer}>
-        <Image source={Images.call} />
-        <Text style={styles.call}>Call Us</Text>
-      </TouchableOpacity>
-    ) : (
+const Authheader = ({isCall}) => {
+  const config = useSelector((state) => state.home.config);
+
+  return (
+    <View style={styles.container}>
       <View style={styles.leftContainer} />
-    )}
-  </View>
-);
+      <Image
+        resizeMode="contain"
+        source={Images.welcome_logo}
+        style={styles.logo}
+      />
+      {isCall ? (
+        <TouchableOpacity
+          onPress={() => call(get(config, 'settings.phoneNumbers.drybarServices'))}
+          style={styles.rightContainer}>
+          <Image source={Images.call} />
+          <Text style={styles.call}>Call Us</Text>
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.leftContainer} />
+      )}
+    </View>
+  );
+};
 
 export default Authheader;
 

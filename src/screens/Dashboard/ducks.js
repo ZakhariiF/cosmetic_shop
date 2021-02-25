@@ -17,6 +17,9 @@ export const types = {
 
   // ---- SET USE CURRENT LOCATION ---
   SET_USE_CURRENT_LOCATION: 'SET_USE_CURRENT_LOCATION',
+
+  // ---- SET USE CURRENT LOCATION ---
+  SET_GLOBAL_CONFIG: 'SET_GLOBAL_CONFIG',
 };
 
 export const homeIntialState = {
@@ -24,6 +27,7 @@ export const homeIntialState = {
   pastAppt: [],
   apptLoading: false,
   useCurrentLocation: true,
+  config: null,
 };
 
 // Reducer
@@ -92,6 +96,13 @@ const HomeReducer = (state = homeIntialState, action) => {
         ...state,
         useCurrentLocation: action.payload,
       };
+
+    case types.SET_GLOBAL_CONFIG:
+      return {
+        ...state,
+        config: action.payload,
+      };
+
     default:
       return state;
   }
@@ -134,6 +145,12 @@ export const homeActions = {
 
   setUseCurrentLocation: (payload) => ({
     type: types.SET_USE_CURRENT_LOCATION,
+    payload,
+  }),
+
+  // --------- SET GLOBAL CONFIG ---------------
+  setGlobalConfig: (payload) => ({
+    type: types.SET_GLOBAL_CONFIG,
     payload,
   }),
 };

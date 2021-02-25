@@ -153,6 +153,7 @@ export const greetings = () => {
 };
 
 export const call = (number) => {
+  console.log('PHone Number: ', number);
   Linking.openURL(`tel:${number}`);
 };
 

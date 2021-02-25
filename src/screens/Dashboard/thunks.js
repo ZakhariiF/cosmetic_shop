@@ -92,3 +92,7 @@ export const cancelItinerary = (id, locationId) => async (dispatch) => {
     }
   }
 };
+
+export const setGlobalConfig = (config) => (dispatch) => {
+  dispatch(homeActions.setGlobalConfig(config));
+};

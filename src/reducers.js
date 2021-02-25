@@ -14,7 +14,7 @@ const appReducer = combineReducers({
   auth: authReducer,
   home: homeReducer,
   booking: bookingReducer,
-  account: accountReducer
+  account: accountReducer,
 });
 
 export default (state, action) => {
