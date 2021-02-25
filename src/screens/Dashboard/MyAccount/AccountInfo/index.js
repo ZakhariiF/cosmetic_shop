@@ -74,7 +74,6 @@ const AccountInfo = ({navigation}) => {
           <Input
             isEdit
             name="Phone Number"
-            placeholder="(714) 555-1212"
             value={phoneNumber}
             onChangeText={(e) => setphoneNumber(e)}
           />
