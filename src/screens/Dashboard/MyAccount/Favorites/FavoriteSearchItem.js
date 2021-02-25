@@ -11,7 +11,7 @@ const FavoriteSearchItem = ({item, onFavIcon, isFav, currentLocation}) => {
     if (currentLocation) {
       getDistance();
     }
-  }, []);
+  }, [currentLocation]);
   const getDistance = async () => {
     const _dis = await distance(
       {
