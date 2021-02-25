@@ -11,17 +11,23 @@ import MParticle from 'react-native-mparticle';
 
 import rootStyle from 'rootStyle';
 import Authheader from 'components/Header/Authheader';
-import styles from './styles';
+
 import UpcomingAppts from 'components/UpcomingAppts';
-import {Fonts, Images} from 'constant';
+import {Images} from 'constant';
 import StyleSwiper from 'components/StyleSwiper';
 import RebookAppts from 'components/RebookAppts';
-import {cancelAppointment, cancelItinerary, getAppointments} from '../thunks';
+import {
+  cancelAppointment,
+  cancelItinerary,
+  getAppointments,
+  setGlobalConfig,
+} from '../thunks';
 import {useDispatch, useSelector} from 'react-redux';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {getCustomerInfo, loginSuccess} from 'screens/Auth/thunks';
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
+import {getGlobalConfig} from 'constant/contentfulActions';
 import {
   getLocations,
   setExtensionAddon,
@@ -36,6 +42,8 @@ import {getUser} from '@okta/okta-react-native';
 import Dialog from 'react-native-dialog';
 import {hasRadarPermission, trigerListener} from 'utils/RadarHelper';
 
+import styles from './styles';
+
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.home.apptLoading);
@@ -48,7 +56,22 @@ const Home = ({navigation}) => {
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const customerId = get(userInfo, 'bookerID');
   const [deleteItem, setDeleteItem] = useState(null);
-  console.log(userInfo);
+
+  const globalConfig = useSelector((state) => state.home.config);
+
+  useEffect(() => {
+    if (!globalConfig) {
+      getConfig();
+    }
+  }, [globalConfig]);
+
+  const getConfig = async () => {
+    const configData = await getGlobalConfig();
+    if (configData) {
+      dispatch(setGlobalConfig(configData));
+    }
+  };
+
   React.useMemo(() => {
     if (loading || error) {
       return null;
@@ -58,10 +81,9 @@ const Home = ({navigation}) => {
     return data;
   }, [loading, error, data]);
 
-
   useEffect(() => {
     hasRadarPermission(customerId);
-    trigerListener()
+    trigerListener();
     if (customerId) {
       getAppts();
       getCustomerDetails();
@@ -78,7 +100,8 @@ const Home = ({navigation}) => {
 
   const getCustomerDetails = () => dispatch(getCustomerInfo(customerId));
 
-  const getAppts = () => dispatch(getAppointments(customerId, 10, moment().format('YYYY-MM-DD')));
+  const getAppts = () =>
+    dispatch(getAppointments(customerId, 10, moment().format('YYYY-MM-DD')));
 
   const getHomeData = async () => {
     try {
@@ -190,7 +213,9 @@ const Home = ({navigation}) => {
   };
 
   const handleCancel = () => {
-    if (!deleteItem) return;
+    if (!deleteItem) {
+      return;
+    }
     const {item, location} = deleteItem;
     if (item.groupID) {
       dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then(
@@ -394,7 +419,9 @@ const Home = ({navigation}) => {
 
               if (img && action) {
                 return (
-                  <TouchableOpacity onPress={() => onBrowser(action)} key={index}>
+                  <TouchableOpacity
+                    onPress={() => onBrowser(action)}
+                    key={index}>
                     {img}
                   </TouchableOpacity>
                 );
