@@ -9,20 +9,25 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Colors, Fonts, Images} from 'constant';
-import { useNavigation, useNavigationState } from "@react-navigation/native";
+import {useNavigation, useNavigationState} from '@react-navigation/native';
 import rootStyle from 'rootStyle';
 import {updateRouteName} from 'utils';
+
+
+const hiddenTabs = ['ShopDetail', 'BookingForm', 'Stylists'];
 
 const BookingTab = ({}) => {
   const scrollRef = useRef(null);
   const routes = useNavigationState((state) => state.routes);
   const allRoutes = useNavigationState((state) => state.routeNames);
   const currentRoute = routes[routes.length - 1].name;
-  let beforeRoute = allRoutes.slice(0, allRoutes.indexOf(currentRoute)).filter((r) => r !== 'ShopDetail' && r !== 'BookingForm');
-  let afterRoute = allRoutes.slice(
-    allRoutes.indexOf(currentRoute) + 1,
-    allRoutes.length,
-  ).filter((r) => r !== 'BookingForm' && r !== 'ShopDetail');
+
+  let beforeRoute = allRoutes
+    .slice(0, allRoutes.indexOf(currentRoute))
+    .filter((r) => !hiddenTabs.includes(r));
+  let afterRoute = allRoutes
+    .slice(allRoutes.indexOf(currentRoute) + 1, allRoutes.length)
+    .filter((r) => !hiddenTabs.includes(r));
 
   const navigation = useNavigation();
 
@@ -42,12 +47,12 @@ const BookingTab = ({}) => {
             contentContainerStyle={styles.firstContainer}>
             {beforeRoute.map((e, i) => {
               return (
-                <TouchableOpacity onPress={() => {
-                  console.log('Before:', e);
-                  navigation.navigate('Book', {
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('Book', {
                       screen: e,
-                  });
-                }}>
+                    });
+                  }}>
                   <Text key={i} style={styles.routeName}>
                     {updateRouteName(e)}
                   </Text>
@@ -72,12 +77,13 @@ const BookingTab = ({}) => {
                 e === 'Stylists'
               ) {
                 return;
-              } else
+              } else {
                 return (
                   <Text key={i} style={styles.routeName}>
                     {updateRouteName(e)}
                   </Text>
                 );
+              }
             })}
           </ScrollView>
         </View>
