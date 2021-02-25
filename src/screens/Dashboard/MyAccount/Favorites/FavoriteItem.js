@@ -12,8 +12,9 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
     if (currentLocation) {
       getDistance();
     }
-  }, []);
+  }, [currentLocation]);
   const getDistance = async () => {
+    console.log('called distance call')
     const _dis = await distance(
       {
         latitude: Number(currentLocation.latitude),
@@ -26,7 +27,8 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
     );
     setDis(_dis);
   }
-  
+  console.log(item);
+  console.log(dis); 
   return (
     <View style={styles.container}>
       <View style={styles.row}>

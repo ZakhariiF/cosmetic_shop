@@ -75,7 +75,6 @@ const FindLocation = ({navigation}) => {
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
-      console.log("&&&&&&&&&", position);
       const latitude = get(position, 'latitude');
       const longitude = get(position, 'longitude');
 
@@ -216,7 +215,8 @@ const FindLocation = ({navigation}) => {
       }
     });
   };
-  console.log("&&&&&&&&", currentLocation);
+  console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&", currentLocation);
+  // console.log(locationItems.slice(0, 2));
   return (
     <View style={styles.container}>
       <Header title="FIND LOCATION" isTab isBack />

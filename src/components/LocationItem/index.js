@@ -32,20 +32,24 @@ const LocationItem = ({
     if(currentLocation) {
       getDistance();
     }
-  }, []);
+  }, [currentLocation]);
   const getDistance = async () => {
-    const _dis = await distance(
-      {
-        latitude: Number(currentLocation.latitude),
-        longitude: Number(currentLocation.longitude),
-      },
-      {
-        latitude: Number(get(item, 'contact.coordinates[0]')),
-        longitude: Number(get(item, 'contact.coordinates[1]'))
-      }
-    );
-    console.log(_dis);
-    setDis(_dis);
+    console.log("get Distance function call")
+    try {
+      const _dis = await distance(
+        {
+          latitude: Number(currentLocation.latitude),
+          longitude: Number(currentLocation.longitude),
+        },
+        {
+          latitude: Number(get(item, 'contact.coordinates[0]')),
+          longitude: Number(get(item, 'contact.coordinates[1]'))
+        }
+      );
+      setDis(_dis);
+    } catch (error) {
+      console.log(error);
+    }
   }
   const window = Dimensions.get('window');
   const {width, height} = window;
@@ -81,8 +85,10 @@ const LocationItem = ({
     item.bookerLocationId &&
     item.type === 'Drybar Shop' &&
     get(item, 'settings.bookable', false);
-  console.log("&&&&&&&&&&",currentLocation);
-  console.log("&&&&&&&&&&",dis);
+
+
+  console.log(item);
+  console.log(dis); 
   return (
     <TouchableWithoutFeedback
       onPress={() => {

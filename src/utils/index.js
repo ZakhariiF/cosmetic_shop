@@ -92,6 +92,7 @@ export const requestUserLocationLocation = () => {
         ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
     ).then((response) => {
+      console.log(response);
       if (response === RESULTS.GRANTED) {
         // Geolocation.getCurrentPosition(
         //   (position) => {
@@ -104,17 +105,22 @@ export const requestUserLocationLocation = () => {
         // );
         trackOnce(resolve, reject);
       } else if (response === RESULTS.UNAVAILABLE) {
+        reject(response);
         // Alert.alert(
         //   'Error',
         //   'We cannot find any hardware to fetch location on your device.',
         // );
       } else {
+        reject(response);
         // Alert.alert(
         //   'Error',
         //   'Please, change your settings to allow DryBar to access your location.',
         // );
       }
-    });
+    }).catch(err => {
+      console.log(err);
+      reject(err);
+    })
   });
 };
 
