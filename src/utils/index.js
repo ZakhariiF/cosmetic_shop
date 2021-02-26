@@ -311,6 +311,8 @@ export const findStoresFromPointWithTitle = (
     };
   }
 
+  console.log('Center:', center, storesSlugsByTitle, locationData);
+
   const filteredLocationData = locationData
     .filter(
       (location) =>
@@ -333,12 +335,12 @@ export const findStoresFromPointWithTitle = (
 
       return {
         ...location,
-        distance: distanceFromCenter,
+        distanceFromCenter: distanceFromCenter,
       };
     })
-    .filter((location) => location.distance < MAX_DISTANCE)
+    .filter((location) => location.distanceFromCenter < MAX_DISTANCE)
     .sort((location1, location2) =>
-      location1.distance < location2.distance ? -1 : 1,
+      location1.distanceFromCenter < location2.distanceFromCenter ? -1 : 1,
     );
 
   return {

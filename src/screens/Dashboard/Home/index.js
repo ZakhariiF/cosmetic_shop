@@ -82,8 +82,6 @@ const Home = ({navigation}) => {
   }, [loading, error, data]);
 
   useEffect(() => {
-    hasRadarPermission(customerId);
-    trigerListener();
     if (customerId) {
       getAppts();
       getCustomerDetails();
