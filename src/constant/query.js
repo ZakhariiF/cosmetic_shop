@@ -12,6 +12,7 @@ export const storeCollectionQuery = (storeType = 'Drybar Shop') => gql`
         contact
         settings
         arrivalInformation
+        slug
       }
     }
   }

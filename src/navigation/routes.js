@@ -93,7 +93,10 @@ const AccountNavigator = () => (
     />
     <AccountStack.Screen name="Favorites" component={Favorites} />
     <AccountStack.Screen name="BarflyMembership" component={BarflyMembership} />
-    <AccountStack.Screen name="BarflyMembershipEnrollment" component={BarflyMembershipEnrollment} />
+    <AccountStack.Screen
+      name="BarflyMembershipEnrollment"
+      component={BarflyMembershipEnrollment}
+    />
     <AccountStack.Screen name="BarflyConfirm" component={BarflyConfirm} />
     <AccountStack.Screen name="AccountService" component={AccountService} />
     <AccountStack.Screen name="AccountAddon" component={AccountAddon} />
@@ -102,8 +105,14 @@ const AccountNavigator = () => (
     <AccountStack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     <AccountStack.Screen name="TermsOfServices" component={TermsOfServices} />
     <AccountStack.Screen name="ExtensionPolicy" component={ExtensionPolicy} />
-    <AccountStack.Screen name="CaliforniaResidents" component={CaliforniaResidents} />
-    <AccountStack.Screen name="AccessibilityPolicy" component={AccessibilityPolicy} />
+    <AccountStack.Screen
+      name="CaliforniaResidents"
+      component={CaliforniaResidents}
+    />
+    <AccountStack.Screen
+      name="AccessibilityPolicy"
+      component={AccessibilityPolicy}
+    />
     <AccountStack.Screen name="AccountStyle" component={AccountStyle} />
   </AccountStack.Navigator>
 );
@@ -129,8 +138,8 @@ const BookingNavigator = () => (
 export const TabStack = () => (
   <Tab.Navigator tabBar={(props) => <CustomTabbar {...props} />}>
     <Tab.Screen name="Home" component={Home} />
-    <Tab.Screen name="My Appts" component={AppointNavigator} />
     <Tab.Screen name="Book" component={BookingNavigator} />
+    <Tab.Screen name="My Appts" component={AppointNavigator} />
     <Tab.Screen name="Account" component={AccountNavigator} />
   </Tab.Navigator>
 );

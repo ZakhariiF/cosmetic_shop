@@ -75,7 +75,7 @@ const FindLocation = ({navigation}) => {
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
-      console.log("&&&&&&&&&", position);
+      console.log('Current Location:', position);
       const latitude = get(position, 'latitude');
       const longitude = get(position, 'longitude');
 
@@ -93,12 +93,6 @@ const FindLocation = ({navigation}) => {
   useEffect(() => {
     getUserLocation();
   }, []);
-
-  useEffect(() => {
-    if (isEmptyString(searchVal)) {
-      setLocationItems(arrayHolder);
-    }
-  }, [searchVal]);
 
   React.useMemo(() => {
     if (loading || error) {
@@ -171,7 +165,6 @@ const FindLocation = ({navigation}) => {
         );
         newData = newData.concat(retailStoreData);
       }
-
       setLocationItems(newData);
 
       if (newData.length) {
@@ -216,28 +209,22 @@ const FindLocation = ({navigation}) => {
       }
     });
   };
-  console.log("&&&&&&&&", currentLocation);
+
   return (
     <View style={styles.container}>
       <Header title="FIND LOCATION" isTab isBack />
-      {currentLocation ? 
+
       <MapView
         showsUserLocation
-        // customMapStyle={mapStyle}
-        // provider={PROVIDER_GOOGLE}
         provider={null}
         ref={mapRef}
         style={{
           flex: 0.8,
         }}
         initialRegion={searchVal.length ? coords : currentLocation}
-        region={coords}>
-        {(locationItems.length
-          ? locationItems
-          : storeIdx
-          ? arrayHolder.concat(get(retailStores, 'storeCollection.items', []))
-          : arrayHolder
-        ).map((e, i) => (
+        region={coords}
+      >
+        {locationItems.map((e, i) => (
           <MapView.Marker
             key={i}
             coordinate={{
@@ -256,8 +243,8 @@ const FindLocation = ({navigation}) => {
             />
           </MapView.Marker>
         ))}
-      </MapView>: <View/>}
-      {currentLocation ? <View style={rootStyle.innerContainer}>
+      </MapView>
+      <View style={rootStyle.innerContainer}>
         <View style={{alignItems: 'center'}}>
           <CheckBox
             titile={'Use Current Location'}
@@ -298,8 +285,8 @@ const FindLocation = ({navigation}) => {
           )}
           extraData={[locationItems, searchVal]}
         />
-      </View> : <View/>}
-      {loading || isFavLoad ? <Indicator /> : null}
+       {(loading || isFavLoad) ? <Indicator /> : null}
+      </View>
     </View>
   );
 };

@@ -19,8 +19,6 @@ const ShopDetail = ({navigation, route}) => {
   const arrivalInformation = get(item, 'arrivalInformation', '');
   const socialData = get(item, 'contact.social.instagram');
 
-  console.log('ShopDetail:', item);
-
   const [currentLocation, setCurrentLocation] = useState(null);
 
   const getUserLocation = async () => {

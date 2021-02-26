@@ -7,12 +7,17 @@ import {navigationRef} from './RootNavigation';
 import {createConfig, getAccessToken} from '@okta/okta-react-native';
 import configFile from 'constant/config';
 import {useSelector} from 'react-redux';
+import {get} from 'lodash';
+import Radar from 'react-native-radar';
+import {hasRadarPermission} from 'utils/RadarHelper';
 
 const Root = createStackNavigator();
 
 const AppContainer = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const [token, setToken] = useState(null);
+
+  const customerId = get(userInfo, 'bookerID');
   const configApp = useCallback(async () => {
     if (Platform.OS === 'ios') {
       await createConfig({
@@ -27,6 +32,16 @@ const AppContainer = () => {
     }
   }, []);
 
+  Radar.on('clientLocation', (result) => {
+    // do something with result.location
+    console.log('Radar clientLocation:', result);
+  });
+
+  Radar.on('location', (result) => {
+    // do something with result.location, result.user
+    console.log('radar clientLocation:', result);
+  });
+
   useEffect(() => {
     configApp();
   }, []);
@@ -39,10 +54,13 @@ const AppContainer = () => {
       } catch (e) {
         console.log('Get Access Token Error:', e);
       }
+      if (customerId) {
+        hasRadarPermission(customerId);
+      }
     } else {
       setToken(null);
     }
-  }, [userInfo]);
+  }, [userInfo, customerId]);
 
   return (
     <NavigationContainer ref={navigationRef}>

@@ -1,5 +1,5 @@
 import {Colors, Fonts, Images} from 'constant';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   Image,
   StyleSheet,
@@ -26,14 +26,15 @@ const LocationItem = ({
   fromFindLoc = false,
   onSelect,
   currentLocation,
-}) =>  {
+}) => {
   const [dis, setDis] = useState(null);
   useEffect(() => {
-    if(currentLocation) {
+    if (currentLocation) {
       getDistance();
     }
   }, []);
-  const getDistance = async () => {
+
+  const getDistance = useCallback(async () => {
     const _dis = await distance(
       {
         latitude: Number(currentLocation.latitude),
@@ -41,12 +42,11 @@ const LocationItem = ({
       },
       {
         latitude: Number(get(item, 'contact.coordinates[0]')),
-        longitude: Number(get(item, 'contact.coordinates[1]'))
-      }
+        longitude: Number(get(item, 'contact.coordinates[1]')),
+      },
     );
-    console.log(_dis);
     setDis(_dis);
-  }
+  }, [currentLocation]);
   const window = Dimensions.get('window');
   const {width, height} = window;
   const ASPECT_RATIO = width / height;
@@ -72,7 +72,7 @@ const LocationItem = ({
           : Number(0),
     };
   }
-  
+
   const operatingMessage = get(item, 'settings.operatingMessage', '');
   const arrivalInformation = get(item, 'arrivalInformation', '');
 
@@ -81,8 +81,7 @@ const LocationItem = ({
     item.bookerLocationId &&
     item.type === 'Drybar Shop' &&
     get(item, 'settings.bookable', false);
-  console.log("&&&&&&&&&&",currentLocation);
-  console.log("&&&&&&&&&&",dis);
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -147,11 +146,7 @@ const LocationItem = ({
         <View style={[styles.flexContainer, {marginTop: 10, marginLeft: 35}]}>
           {dis && (
             <Text style={styles.miles}>
-              {dis.status === "SUCCESS" ?
-                dis.routes.car.distance.text
-              :
-                ""
-              }
+              {dis.status === 'SUCCESS' ? dis.routes.car.distance.text : ''}
             </Text>
           )}
 
