@@ -31,7 +31,7 @@ const defaultPoint = {
   longitude: -118.3622365,
   latitudeDelta: LATITUDE_DELTA,
   longitudeDelta: LONGITUDE_DELTA,
-}
+};
 
 const Location = ({navigation}) => {
   const [coords, setCoords] = useState(defaultPoint);
@@ -46,7 +46,9 @@ const Location = ({navigation}) => {
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const [currentLocation, setCurrentLocation] = useState(null);
-  const useCurrentLocation = useSelector((state) => state.home.useCurrentLocation);
+  const useCurrentLocation = useSelector(
+    (state) => state.home.useCurrentLocation,
+  );
 
   useEffect(() => {
     getUserLocation();
@@ -58,7 +60,7 @@ const Location = ({navigation}) => {
       searchFilterFunction(currentLocation);
     } else if (!useCurrentLocation && searchVal === '') {
       setCoords(defaultPoint);
-      searchFilterFunction(defaultPoint)
+      searchFilterFunction(defaultPoint);
     }
   }, [useCurrentLocation, searchVal, currentLocation]);
 
@@ -104,21 +106,19 @@ const Location = ({navigation}) => {
     searchFilterFunction();
   }, [searchVal]);
 
-  const cachedMutatedData = React.useMemo(() => {
+  React.useMemo(() => {
     if (loading || error) {
       return null;
     }
 
     arrayHolder = get(data, 'storeCollection.items', []);
 
-    dispatch(getLocations(data.storeCollection.items));
     return data;
   }, [loading, error, data]);
 
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
-      console.log(position);
       const latitude = get(position, 'latitude');
       const longitude = get(position, 'longitude');
       setCurrentLocation({
@@ -137,8 +137,8 @@ const Location = ({navigation}) => {
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
       longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
-      latitudeDelta: 0.015 * 8,
-      longitudeDelta: 0.0121 * 8,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     });
     if (item.bookerLocationId) {
       if (selectedLocationId === item.bookerLocationId) {
@@ -153,11 +153,11 @@ const Location = ({navigation}) => {
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
       longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
-      latitudeDelta: 0.015 * 8,
-      longitudeDelta: 0.0121 * 8,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     });
   };
-  console.log("booking location screen", currentLocation)
+
   return (
     <>
       <BookingTab />
@@ -172,39 +172,33 @@ const Location = ({navigation}) => {
         }}
         initialRegion={searchVal.length ? coords : currentLocation}
         region={coords}>
-        {get(data, 'storeCollection')
-          ? allLocations.map((e, i) => (
-              <MapView.Marker
-                key={i}
-                coordinate={{
-                  latitude: Number(
-                    get(e, 'contact.coordinates[0]', 34.1434376),
-                  ),
-                  longitude: Number(
-                    get(e, 'contact.coordinates[1]', -118.2580306),
-                  ),
-                  latitudeDelta: 0.015 * 8,
-                  longitudeDelta: 0.0121 * 8,
-                }}
-                animation
-                onPress={() => onMarker(e)}>
-                <CustomMapMarker
-                  selected={selectedLocationId === e.bookerLocationId}
-                  item={e}
-                  navigation={navigation}
-                  currentLocation={currentLocation}
-                />
-              </MapView.Marker>
-            ))
-          : null}
+        {(allLocations || []).map((e, i) => (
+          <MapView.Marker
+            key={i}
+            coordinate={{
+              latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
+              longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            }}
+            animation
+            onPress={() => onMarker(e)}>
+            <CustomMapMarker
+              selected={selectedLocationId === e.bookerLocationId}
+              item={e}
+              navigation={navigation}
+              currentLocation={currentLocation}
+            />
+          </MapView.Marker>
+        ))}
       </MapView>
 
       {get(data, 'storeCollection') ? (
         <LocationModal
           ref={childRef}
-          selectedIndex={arrayHolder
-            .map((item) => item.bookerLocationId)
-            .indexOf(selectedLocationId)}
+          // selectedIndex={arrayHolder
+          //   .map((item) => item.bookerLocationId)
+          //   .indexOf(selectedLocationId)}
           onSearch={() => searchFilterFunction()}
           onChangeText={(e) => setSearch(e)}
           searchVal={searchVal}

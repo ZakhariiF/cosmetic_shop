@@ -70,7 +70,6 @@ const LocationModal = forwardRef((props, ref) => {
     (state) => state.booking.selectedLocation,
   );
   const favStore = useSelector((state) => state.auth.favItem);
-  const distance = useSelector((state) => state);
   const currentRoute = routes[routes.length - 1].name || 'Location';
 
   const customerInfo = useSelector((state) => state.auth.customerInfo);
@@ -92,20 +91,6 @@ const LocationModal = forwardRef((props, ref) => {
       Filter: activeTab === 0 ? 'Closest' : 'Favorite',
     });
   }, [activeTab]);
-
-  // useImperativeHandle(ref, () => ({
-  //   onMin() {
-  //     collapse();
-
-  //     if (min) {
-  //       currentRoute !== 'Location' ? navigation.navigate('Location') : null;
-  //       setHight('50%');
-  //     } else {
-  //       setHight('10%');
-  //     }
-  //     setMin(!min);
-  //   },
-  // }));
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
@@ -202,7 +187,7 @@ const LocationModal = forwardRef((props, ref) => {
       }
     });
   };
-  console.log(currentLocation);
+
   return (
     <View style={[styles.container, {height: updatedHeight}]}>
       <TouchableOpacity onPress={onMin}>

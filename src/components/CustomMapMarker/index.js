@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Colors, Fonts, Images} from 'constant';
 import {
   Image,
@@ -12,13 +12,37 @@ import {get} from 'lodash';
 import rootStyle from 'rootStyle';
 import {useDispatch} from 'react-redux';
 import {setLocation} from 'screens/Dashboard/Booking/thunks';
-import {openMaps, distance, call} from 'utils';
+import {openMaps, call} from 'utils';
+import {distance} from 'utils/RadarHelper';
 
 const {width} = Dimensions.get('window');
 
 const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
   const dispatch = useDispatch();
-
+  const [dis, setDis] = useState(null);
+  useEffect(() => {
+    if(currentLocation) {
+      getDistance();
+    }
+  }, [currentLocation]);
+  const getDistance = async () => {
+    console.log("get Distance function call")
+    try {
+      const _dis = await distance(
+        {
+          latitude: Number(currentLocation.latitude),
+          longitude: Number(currentLocation.longitude),
+        },
+        {
+          latitude: Number(get(item, 'contact.coordinates[0]')),
+          longitude: Number(get(item, 'contact.coordinates[1]'))
+        }
+      );
+      setDis(_dis);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const phoneNumber = get(item, 'contact.phoneNumber');
   const isBookable =
     item.bookerLocationId &&
@@ -52,17 +76,13 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
 
             <View style={styles.nameContainer}>
               <View>
-                {currentLocation && (
+                {dis && (
                   <Text style={styles.miles}>
-                    {Math.round(
-                      distance(
-                        currentLocation.latitude,
-                        currentLocation.longitude,
-                        get(item, 'contact.coordinates[0]', 34.1434376),
-                        get(item, 'contact.coordinates[1]', 34.1434376),
-                      ),
-                    )}{' '}
-                    miles away
+                    {dis.status === "SUCCESS" ?
+                      dis.routes.car.distance.text
+                    :
+                      ""
+                    }
                   </Text>
                 )}
                 <TouchableOpacity onPress={() => call(phoneNumber)}>
