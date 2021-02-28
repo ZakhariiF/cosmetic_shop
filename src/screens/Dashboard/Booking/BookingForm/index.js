@@ -119,7 +119,6 @@ const BookingForm = ({navigation}) => {
       !lastName ||
       !isValidEmail(email) ||
       !address1 ||
-      !address2 ||
       !city ||
       !states ||
       !postalCode ||
