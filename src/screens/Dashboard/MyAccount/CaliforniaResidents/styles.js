@@ -25,8 +25,10 @@ export default StyleSheet.create({
     fontFamily: Fonts.Evan,
     lineHeight: 20,
     fontSize: 15,
-    color: Colors.header_title,
+    color: Colors.link,
     flexBasis: '85%',
+    // textDecoration: 'underline',
+    textDecorationLine: 'underline',
   },
   p: {
     ...rootStyle.commonText,
