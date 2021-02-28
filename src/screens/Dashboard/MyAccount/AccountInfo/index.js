@@ -15,7 +15,6 @@ const AccountInfo = ({navigation}) => {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.auth.userInfo);
   const isLoading = useSelector((state) => state.auth.isUpdate);
-  const token = useSelector((state) => state.auth.token);
   const [firstName, setFirstName] = useState(
     get(userInfo, 'firstname', ''),
   );
@@ -27,11 +26,13 @@ const AccountInfo = ({navigation}) => {
     get(userInfo, 'primaryPhone', ''),
   );
 
+  console.log('UserInfo:', userInfo);
+
   const onUpdate = () => {
     const obj = {
       firstName,
       lastName,
-      mobilePhone: phoneNumber,
+      primaryPhone: phoneNumber,
     };
 
     dispatch(updateUserInfo(obj)).then((response) => {
@@ -84,7 +85,7 @@ const AccountInfo = ({navigation}) => {
             hide
             onEdit={() => navigation.navigate('ChangePassword')}
           />
-          <Button onButtonPress={onUpdate} name={"Save"} />
+          <Button onButtonPress={onUpdate} name={'Save'} />
         </View>
       </KeyboardAwareScrollView>
 
