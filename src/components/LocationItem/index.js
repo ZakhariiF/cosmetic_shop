@@ -131,16 +131,17 @@ const LocationItem = ({
               {get(item, 'contact.postalCode')}
             </Text>
           </View>
-
-          <TouchableOpacity
-            onPress={() => onFavIcon(item)}
-            style={styles.favIcon}>
-            <Image
-              resizeMode="contain"
-              source={isFav ? Images.fav : Images.fav_trans}
-              style={styles.favIcon}
-            />
-          </TouchableOpacity>
+          {get(item, 'bookerLocationId') && (
+            <TouchableOpacity
+              onPress={() => onFavIcon(item)}
+              style={styles.favIcon}>
+              <Image
+                resizeMode="contain"
+                source={isFav ? Images.fav : Images.fav_trans}
+                style={styles.favIcon}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={[styles.flexContainer, {marginTop: 10, marginLeft: 35}]}>
