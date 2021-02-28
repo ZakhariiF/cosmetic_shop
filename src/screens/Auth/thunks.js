@@ -82,7 +82,14 @@ export const updateUserInfo = (obj) => async (dispatch) => {
     console.log('update  data data>>>', data);
     if (data) {
       AlertHelper.showSuccess('User Updated Successfully');
-      return dispatch(authActions.updateUserSuccess(get(data, 'profile')));
+      const userInfo = get(data, 'profile');
+      return dispatch(
+        authActions.updateUserSuccess({
+          ...userInfo,
+          firstname: userInfo.firstName,
+          lastname: userInfo.lastName,
+        }),
+      );
     } else {
       return dispatch(authActions.updateUserError());
     }
