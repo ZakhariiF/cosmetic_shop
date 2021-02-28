@@ -26,5 +26,5 @@ export default {
     genericPartyFormId: 'm639jay05gnt4z',
     contactFormId: 'z1srujeu0vb2dvk',
   },
-  googleMapAPIKey: 'AIzaSyBBho2G8GQkEwIBPeS4ph4cxM5_Ullfnws'
+  googleMapAPIKey: 'AIzaSyCI8V2hqQehtgQjoXW51kKuMibchXwlD4M'
 };

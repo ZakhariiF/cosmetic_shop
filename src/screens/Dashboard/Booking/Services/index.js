@@ -74,8 +74,6 @@ const Services = ({navigation}) => {
     }
   };
 
-  // console.log('data>>>>.', data);
-
   return (
     <View style={rootStyle.container}>
       <BookingTab />
