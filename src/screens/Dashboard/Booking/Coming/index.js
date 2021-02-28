@@ -88,7 +88,7 @@ const Coming = ({navigation}) => {
             count={count}
             onDecrement={onDecrement}
             onIncrement={onIncrement}
-            onNext={() => onNext(count)}
+            onNext={() => onNext(count + 1)}
           />
         ) : null}
       </ScrollView>
