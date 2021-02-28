@@ -317,8 +317,6 @@ export const findStoresFromPointWithTitle = (
     };
   }
 
-  console.log('Center:', center, storesSlugsByTitle, locationData);
-
   const filteredLocationData = locationData
     .filter(
       (location) =>
