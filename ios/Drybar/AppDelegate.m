@@ -88,7 +88,7 @@ static void InitializeBraze(UIApplication *application, NSDictionary *launchOpti
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [GMSServices provideAPIKey:@"AIzaSyBBqVUqUYYw5L1mlqM-Lau1Rn4l8NPqIzw"];
+  [GMSServices provideAPIKey:@"AIzaSyCI8V2hqQehtgQjoXW51kKuMibchXwlD4M"];
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif

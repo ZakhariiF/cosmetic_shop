@@ -170,7 +170,7 @@ const Location = ({navigation}) => {
         style={{
           flex: 1,
         }}
-        initialRegion={searchVal.length ? coords : currentLocation}
+        initialRegion={searchVal.length ? coords : currentLocation || coords}
         region={coords}>
         {(allLocations || []).map((e, i) => (
           <MapView.Marker

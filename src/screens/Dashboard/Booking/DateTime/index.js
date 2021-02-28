@@ -101,21 +101,28 @@ const DateTime = ({navigation}) => {
   };
 
   useEffect(() => {
-    availableDates(selectedDate);
-    let multiUserobj = {
-      locationId: get(selectedLocation, 'bookerLocationId', ''),
-      fromDateTime: selectedDate.toISOString(),
-      IncludeEmployees: true,
-      IncludeFreelancers: false,
-    };
+    // availableDates(selectedDate);
 
-    multiUserobj.itineraries = totalGuests.map((element) => {
-      return {
-        serviceId: element.services.ID,
+    const locationId = get(selectedLocation, 'bookerLocationId', '');
+    console.log('SelectedLocation:', selectedLocation);
+    if (locationId && locationId !== '') {
+      let multiUserobj = {
+        locationId: locationId,
+        fromDateTime: moment(selectedDate).format('YYYY-MM-DDTHH:mm:ssZ'),
+        IncludeEmployees: true,
+        IncludeFreelancers: false,
       };
-    });
 
-    dispatch(getMultiUserTimeSlots(multiUserobj));
+      multiUserobj.itineraries = totalGuests.map((element) => {
+        return {
+          serviceId: element.services.ID,
+        };
+      });
+
+      dispatch(getMultiUserTimeSlots(multiUserobj));
+    } else {
+      navigation.navigate('Book', {screen: 'Location'});
+    }
   }, [selectedDate]);
 
   const hideDatePicker = () => {
@@ -166,18 +173,37 @@ const DateTime = ({navigation}) => {
 
       if (employeeId) {
         usedEmployees.push(employeeId);
+
+        if (tempArr[idx].addons && tempArr[idx].addons.length) {
+          tempArr[idx].addons = tempArr[idx].addons.map((i) => ({
+            ...i,
+            employees: employeeId
+          }));
+        }
       }
 
+      // const addons = item.addons || [];
+      const addons = [];
+
       if (item.extension && item.extension.name === 'Yes' && extensionAddon) {
+        addons.push(extensionAddon);
+      }
+
+      let endTime = moment(dateItem.startDateTime)
+        .add(item.services.TotalDuration, 'minutes')
+        .utcOffset(dateItem.timezone);
+
+      addons.forEach((a) => {
         extensionObjs.push({
           locationId,
-          serviceId: extensionAddon.ID,
-          startDateTime: moment(dateItem.startDateTime)
-            .add(item.services.TotalDuration, 'minutes')
-            .utcOffset(dateItem.timezone)
-            .format('YYYY-MM-DDTHH:mm:ssZ'),
+          serviceId: a.ID,
+          startDateTime: moment(endTime).format('YYYY-MM-DDTHH:mm:ssZ'),
         });
-      }
+
+        endTime += moment(endTime)
+          .add(a.TotalDuration, 'minutes')
+          .utcOffset(dateItem.timezone);
+      });
 
       return {
         locationId,
@@ -188,7 +214,7 @@ const DateTime = ({navigation}) => {
     });
 
     dispatch(getEmplyeesData(objs, extensionObjs)).then((response) => {
-      if (response.type == types.GET_EMPLOYEE_SUCCESS) {
+      if (response.type === types.GET_EMPLOYEE_SUCCESS) {
         const usedRoomIds = [];
         get(response, 'payload').forEach((item, idx) => {
           let rooms = get(item, 'rooms', []).filter(
@@ -197,6 +223,13 @@ const DateTime = ({navigation}) => {
           if (rooms.length) {
             tempArr[idx].rooms = rooms[0].roomId;
             usedRoomIds.push(rooms[0].roomId);
+
+            if (tempArr[idx].addons && tempArr[idx].addons.length) {
+              tempArr[idx].addons = tempArr[idx].addons.map((i) => ({
+                ...i,
+                rooms: rooms[0].roomId,
+              }));
+            }
           }
         });
 
@@ -250,6 +283,7 @@ const DateTime = ({navigation}) => {
                 rooms: extensionroom,
                 serviceId: extensionAddon.ID,
               };
+
             }
           });
         }

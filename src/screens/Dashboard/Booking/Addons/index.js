@@ -19,6 +19,8 @@ import Extensions from '../Extensions';
 import {get} from 'lodash';
 import Indicator from 'components/Indicator';
 import ServiceInfoModal from 'components/ServiceInfoModal';
+import {productInformationCollection} from 'constant/query';
+import {useQuery} from '@apollo/client';
 
 const Addons = ({navigation}) => {
   const [isVisible, setVisible] = useState(false);
@@ -26,42 +28,45 @@ const Addons = ({navigation}) => {
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const activeTab = useSelector((state) => state.booking.activeGuestTab);
   const isExtension = useSelector((state) => state.booking.isExtension);
-  // const data = useSelector((state) => state.booking.addons);
+  const data = useSelector((state) => state.booking.addons);
   const isLoading = useSelector((state) => state.booking.addonsLoading);
 
   const [totalAddon, setTotaladdons] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [infoItem, setinfoItem] = useState({});
+  console.log('TotalGuests:', totalGuests);
 
-  // useEffect(() => {
-  //   getData();
-  // }, [activeTab]);
+  useEffect(() => {
+    getData();
+  }, [activeTab]);
 
-  // useEffect(() => {
-  //   calculateAddon();
-  // }, [totalGuests]);
+  useEffect(() => {
+    calculateAddon();
+  }, [totalGuests]);
 
-  // const getData = () => {
-  //   let serviceId = get(totalGuests[activeTab], 'services.ID');
-  //   dispatch(getAddons(serviceId));
-  // };
+  const getData = () => {
+    let serviceId = get(totalGuests[activeTab], 'services.ID');
+    dispatch(getAddons(serviceId));
+  };
 
-  // const calculateAddon = () => {
-  //   let addonARR = totalGuests[activeTab].addons || [];
-  //   let totalPrice = addonARR.reduce(
-  //     (acc, e) => acc + get(e, 'Price.Amount', 0),
-  //     0,
-  //   );
-  //   setTotaladdons(addonARR.length);
-  //   setTotalPrice(totalPrice);
-  // };
+  const calculateAddon = () => {
+    let addonARR = get(totalGuests, `[${activeTab}].addons`) || [];
+    let totalPrice = addonARR.reduce(
+      (acc, e) => acc + get(e, 'Price.Amount', 0),
+      0,
+    );
+    setTotaladdons(addonARR.length);
+    setTotalPrice(totalPrice);
+  };
 
   const isExist = (item) => {
     let isActive = false;
 
     if (totalGuests[activeTab].addons && totalGuests[activeTab].addons.length) {
       totalGuests[activeTab].addons.forEach((element) => {
-        if (element.ID === item.ID) isActive = true;
+        if (element.ID === item.ID) {
+          isActive = true;
+        }
       });
     }
 
@@ -71,7 +76,9 @@ const Addons = ({navigation}) => {
   const addonPress = (item, index) => {
     let tempArr = [...totalGuests];
 
-    if (!tempArr[activeTab].addons) tempArr[activeTab].addons = [];
+    if (!tempArr[activeTab].addons) {
+      tempArr[activeTab].addons = [];
+    }
 
     if (isExist(item)) {
       let addonARR = tempArr[activeTab].addons;
@@ -85,20 +92,20 @@ const Addons = ({navigation}) => {
   };
 
   const onBackPress = () => {
-    // if (isExtension) {
-    //   dispatch(setExtensionType(false));
-    // } else {
+    if (isExtension) {
+      dispatch(setExtensionType(false));
+    } else {
       navigation.goBack();
-    // }
+    }
   };
 
   const onNext = () => {
-    // if (!isExtension) {
-    //   dispatch(setExtensionType(true));
-    // } else {
+    if (!isExtension) {
+      dispatch(setExtensionType(true));
+    } else {
       navigation.navigate('DateTime');
-    //   dispatch(setExtensionType(false));
-    // }
+      dispatch(setExtensionType(false));
+    }
   };
 
   // console.log('data>>', data);
@@ -117,10 +124,12 @@ const Addons = ({navigation}) => {
         }
         safeBackColor={Colors.bg}
         onBackPress={onBackPress}
+        isNext={!isExtension}
+        onNext={onNext}
       />
 
-      <Extensions navigation={navigation} onSkip={onNext} />
-      {/* {isExtension ? (
+      {isExtension ? (
+        <Extensions navigation={navigation} onSkip={onNext} />
       ) : (
         <View style={rootStyle.innerContainer}>
           {totalGuests.length > 1 ? (
@@ -164,7 +173,7 @@ const Addons = ({navigation}) => {
             keyExtractor={(_, index) => index.toString()}
           />
         </View>
-      )} */}
+      )}
 
       <LocationModal />
 
@@ -191,12 +200,29 @@ const AddonItem = ({
   active,
   onInfoPress,
 }) => {
+  const PRODUCT_INFO_QUERY = productInformationCollection(item.ID);
+  const {data, error, loading} = useQuery(PRODUCT_INFO_QUERY);
+
+  const information = get(data, 'productCollection.items', []);
+
   return (
     <View style={styles.listContainer}>
       <TouchableOpacity
-        onPress={() => onInfoPress(item)}
-        hitSlop={{top: 10, bottom: 10, right: 10, left: 10}}>
-        <Image source={Images.notice} />
+        onPress={() => {
+          if (information.length) {
+            onInfoPress(item);
+          }
+        }}
+        hitSlop={{
+          top: 10,
+          bottom: 10,
+          right: 10,
+          left: 10,
+        }}>
+        <Image
+          source={Images.notice}
+          style={{opacity: information.length ? 1 : 0}}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity

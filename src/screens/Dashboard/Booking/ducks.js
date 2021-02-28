@@ -129,7 +129,7 @@ export const types = {
 export const bookingIntialState = {
   totalGuests: [],
   activeGuestTab: 0,
-  isExtension: true,
+  isExtension: false,
   services: [],
   serviceLoading: false,
   addons: [],
@@ -233,18 +233,15 @@ const BookingReducer = (state = bookingIntialState, action) => {
 
     case types.GET_TIME_SLOTS_SUCCESS:
       let slotArr = get(action, 'payload[0]', {});
-      console.log('slotArr>>here', action.payload);
-      console.log('slotArray>>hereee', action.payload[0].serviceCategories);
+
       // let slotArray = action.payload[0].serviceCategories;
 
       if (slotArr?.preferredAppointmentTimes) {
         for (let i in slotArr.preferredAppointmentTimes) {
           slotArr.preferredAppointmentTimes[i].open =
-            slotArr.preferredAppointmentTimes[i]['appointmentTime'];
+            slotArr.preferredAppointmentTimes[i].appointmentTime;
         }
       }
-
-      // console.log('slotArr>>', slotArr);
 
       return {
         ...state,
@@ -256,8 +253,8 @@ const BookingReducer = (state = bookingIntialState, action) => {
     case types.SET_EXTENSION_ADDON:
       return {
         ...state,
-        extensionAddon: get(action, 'payload')
-      }
+        extensionAddon: get(action, 'payload'),
+      };
 
     case types.GET_TIME_SLOTS_ERROR:
       return {
@@ -373,21 +370,36 @@ const BookingReducer = (state = bookingIntialState, action) => {
       };
 
     case types.MULTI_GUEST_AVAIL_DATES_SUCCESS:
-      const availbilityTimes1 = []
+      const availbilityTimes1 = [];
       get(action.payload, 'availability').forEach((item) => {
         let startTime = moment(item.startDateTime);
         let endTime = moment(item.endDateTime);
 
-        const timezone = moment().utcOffset(item.startDateTime).utcOffset()
+        const timezone = moment().utcOffset(item.startDateTime).utcOffset();
+
+        const aTimes = [];
 
         while (startTime < endTime) {
-          availbilityTimes1.push({
+          aTimes.push({
             ...item,
             timezone,
-            startDateTime: startTime.utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ'),
-          }),
+            startDateTime: startTime
+              .utcOffset(timezone)
+              .format('YYYY-MM-DDTHH:mm:ssZ'),
+          });
           startTime = startTime.add(15, 'minutes');
         }
+        if (aTimes.length === 0) {
+          aTimes.push({
+            ...item,
+            timezone,
+            startDateTime: startTime
+              .utcOffset(timezone)
+              .format('YYYY-MM-DDTHH:mm:ssZ'),
+          });
+        }
+
+        availbilityTimes = availbilityTimes.concat(aTimes);
       });
       return {
         ...state,
@@ -569,27 +581,44 @@ const BookingReducer = (state = bookingIntialState, action) => {
       };
 
     case types.MULTI_USER_TIMESLOTS_SUCCESS:
-      const availbilityTimes = []
+      let availbilityTimes = [];
+
       get(action.payload, 'availability').forEach((item) => {
         let startTime = moment(item.startDateTime);
         let endTime = moment(item.endDateTime);
 
         const timezone = moment().utcOffset(item.startDateTime).utcOffset();
 
+        const aTimes = [];
+
         while (startTime < endTime) {
-          availbilityTimes.push({
+          aTimes.push({
             ...item,
             timezone,
-            startDateTime: startTime.utcOffset(timezone).format('YYYY-MM-DDTHH:mm:ssZ')
-          })
-          startTime = startTime.add(15, 'minutes')
+            startDateTime: startTime
+              .utcOffset(timezone)
+              .format('YYYY-MM-DDTHH:mm:ssZ'),
+          });
+          startTime = startTime.add(15, 'minutes');
         }
 
+        if (aTimes.length === 0) {
+          aTimes.push({
+            ...item,
+            timezone,
+            startDateTime: startTime
+              .utcOffset(timezone)
+              .format('YYYY-MM-DDTHH:mm:ssZ'),
+          });
+        }
+
+        availbilityTimes = availbilityTimes.concat(aTimes);
       });
+
       return {
         ...state,
         slotsLoading: false,
-        multiUserSlots: availbilityTimes
+        multiUserSlots: availbilityTimes,
       };
 
     case types.MULTI_USER_TIMESLOTS_ERROR:
