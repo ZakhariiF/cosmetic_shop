@@ -208,7 +208,9 @@ const MyAppts = ({navigation}) => {
 
           {pastAppt.length ? (
             <>
-              <Text style={styles.upcomingText}>Past</Text>
+              <Text style={styles.upcomingText}>
+                PAST APPOINTMENTS (showing only past 3 months)
+              </Text>
               <FlatList
                 data={pastAppt.sort(
                   (a, b) =>
