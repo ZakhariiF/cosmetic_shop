@@ -360,7 +360,9 @@ export const bookedForMoreUser = (obj) => async (dispatch) => {
     const data = await API.bookedForMoreUser(obj);
     console.log('bookedForMoreUser >>', data);
     if (data.Success) {
-      AlertHelper.showSuccess('Booked Succesfully');
+      AlertHelper.showSuccess(
+        'Request Sent. Someone from Drybar will contact you soon.',
+      );
       return dispatch(bookingActions.bookingFormSuccess(data));
     } else {
       AlertHelper.showError(
