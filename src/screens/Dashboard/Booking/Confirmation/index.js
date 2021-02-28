@@ -118,27 +118,12 @@ const Confirmation = () => {
                 onButtonPress={() => reset('Dashboard')}
               />
 
-              <View style={styles.specialContainer}>
-                <DottedView containerStyle={{flex: 1}} />
-                <Image
-                  resizeMode="contain"
-                  source={Images.offer}
-                  style={{marginLeft: 10, marginRight: 10}}
-                />
-                <DottedView containerStyle={{flex: 1}} />
-              </View>
-
               <Image
                 resizeMode="contain"
                 source={{uri: bannerImageUrl}}
                 style={styles.chaserIcon}
               />
 
-              <Button
-                name="Buy Chaser"
-                containerStyle={styles.chaserContainer}
-                titleStyle={styles.chaserTitle}
-              />
             </>
           )}
         />
