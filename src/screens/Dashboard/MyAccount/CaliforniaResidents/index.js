@@ -38,8 +38,6 @@ const CaliforniaResidents = () => {
     );
   }, [loading, error, data]);
 
-  console.log('data', data, policies);
-
   const checkToggle = (index) => {
     let isToggle = false;
 
@@ -77,7 +75,7 @@ const CaliforniaResidents = () => {
 
   return (
     <View style={rootStyle.container}>
-      <Header title="PRIVACY POLICY" isTab isBack isUppercaseTitle />
+      <Header title="CALIFONIA RESIDENTS" isTab isBack isUppercaseTitle />
       <ScrollView contentContainerStyle={{paddingTop: 20}}>
         <View style={rootStyle.innerContainer}>
           <View style={[styles.topContainer, {paddingBottom: 30}]}>
