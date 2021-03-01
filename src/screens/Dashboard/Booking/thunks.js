@@ -92,10 +92,32 @@ export const getTimeSlots = (obj) => async (dispatch) => {
   }
 };
 
-export const createAppointment = (obj) => async (dispatch) => {
+export const createAppointment = (obj, addons, locationId) => async (
+  dispatch,
+) => {
   dispatch(bookingActions.bookingRequest());
   try {
     const data = await API.createAppt(obj);
+
+    console.log('CreateAppointment:', data);
+
+    if (addons && addons.length) {
+      const addonRequests = addons.map((a) => {
+        return API.addAddonsToAppointment({
+          LocationID: locationId,
+          AppointmentID: get(data, 'Appointment.ID'),
+          // AddonItemID: a.ID,
+          AddonItemID: '3818047',
+          AddonItemTypeID: 1,
+          Quantity: 1,
+        });
+      });
+
+      const addonData = await Promise.all(addonRequests);
+
+      console.log('AddonData:', addonData);
+
+    }
     if (data.IsSuccess) {
       return dispatch(bookingActions.bookingSuccess(data));
     } else {
@@ -119,6 +141,8 @@ export const createGuestAppointment = (obj) => async (dispatch) => {
     const data = await API.createItinerary(obj);
     if (data.IsSuccess) {
       const res = await API.bookItinerary(data.ID, obj.GroupName);
+
+      console.log('CreateItinerary:', obj);
       if (res.IsSuccess) {
         return dispatch(bookingActions.guestBookingSuccess(data));
       } else {
