@@ -79,6 +79,8 @@ const LocationModal = forwardRef((props, ref) => {
     currentRoute === 'Location' ? '50%' : '10%',
   );
 
+  const extensionAddon = useSelector((state) => state.booking.extensionAddon);
+
   const [min, setMin] = useState(currentRoute !== 'Location');
 
   const [favItem, setFavItem] = useState(favStore || '');
@@ -146,6 +148,9 @@ const LocationModal = forwardRef((props, ref) => {
           (val, item) => (get(item, 'PriceInfo.Amount', 0))+ val,
           0,
         );
+      }
+      if (e.extension && e.extension.name === 'Yes' && extensionAddon) {
+        addonPrice += get(extensionAddon, 'Price.Amount', 0);
       }
       return acc + get(e, 'services.Price.Amount', 0) + addonPrice;
     }, 0);

@@ -105,12 +105,12 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     borderRadius: 4,
-    minHeight: 100,
+    minHeight: 20,
     maxHeight: 300,
+    marginBottom: 30,
   },
   dateContainer: {
     width: '25%',
-    height: '100%',
     backgroundColor: Colors.yellow,
     borderTopLeftRadius: 4,
     borderBottomLeftRadius: 4,

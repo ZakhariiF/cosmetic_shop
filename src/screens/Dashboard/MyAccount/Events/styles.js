@@ -31,6 +31,15 @@ export default StyleSheet.create({
     color: Colors.header_title,
   },
 
+  slickText: {
+    fontSize: 15,
+    lineHeight: 23,
+    color: Colors.light_gray,
+    textAlign: 'center',
+    width: '100%',
+    fontFamily: Fonts.AvenirNextRegular,
+  },
+
   swiperTextStyle: {
     fontSize: 30,
     fontFamily: Fonts.DCondensed,

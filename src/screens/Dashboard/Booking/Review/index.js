@@ -21,8 +21,8 @@ import BookingTab from 'components/BookingTab';
 import {
   applyPromoCode,
   createAppointment,
-  createGuestAppointment,
-} from '../thunks';
+  createGuestAppointment, setExtensionType,
+} from "../thunks";
 import Indicator from 'components/Indicator';
 import {getAppointments} from 'screens/Dashboard/thunks';
 import {cancelItinerary, cancelAppt} from 'services';
@@ -356,6 +356,48 @@ const Review = ({navigation, route}) => {
               <Image source={Images.edit} />
             </TouchableOpacity>
           </View>
+
+          {totalGuests.length ? (
+            <View style={styles.boxContainer}>
+              <Text style={styles.headerText}>Extension</Text>
+
+              {totalGuests.map((e, i) => {
+                if (e.extension && e.extension.name === 'Yes') {
+                  return (
+                    <View key={i} style={styles.flexContainer}>
+                      {totalGuests.length > 1 ? (
+                        <Text style={[styles.titleText, styles.basisContainer]}>
+                          {i === 0 ? 'Me' : `Guest ${i}`}
+                        </Text>
+                      ) : null}
+
+                      <Text
+                        style={[
+                          styles.titleText,
+                          {width: totalGuests.length > 1 ? '70%' : '85%'},
+                        ]}>
+                        Extension
+                        <Text style={styles.price}>
+                          (${get(extensionAddon, 'Price.Amount', '')})
+                        </Text>
+                      </Text>
+                    </View>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+
+              <TouchableOpacity
+                style={styles.editContainer}
+                onPress={() => {
+                  dispatch(setExtensionType(true));
+                  navigation.navigate('Addons');
+                }}>
+                <Image source={Images.edit} />
+              </TouchableOpacity>
+            </View>
+          ) : null}
 
           <View style={styles.boxContainer}>
             <Text style={styles.headerText}>Date & Time</Text>

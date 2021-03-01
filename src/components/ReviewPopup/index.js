@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {Colors, Fonts, Images} from 'constant';
 import rootStyle from 'rootStyle';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setExtensionType} from 'screens/Dashboard/Booking/thunks';
 import {get} from 'lodash';
 import moment from 'moment';
 import {useNavigation} from '@react-navigation/native';
@@ -20,8 +21,10 @@ const ReviewPopup = ({}) => {
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
+  const extensionAddon = useSelector((state) => state.booking.extensionAddon);
   const [estimateTotal, setTotal] = useState(0);
   const [isAddon, setisAddOn] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     calculateTotal();
@@ -43,6 +46,9 @@ const ReviewPopup = ({}) => {
         );
       }
 
+      if (e.extension && e.extension.name === 'Yes' && extensionAddon) {
+        addonPrice += get(extensionAddon, 'Price.Amount', 0);
+      }
       return acc + get(e.services, 'Price.Amount', 0) + addonPrice;
     }, 0);
 
@@ -101,7 +107,7 @@ const ReviewPopup = ({}) => {
               <Text style={styles.headerText}>Add-ons</Text>
 
               {!isAddon ? (
-                <Text style={styles.titleText}>Empty </Text>
+                <Text style={styles.titleText}>None </Text>
               ) : (
                 totalGuests.map((e, i, arr) => {
                   if (get(e, 'addons')) {
@@ -133,6 +139,48 @@ const ReviewPopup = ({}) => {
               <TouchableOpacity
                 style={styles.editContainer}
                 onPress={() => navigation.navigate('Addons')}>
+                <Image source={Images.edit} />
+              </TouchableOpacity>
+            </View>
+          ) : null}
+
+          {totalGuests.length ? (
+            <View style={styles.boxContainer}>
+              <Text style={styles.headerText}>Extension</Text>
+
+              {totalGuests.map((e, i) => {
+                if (e.extension && e.extension.name === 'Yes') {
+                  return (
+                    <View key={i} style={styles.flexContainer}>
+                      {totalGuests.length > 1 ? (
+                        <Text style={[styles.titleText, styles.basisContainer]}>
+                          {i === 0 ? 'Me' : `Guest ${i}`}
+                        </Text>
+                      ) : null}
+
+                      <Text
+                        style={[
+                          styles.titleText,
+                          {width: totalGuests.length > 1 ? '70%' : '85%'},
+                        ]}>
+                        Extension
+                        <Text style={styles.price}>
+                          (${get(extensionAddon, 'Price.Amount', '')})
+                        </Text>
+                      </Text>
+                    </View>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+
+              <TouchableOpacity
+                style={styles.editContainer}
+                onPress={() => {
+                  dispatch(setExtensionType(true));
+                  navigation.navigate('Addons');
+                }}>
                 <Image source={Images.edit} />
               </TouchableOpacity>
             </View>
