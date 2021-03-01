@@ -256,7 +256,7 @@ const MyAppts = ({navigation}) => {
                   // backgroundColor: Colors.dimGray,
                 }
               }
-              label="Cancel"
+              label="No"
               onPress={() => setCancelItem(null)}
             />
             <Dialog.Button
@@ -266,7 +266,7 @@ const MyAppts = ({navigation}) => {
                   // backgroundColor: Colors.dimGray,
                 }
               }
-              label="Confirm"
+              label="Yes"
               onPress={handleCancel}
             />
 

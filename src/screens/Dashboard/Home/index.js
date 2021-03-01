@@ -276,7 +276,7 @@ const Home = ({navigation}) => {
               // backgroundColor: Colors.dimGray,
             }
           }
-          label="Cancel"
+          label="No"
           onPress={() => setDeleteItem(null)}
         />
         <Dialog.Button
@@ -286,7 +286,7 @@ const Home = ({navigation}) => {
               // backgroundColor: Colors.dimGray,
             }
           }
-          label="Confirm"
+          label="Yes"
           onPress={handleCancel}
         />
         {/* <Dialog.Button label="" onPress={handleDelete} /> */}
