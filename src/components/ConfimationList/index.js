@@ -34,13 +34,13 @@ const ConfirmationList = ({item, index, data}) => {
             source={Images.calendar}
             resizeMode="contain"
             style={styles.icon}
-          /><Text>Confirm</Text>
+          />
           <View>
             <Text style={styles.infoText}>
               {startTime.format('MM / DD')}
             </Text>
             <Text style={styles.bottomText}>
-              {startTime.diff(moment(new Date()), 'days')}
+              In {startTime.diff(moment(new Date()), 'days')} days
             </Text>
           </View>
         </View>
