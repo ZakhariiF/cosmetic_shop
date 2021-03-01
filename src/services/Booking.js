@@ -23,6 +23,15 @@ export const getAddons = (id) =>
     })
     .then((response) => response.data);
 
+export const findAddonServices = (data) =>
+  client
+    .post('/booker/FindAddOnServices', {
+      method: 'POST',
+      urlParams: {},
+      data,
+    })
+    .then((response) => response.data);
+
 export const getSlots = (data) =>
   client
     .post('/booker/Availability1Day', {
@@ -42,11 +51,13 @@ export const createAppt = (data) =>
     .then((response) => response.data);
 
 export const addAddonsToAppointment = (data) =>
-  client.post('/booker/AddAddonItemToAppointment', {
-    method: 'POST',
-    urlParams: {},
-    data,
-  });
+  client
+    .post('/booker/AddAddonItemToAppointment', {
+      method: 'POST',
+      urlParams: {},
+      data,
+    })
+    .then((response) => response.data);
 
 export const createItinerary = (data) =>
   client

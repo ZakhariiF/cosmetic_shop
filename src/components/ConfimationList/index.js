@@ -56,7 +56,7 @@ const ConfirmationList = ({item, index, data}) => {
               {get(item, 'services.Name', '')}
             </Text>
             <Text style={styles.bottomText}>
-              {get(item, 'AddOnItems', []).length} add ons
+              {get(item, 'addons', []).length} add ons
             </Text>
           </View>
         </View>

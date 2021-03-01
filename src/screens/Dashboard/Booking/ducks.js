@@ -210,7 +210,9 @@ const BookingReducer = (state = bookingIntialState, action) => {
       };
 
     case types.GET_ADDONS_SUCCESS:
-      let addonArr = get(action, 'payload.Treatments', []);
+      let addonArr = get(action, 'payload.Results', []).filter((a) =>
+        get(a, 'PriceInfo.Amount'),
+      );
       return {
         ...state,
         addonsLoading: false,

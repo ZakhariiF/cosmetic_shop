@@ -25,13 +25,13 @@ import {useQuery} from '@apollo/client';
 
 const Confirmation = () => {
   const banner_Query = bannerQuery();
-  console.log(useQuery(banner_Query));
+
   const {data} = useQuery(banner_Query);
   const bannerImageUrl = get(
     data,
     'screenCollection.items[0].marketingComponentsCollection.items[0].mobileMedia.url',
   );
-  console.log(bannerImageUrl);
+
   const totalGuests = useSelector((state) => state.booking.totalGuests);
 
   const extensionAddon = useSelector((state) => state.booking.extensionAddon);

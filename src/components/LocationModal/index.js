@@ -143,7 +143,7 @@ const LocationModal = forwardRef((props, ref) => {
       let addonPrice = 0;
       if (get(e, 'addons')) {
         addonPrice = e.addons.reduce(
-          (val, item) => (get(item, 'Price.Amount', 0) || 10)+ val,
+          (val, item) => (get(item, 'PriceInfo.Amount', 0))+ val,
           0,
         );
       }
