@@ -5,6 +5,7 @@ import Input from 'components/Input';
 import NativePicker from 'components/NativePicker';
 import {Fonts, Colors} from 'constant';
 import config from 'constant/config';
+import {get} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {
   Text,
@@ -29,16 +30,18 @@ const BookingForm = ({navigation}) => {
   const [preferedTime, setPreferTime] = useState([]);
   const [partySizeArr, setpartySizeArr] = useState([]);
   const [occasionArr, setOccasionArr] = useState([]);
+  const userInfo = useSelector((state) => state.auth.userInfo);
+
   const [state, setState] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
+    firstName: get(userInfo, 'firstname'),
+    lastName: get(userInfo, 'lastname'),
+    email: get(userInfo, 'preferred_username'),
     address1: '',
     address2: '',
     city: '',
     states: '',
     postalCode: '',
-    phoneNumber: '',
+    phoneNumber: get(userInfo, 'primaryPhone'),
     selectedLoc: '',
     selectedTime: '',
     partySize: '',
