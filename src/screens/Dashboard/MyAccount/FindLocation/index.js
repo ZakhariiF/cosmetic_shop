@@ -17,7 +17,11 @@ import LocationItem from 'components/LocationItem';
 import EmptyContainer from 'components/EmptyContainer';
 import rootStyle from 'rootStyle';
 import SearchBar from 'components/SearchBar';
-import {setFavoriteLocation} from 'screens/Dashboard/Booking/thunks';
+import {
+  setFavoriteLocation,
+  setLocation,
+  setmemberCount,
+} from 'screens/Dashboard/Booking/thunks';
 import {setFavoriteStore} from 'screens/Auth/thunks';
 import {types} from 'screens/Dashboard/Booking/ducks';
 import CustomMapMarker from 'components/CustomMapMarker';
@@ -222,8 +226,7 @@ const FindLocation = ({navigation}) => {
           flex: 0.8,
         }}
         initialRegion={searchVal.length ? coords : currentLocation}
-        region={coords}
-      >
+        region={coords}>
         {locationItems.map((e, i) => (
           <MapView.Marker
             key={i}
@@ -249,7 +252,9 @@ const FindLocation = ({navigation}) => {
           <CheckBox
             titile={'Use Current Location'}
             isChecked={useCurrentLocation}
-            onPressed={() => dispatch(setUseCurrentLocation(!useCurrentLocation))}
+            onPressed={() =>
+              dispatch(setUseCurrentLocation(!useCurrentLocation))
+            }
             containerStyle={{marginVertical: 10}}
           />
         </View>
@@ -269,7 +274,6 @@ const FindLocation = ({navigation}) => {
           renderItem={(e) => (
             <LocationItem
               {...e}
-              isViewMode
               fromFindLoc
               navigation={navigation}
               customerInfo={customerInfo}
@@ -277,6 +281,11 @@ const FindLocation = ({navigation}) => {
               isFav={get(e, 'item.bookerLocationId') == favItem}
               onSelect={(item) => setCenter(item)}
               currentLocation={currentLocation}
+              onBook={(item) => {
+                dispatch(setLocation(item));
+                dispatch(setmemberCount([]));
+                navigation.navigate('Book', {screen: 'Coming'});
+              }}
             />
           )}
           keyExtractor={(_, index) => index.toString()}
@@ -285,7 +294,7 @@ const FindLocation = ({navigation}) => {
           )}
           extraData={[locationItems, searchVal]}
         />
-       {(loading || isFavLoad) ? <Indicator /> : null}
+        {loading || isFavLoad ? <Indicator /> : null}
       </View>
     </View>
   );

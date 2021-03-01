@@ -88,6 +88,7 @@ export const updateUserInfo = (obj) => async (dispatch) => {
           ...userInfo,
           firstname: userInfo.firstName,
           lastname: userInfo.lastName,
+          preferred_username: userInfo.email,
         }),
       );
     } else {
