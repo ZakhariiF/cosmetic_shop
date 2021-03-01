@@ -120,11 +120,10 @@ const Events = () => {
                         style={styles.imageStyle}
                       />
                       <Text style={styles.swiperTextStyle}>{e.title}</Text>
-                      <View style={{paddingBottom: 30, marginTop: 22,}}>
-                        <HTMLView
-                          value={`${desc}`}
-                          stylesheet={EventDescriptionStyle}
-                        />
+                      <View style={{paddingBottom: 30, marginTop: 22}}>
+                        <Text style={styles.slickText}>
+                          {get(e, 'subtitle')}
+                        </Text>
                       </View>
 
                     </View>
@@ -173,16 +172,5 @@ const PageDescriptionStyle = StyleSheet.create({
     marginBottom: 0,
     fontFamily: Fonts.AvenirNextRegular,
     marginTop: 0,
-  },
-});
-
-const EventDescriptionStyle = StyleSheet.create({
-  p: {
-    fontSize: 15,
-    lineHeight: 23,
-    color: Colors.light_gray,
-    textAlign: 'center',
-    width: '100%',
-    fontFamily: Fonts.AvenirNextRegular,
   },
 });
