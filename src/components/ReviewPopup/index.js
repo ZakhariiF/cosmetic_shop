@@ -20,6 +20,7 @@ const ReviewPopup = ({}) => {
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
+  const extensionAddon = useSelector((state) => state.booking.extensionAddon);
   const [estimateTotal, setTotal] = useState(0);
   const [isAddon, setisAddOn] = useState(false);
 
@@ -43,6 +44,9 @@ const ReviewPopup = ({}) => {
         );
       }
 
+      if (e.extension && e.extension.name === 'Yes' && extensionAddon) {
+        addonPrice += get(extensionAddon, 'Price.Amount', 0);
+      }
       return acc + get(e.services, 'Price.Amount', 0) + addonPrice;
     }, 0);
 
@@ -129,6 +133,45 @@ const ReviewPopup = ({}) => {
                   }
                 })
               )}
+
+              <TouchableOpacity
+                style={styles.editContainer}
+                onPress={() => navigation.navigate('Addons')}>
+                <Image source={Images.edit} />
+              </TouchableOpacity>
+            </View>
+          ) : null}
+
+          {totalGuests.length ? (
+            <View style={styles.boxContainer}>
+              <Text style={styles.headerText}>Extension</Text>
+
+              {totalGuests.map((e, i) => {
+                if (e.extension && e.extension.name === 'Yes') {
+                  return (
+                    <View key={i} style={styles.flexContainer}>
+                      {totalGuests.length > 1 ? (
+                        <Text style={[styles.titleText, styles.basisContainer]}>
+                          {i === 0 ? 'Me' : `Guest ${i}`}
+                        </Text>
+                      ) : null}
+
+                      <Text
+                        style={[
+                          styles.titleText,
+                          {width: totalGuests.length > 1 ? '70%' : '85%'},
+                        ]}>
+                        Extension
+                        <Text style={styles.price}>
+                          (${get(extensionAddon, 'Price.Amount', '')})
+                        </Text>
+                      </Text>
+                    </View>
+                  );
+                } else {
+                  return null;
+                }
+              })}
 
               <TouchableOpacity
                 style={styles.editContainer}

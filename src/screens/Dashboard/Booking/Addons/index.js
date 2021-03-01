@@ -34,7 +34,6 @@ const Addons = ({navigation}) => {
   const [totalAddon, setTotaladdons] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [infoItem, setinfoItem] = useState({});
-  console.log('TotalGuests:', totalGuests);
 
   useEffect(() => {
     getData();
