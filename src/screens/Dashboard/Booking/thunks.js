@@ -62,6 +62,27 @@ export const getAddons = (serviceId) => async (dispatch) => {
   dispatch(bookingActions.getAddonRequest());
   try {
     const data = await API.getAddons(serviceId);
+
+    return dispatch(bookingActions.getAddonSuccess(data));
+  } catch (error) {
+    if (error.response.status === 401) {
+      dispatch(bookingActions.getAddonError());
+      return dispatch(logoutSuccess());
+    } else {
+      AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
+      return dispatch(bookingActions.getAddonError());
+    }
+  }
+};
+
+export const findAddons = (locationId) => async (dispatch) => {
+  dispatch(bookingActions.getAddonRequest());
+  try {
+    const data = await API.findAddonServices({
+      LocationID: locationId,
+      AddonsOnly: true,
+    });
+
     return dispatch(bookingActions.getAddonSuccess(data));
   } catch (error) {
     if (error.response.status === 401) {
@@ -99,15 +120,15 @@ export const createAppointment = (obj, addons, locationId) => async (
   try {
     const data = await API.createAppt(obj);
 
-    console.log('CreateAppointment:', data);
+    let appointment = get(data, 'Appointment');
 
     if (addons && addons.length) {
       const addonRequests = addons.map((a) => {
         return API.addAddonsToAppointment({
           LocationID: locationId,
           AppointmentID: get(data, 'Appointment.ID'),
-          // AddonItemID: a.ID,
-          AddonItemID: '3818047',
+          AddonItemID: a.ServiceID,
+          // AddonItemID: '3818047',
           AddonItemTypeID: 1,
           Quantity: 1,
         });
@@ -115,11 +136,25 @@ export const createAppointment = (obj, addons, locationId) => async (
 
       const addonData = await Promise.all(addonRequests);
 
-      console.log('AddonData:', addonData);
-
+      addonData.forEach((addon) => {
+        const addons = get(addon, 'Appointment.AddOnItems', []);
+        addons.forEach((a) => {
+          const addonIds = get(appointment, 'AddOnItems', []).map(
+            (i) => i.ItemID,
+          );
+          if (!addonIds.includes(a.ItemID)) {
+            appointment.AddOnItems.push(a);
+          }
+        });
+      });
     }
     if (data.IsSuccess) {
-      return dispatch(bookingActions.bookingSuccess(data));
+      return dispatch(
+        bookingActions.bookingSuccess({
+          Appointment: appointment,
+          IsSuccess: true,
+        }),
+      );
     } else {
       AlertHelper.showError(get(data, 'ErrorMessage', 'Server Error'));
       return dispatch(bookingActions.bookingError());

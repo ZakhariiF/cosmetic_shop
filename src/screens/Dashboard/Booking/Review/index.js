@@ -63,7 +63,7 @@ const Review = ({navigation, route}) => {
       let addonPrice = 0;
       if (get(e, 'addons')) {
         addonPrice = e.addons.reduce(
-          (val, item) => (get(item, 'Price.Amount', 0) || 10) + val,
+          (val, item) => (get(item, 'PriceInfo.Amount', 0)) + val,
           0,
         );
       }
@@ -336,9 +336,9 @@ const Review = ({navigation, route}) => {
                           styles.titleText,
                           {width: arr.length > 1 ? '70%' : '85%'},
                         ]}>
-                        {get(item, 'Name', '')}{' '}
+                        {get(item, 'ServiceName', '')}{' '}
                         <Text style={styles.price}>
-                          (${get(item, 'Price.Amount', 0) || 10})
+                          (${get(item, 'PriceInfo.Amount', 0)})
                         </Text>
                       </Text>
                     </View>

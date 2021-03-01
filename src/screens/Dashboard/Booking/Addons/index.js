@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,12 @@ import Header from 'components/Header/Header';
 import {Colors, Fonts, Images} from 'constant';
 import rootStyle from 'rootStyle';
 import {useDispatch, useSelector} from 'react-redux';
-import {getAddons, setExtensionType, setmemberCount} from '../thunks';
+import {
+  findAddons,
+  getAddons,
+  setExtensionType,
+  setmemberCount,
+} from '../thunks';
 import GuestTab from 'components/GuestTab';
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
@@ -30,6 +35,7 @@ const Addons = ({navigation}) => {
   const isExtension = useSelector((state) => state.booking.isExtension);
   const data = useSelector((state) => state.booking.addons);
   const isLoading = useSelector((state) => state.booking.addonsLoading);
+  const selectedLocation = useSelector((state) => state.booking.selectedLocation);
 
   const [totalAddon, setTotaladdons] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -37,21 +43,30 @@ const Addons = ({navigation}) => {
 
   useEffect(() => {
     getData();
-  }, [activeTab]);
+  }, []);
 
   useEffect(() => {
     calculateAddon();
   }, [totalGuests]);
 
-  const getData = () => {
-    let serviceId = get(totalGuests[activeTab], 'services.ID');
-    dispatch(getAddons(serviceId));
-  };
+  const getData = useCallback(() => {
+    // let serviceId = get(totalGuests[activeTab], 'services.ID');
+    // dispatch(getAddons(serviceId));
+
+    const locationId = get(selectedLocation, 'bookerLocationId');
+    if (locationId) {
+      dispatch(findAddons(locationId));
+    } else {
+      navigation.navigate('Book', {
+        screen: 'Location',
+      });
+    }
+  }, [selectedLocation]);
 
   const calculateAddon = () => {
     let addonARR = get(totalGuests, `[${activeTab}].addons`) || [];
     let totalPrice = addonARR.reduce(
-      (acc, e) => acc + (get(e, 'Price.Amount', 0) || 10),
+      (acc, e) => acc + (get(e, 'PriceInfo.Amount', 0)),
       0,
     );
     setTotaladdons(addonARR.length);
@@ -63,7 +78,7 @@ const Addons = ({navigation}) => {
 
     if (totalGuests[activeTab].addons && totalGuests[activeTab].addons.length) {
       totalGuests[activeTab].addons.forEach((element) => {
-        if (element.ID === item.ID) {
+        if (element.ServiceID === item.ServiceID) {
           isActive = true;
         }
       });
@@ -81,7 +96,7 @@ const Addons = ({navigation}) => {
 
     if (isExist(item)) {
       let addonARR = tempArr[activeTab].addons;
-      addonARR = addonARR.filter((e) => e.ID !== item.ID);
+      addonARR = addonARR.filter((e) => e.ServiceID !== item.ServiceID);
       tempArr[activeTab].addons = addonARR;
     } else {
       tempArr[activeTab].addons.push(item);
@@ -106,8 +121,6 @@ const Addons = ({navigation}) => {
       dispatch(setExtensionType(false));
     }
   };
-
-  // console.log('data>>', data);
 
   return (
     <View style={rootStyle.container}>
@@ -199,7 +212,7 @@ const AddonItem = ({
   active,
   onInfoPress,
 }) => {
-  const PRODUCT_INFO_QUERY = productInformationCollection(item.ID);
+  const PRODUCT_INFO_QUERY = productInformationCollection(item.ServiceID);
   const {data, error, loading} = useQuery(PRODUCT_INFO_QUERY);
 
   const information = get(data, 'productCollection.items', []);
@@ -228,12 +241,10 @@ const AddonItem = ({
         style={[styles.listButton, rootStyle.shadow]}
         onPress={() => onAddon(item, index)}>
         <View style={{flex: 1, paddingRight: 15}}>
-          <Text style={styles.itemName}>{item.Name}</Text>
-          <Text style={styles.itemDesc}>
-            Brightens, adds shine & removes dullness.
-          </Text>
+          <Text style={styles.itemName}>{item.ServiceName}</Text>
+          <Text style={styles.itemDesc}>{item.Description}</Text>
 
-          <Text style={styles.price}>${get(item, 'Price.Amount', 0)}</Text>
+          <Text style={styles.price}>${get(item, 'PriceInfo.Amount', 0)}</Text>
         </View>
 
         <View
