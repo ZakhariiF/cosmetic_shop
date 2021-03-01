@@ -29,11 +29,12 @@ import * as API from 'services';
 
 import styles from './styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AlertHelper } from "utils/AlertHelper";
 
 const BarflyMembership = ({navigation}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const customerMembership = useSelector((state) => state.account.membership);
-  const customerLocation = useSelector((state) => state.account.location);
+  const customerMembershipLocation = useSelector((state) => state.account.location);
 
   const BARFLY_QUERY = screenBarfly();
   const {data, error, loading} = useQuery(BARFLY_QUERY);
@@ -62,14 +63,14 @@ const BarflyMembership = ({navigation}) => {
 
   useEffect(() => {
     const customerId = get(userInfo, 'bookerID');
-    const locationId = get(customerLocation, 'bookerLocationId');
+    const locationId = get(customerMembershipLocation, 'bookerLocationId');
     if (locationId && customerId) {
       dispatch(getCustomerMembership(customerId, locationId));
     }
-  }, [userInfo, customerLocation]);
+  }, [userInfo, customerMembershipLocation]);
 
   useEffect(() => {
-    const locationId = get(customerLocation, 'bookerLocationId');
+    const locationId = get(customerMembershipLocation, 'bookerLocationId');
     if (locationId) {
       API.findMembershipByLocation(locationId).then(
         ({data: membershipsData}) => {
@@ -82,7 +83,7 @@ const BarflyMembership = ({navigation}) => {
         },
       );
     }
-  }, [customerLocation, setMembershipDataByLocation]);
+  }, [customerMembershipLocation, setMembershipDataByLocation]);
 
   const setSearchKey = (e) => {
     setSearch(e);
@@ -161,10 +162,14 @@ const BarflyMembership = ({navigation}) => {
   );
 
   const upgradeMembership = (item) => {
-    navigation.navigate('BarflyMembershipEnrollment', {
-      membership: item,
-      thankMessage: get(data, 'barfly.thankYou'),
-    });
+    if (customerMembershipLocation) {
+      navigation.navigate('BarflyMembershipEnrollment', {
+        membership: item,
+        thankMessage: get(data, 'barfly.thankYou'),
+      });
+    } else {
+      AlertHelper.showError('Please select the store at first');
+    }
   };
 
   return (
@@ -174,8 +179,11 @@ const BarflyMembership = ({navigation}) => {
       <ScrollView>
         <View style={rootStyle.innerContainer}>
           <View>
-            {customerLocation && (
-              <Text>{`Selected: ${get(customerLocation, 'title')}`}</Text>
+            {customerMembershipLocation && (
+              <Text>{`Selected: ${get(
+                customerMembershipLocation,
+                'title',
+              )}`}</Text>
             )}
             <SearchBar
               value={search}
