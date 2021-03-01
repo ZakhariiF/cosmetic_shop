@@ -28,7 +28,6 @@ import {getAppointments} from 'screens/Dashboard/thunks';
 import {cancelItinerary, cancelAppt} from 'services';
 import MParticle from 'react-native-mparticle';
 
-
 const Review = ({navigation, route}) => {
   const [isChecked, setChecked] = useState(false);
   const dispatch = useDispatch();
@@ -64,7 +63,7 @@ const Review = ({navigation, route}) => {
       let addonPrice = 0;
       if (get(e, 'addons')) {
         addonPrice = e.addons.reduce(
-          (val, item) => get(item, 'Price.Amount', 0) + val,
+          (val, item) => (get(item, 'Price.Amount', 0) || 10) + val,
           0,
         );
       }
@@ -100,31 +99,30 @@ const Review = ({navigation, route}) => {
 
     const addons = get(totalGuests, '[0].addons', []);
 
-    if (addons && addons.length) {
-      addons.forEach((e) => {
-        let endAddonTime = moment(endTime)
-          .add(e.TotalDuration || 10, 'minutes')
-          .utcOffset(timezone)
-          .format('YYYY-MM-DDTHH:mm:ssZ');
-
-        items.push({
-          EmployeeID: e.employees,
-          StartTimeOffset: endTime,
-          EndTimeOffset: endAddonTime,
-          TreatmentID: e.ID,
-          RoomID: e.rooms,
-        });
-
-        endTime = endAddonTime;
-      });
-    }
+    // if (addons && addons.length) {
+    //   addons.forEach((e) => {
+    //     let endAddonTime = moment(endTime)
+    //       .add(e.TotalDuration || 10, 'minutes')
+    //       .utcOffset(timezone)
+    //       .format('YYYY-MM-DDTHH:mm:ssZ');
+    //
+    //     items.push({
+    //       EmployeeID: e.employees,
+    //       StartTimeOffset: endTime,
+    //       EndTimeOffset: endAddonTime,
+    //       TreatmentID: e.ID,
+    //       RoomID: e.rooms,
+    //     });
+    //
+    //     endTime = endAddonTime;
+    //   });
+    // }
 
     if (
       totalGuests[0].extension &&
       totalGuests[0].extension.name === 'Yes' &&
       extensionAddon
     ) {
-      // addons.push(extensionAddon);
       items.push({
         EmployeeID: get(totalGuests[0].extension, 'employee', ''),
         StartTimeOffset: endTime,
@@ -136,7 +134,6 @@ const Review = ({navigation, route}) => {
         RoomID: get(totalGuests[0].extension, 'rooms'),
       });
     }
-
 
     let obj = {
       AppointmentDateOffset: get(
@@ -162,7 +159,13 @@ const Review = ({navigation, route}) => {
       Notes: route.params.Notes || '',
     };
 
-    dispatch(createAppointment(obj)).then((res) => {
+    dispatch(
+      createAppointment(
+        obj,
+        addons,
+        get(selectedLocation, 'bookerLocationId', ''),
+      ),
+    ).then((res) => {
       if (res.payload && res.payload.IsSuccess) {
         dispatch(getAppointments(get(userInfo, 'bookerID', '')));
         navigation.navigate('Confirmation', {
@@ -316,7 +319,7 @@ const Review = ({navigation, route}) => {
             <Text style={styles.headerText}>Add-ons</Text>
 
             {!isAddon ? (
-              <Text style={styles.titleText}>None </Text>
+              <Text style={styles.titleText}>None</Text>
             ) : (
               totalGuests.map((e, i, arr) => {
                 if (get(e, 'addons')) {
@@ -335,7 +338,7 @@ const Review = ({navigation, route}) => {
                         ]}>
                         {get(item, 'Name', '')}{' '}
                         <Text style={styles.price}>
-                          (${get(item, 'Price.Amount', '')})
+                          (${get(item, 'Price.Amount', 0) || 10})
                         </Text>
                       </Text>
                     </View>

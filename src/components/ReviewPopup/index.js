@@ -38,7 +38,7 @@ const ReviewPopup = ({}) => {
       let addonPrice = 0;
       if (get(e, 'addons')) {
         addonPrice = e.addons.reduce(
-          (val, item) => get(item, 'Price.Amount', 0) + val,
+          (val, item) => (get(item, 'Price.Amount', 0) || 10) + val,
           0,
         );
       }
@@ -121,7 +121,7 @@ const ReviewPopup = ({}) => {
                           ]}>
                           {get(item, 'Name', '')}{' '}
                           <Text style={styles.price}>
-                            (${get(item, 'Price.Amount', '')})
+                            (${get(item, 'Price.Amount', 0) || 10})
                           </Text>
                         </Text>
                       </View>

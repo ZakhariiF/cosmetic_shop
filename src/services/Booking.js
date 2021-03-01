@@ -41,6 +41,13 @@ export const createAppt = (data) =>
     })
     .then((response) => response.data);
 
+export const addAddonsToAppointment = (data) =>
+  client.post('/booker/AddAddonItemToAppointment', {
+    method: 'POST',
+    urlParams: {},
+    data,
+  });
+
 export const createItinerary = (data) =>
   client
     .post('/booker/CreateItinerary', {
@@ -49,19 +56,17 @@ export const createItinerary = (data) =>
       data,
     })
     .then((response) => response.data);
- 
-
 
 export const bookItinerary = (itineraryId, groupName) =>
   client
     .post('/booker/BookItinerary', {
       method: 'POST',
       urlParams: {
-        itineraryId
+        itineraryId,
       },
       data: {
         ID: itineraryId,
-        GroupName: groupName
+        GroupName: groupName,
       },
     })
     .then((response) => response.data);

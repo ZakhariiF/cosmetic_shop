@@ -34,7 +34,6 @@ const Addons = ({navigation}) => {
   const [totalAddon, setTotaladdons] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [infoItem, setinfoItem] = useState({});
-  console.log('TotalGuests:', totalGuests);
 
   useEffect(() => {
     getData();
@@ -52,7 +51,7 @@ const Addons = ({navigation}) => {
   const calculateAddon = () => {
     let addonARR = get(totalGuests, `[${activeTab}].addons`) || [];
     let totalPrice = addonARR.reduce(
-      (acc, e) => acc + get(e, 'Price.Amount', 0),
+      (acc, e) => acc + (get(e, 'Price.Amount', 0) || 10),
       0,
     );
     setTotaladdons(addonARR.length);
