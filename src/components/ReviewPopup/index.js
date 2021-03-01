@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {Colors, Fonts, Images} from 'constant';
 import rootStyle from 'rootStyle';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setExtensionType} from 'screens/Dashboard/Booking/thunks';
 import {get} from 'lodash';
 import moment from 'moment';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +24,7 @@ const ReviewPopup = ({}) => {
   const extensionAddon = useSelector((state) => state.booking.extensionAddon);
   const [estimateTotal, setTotal] = useState(0);
   const [isAddon, setisAddOn] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     calculateTotal();
@@ -175,7 +177,10 @@ const ReviewPopup = ({}) => {
 
               <TouchableOpacity
                 style={styles.editContainer}
-                onPress={() => navigation.navigate('Addons')}>
+                onPress={() => {
+                  dispatch(setExtensionType(true));
+                  navigation.navigate('Addons');
+                }}>
                 <Image source={Images.edit} />
               </TouchableOpacity>
             </View>
