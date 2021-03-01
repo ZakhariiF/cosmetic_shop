@@ -21,12 +21,12 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
   const dispatch = useDispatch();
   const [dis, setDis] = useState(null);
   useEffect(() => {
-    if(currentLocation) {
+    if (currentLocation) {
       getDistance();
     }
   }, [currentLocation]);
   const getDistance = async () => {
-    console.log("get Distance function call")
+    console.log('get Distance function call');
     try {
       const _dis = await distance(
         {
@@ -35,14 +35,14 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
         },
         {
           latitude: Number(get(item, 'contact.coordinates[0]')),
-          longitude: Number(get(item, 'contact.coordinates[1]'))
-        }
+          longitude: Number(get(item, 'contact.coordinates[1]')),
+        },
       );
       setDis(_dis);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   const phoneNumber = get(item, 'contact.phoneNumber');
   const isBookable =
     item.bookerLocationId &&
@@ -78,11 +78,9 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
               <View>
                 {dis && (
                   <Text style={styles.miles}>
-                    {dis.status === "SUCCESS" ?
-                      dis.routes.car.distance.text
-                    :
-                      ""
-                    }
+                    {dis.status === 'SUCCESS'
+                      ? dis.routes.car.distance.text
+                      : ''}
                   </Text>
                 )}
                 <TouchableOpacity onPress={() => call(phoneNumber)}>
