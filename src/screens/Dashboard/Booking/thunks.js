@@ -1,3 +1,5 @@
+import {convertAppointmentToState, getExtensionFromAppointment} from 'utils';
+
 const {bookingActions} = require('./ducks');
 import {get} from 'lodash';
 import * as API from 'services';
@@ -438,4 +440,38 @@ export const bookedForMoreUser = (obj) => async (dispatch) => {
       return dispatch(bookingActions.bookingFormError());
     }
   }
+};
+
+export const editOrRebookFromAppointment = (location, appointment) => async (
+  dispatch,
+) => {
+  const extensionData = getExtensionFromAppointment(appointment);
+  const locationId = get(location, 'bookerLocationId');
+  dispatch(getServices(locationId));
+  const addons = await API.findAddonServices({
+    LocationID: locationId,
+    AddonsOnly: true,
+  });
+
+  const tempArr = convertAppointmentToState(
+    appointment,
+    get(addons, 'Results', []),
+  );
+  dispatch(setLocation(location));
+  dispatch(
+    setExtensionAddon({
+      Name: get(extensionData, 'TreatmentName'),
+      Price: {Amount: get(extensionData, 'Treatment.Price.Amount')},
+      ...get(extensionData, 'Treatment', {}),
+    }),
+  );
+  dispatch(bookingActions.getAddonSuccess(addons));
+  dispatch(setmemberCount(tempArr));
+  return dispatch(
+    setIsEdit({
+      group: appointment.groupID,
+      appointment: appointment.appointment.ID,
+      oldLocation: location.bookerLocationId,
+    }),
+  );
 };

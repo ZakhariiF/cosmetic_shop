@@ -1,13 +1,13 @@
 import {client} from 'services';
 import config from 'constant/config';
 
-export const getServices = (id) =>
+export const getServices = (locationId) =>
   client
     .post('/booker/FindTreatments', {
       method: 'POST',
       urlParams: {},
       data: {
-        LocationID: id,
+        LocationID: locationId,
       },
     })
     .then((response) => response.data);

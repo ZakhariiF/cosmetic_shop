@@ -8,13 +8,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useQuery} from '@apollo/client';
 import Indicator from 'components/Indicator';
 import {cancelAppointment, getAppointments, cancelItinerary} from '../thunks';
-import {
-  setExtensionAddon,
-  setIsEdit,
-  setLocation,
-  setmemberCount,
-} from '../Booking/thunks';
-import moment from 'moment';
+import {editOrRebookFromAppointment} from '../Booking/thunks';
+
 import {get} from 'lodash';
 import EmptyContainer from 'components/EmptyContainer';
 import {storeCollectionQuery} from 'constant/query';
@@ -23,6 +18,7 @@ import Dialog from 'react-native-dialog';
 import Button from 'components/Button';
 import {getUser} from '@okta/okta-react-native';
 import {loginSuccess} from 'screens/Auth/thunks';
+
 
 const MyAppts = ({navigation}) => {
   const dispatch = useDispatch();
@@ -51,97 +47,16 @@ const MyAppts = ({navigation}) => {
     dispatch(loginSuccess(user));
   };
 
-  const getAppts = () =>
-    dispatch(getAppointments(customerId));
+  const getAppts = () => dispatch(getAppointments(customerId));
 
   const onEdit = (item, location, isRebook = false) => {
-    const services = get(item, 'appointment.AppointmentTreatments', []).filter(
-      (service) => service.TreatmentName !== 'Extensions',
-    );
-
-    const extensionData = get(
-      item,
-      'appointment.AppointmentTreatments',
-      [],
-    ).find((service) => service.TreatmentName === 'Extensions');
-
-    const checkExtension = (service) => {
-      let extension = get(item, 'appointment.AppointmentTreatments', []).find(
-        (s) =>
-          s.AppointmentID === service.AppointmentID &&
-          s.TreatmentName === 'Extensions',
-      );
-
-      if (!extension) {
-        return (
-          get(
-            item,
-            `appointments.appoint_${service.AppointmentID}.Notes`,
-            '',
-          ) || ''
-        ).includes('Extensions added.');
+    dispatch(editOrRebookFromAppointment(location, item)).then((res) => {
+      if (isRebook) {
+        navigation.navigate('Book', {screen: 'DateTime'});
+      } else {
+        navigation.navigate('Book', {screen: 'Services'});
       }
-      return extension;
-    };
-
-    let tempArr = services.map((service, idx) => {
-      const extension = checkExtension(service);
-
-      return {
-        userType: idx === 0 ? 'Me' : 'Guest ' + idx,
-        date: {
-          date: moment(get(service, 'StartDateTimeOffset')).format(
-            'YYYY-MM-DDTHH:mm:ssZ',
-          ),
-          time: {
-            startTime: get(service, 'StartDateTimeOffset'),
-            endTime: get(service, 'EndDateTimeOffset'),
-            timezone: moment()
-              .utcOffset(get(service, 'StartDateTimeOffset'))
-              .utcOffset(),
-          },
-        },
-
-        rooms: get(service, 'RoomID'),
-        employees: get(service, 'EmployeeID'),
-        services: {
-          Name: get(service, 'TreatmentName'),
-          Price: {Amount: get(service, 'Treatment.Price.Amount')},
-          ...service.Treatment,
-        },
-        customer: item.Customer,
-        extension: extension
-          ? {
-              price: get(extensionData, 'TagPrice.Amount', 20),
-              name: 'Yes',
-              room: get(extensionData, 'RoomID'),
-              employee: get(extensionData, 'EmployeeID'),
-            }
-          : undefined,
-      };
     });
-
-    dispatch(setLocation(location));
-    dispatch(
-      setExtensionAddon({
-        Name: get(extensionData, 'TreatmentName'),
-        Price: {Amount: get(extensionData, 'Treatment.Price.Amount')},
-        ...get(extensionData, 'Treatment', {}),
-      }),
-    );
-    dispatch(setmemberCount(tempArr));
-    dispatch(
-      setIsEdit({
-        group: item.groupID,
-        appointment: item.appointment.ID,
-        oldLocation: location.bookerLocationId,
-      }),
-    );
-    if (isRebook) {
-      navigation.navigate('Book', {screen: 'DateTime'});
-    } else {
-      navigation.navigate('Book', {screen: 'Services'});
-    }
   };
 
   const onCancel = (item, location) => {
