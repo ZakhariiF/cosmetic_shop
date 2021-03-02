@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   Image,
   Pressable,
@@ -19,18 +19,40 @@ import {useDispatch, useSelector} from 'react-redux';
 import {editOrRebookFromAppointment} from '../../Booking/thunks';
 import Indicator from 'components/Indicator';
 import {cancelAppointment, cancelItinerary} from '../../thunks';
-import {openMaps, checkExtension, getServicesFromAppointment} from 'utils';
+import {
+  openMaps,
+  checkExtension,
+  getServicesFromAppointment,
+  getAddons,
+} from 'utils';
 import {getAppointments} from '../../thunks';
+import * as API from 'services';
 
 const ApptDetails = ({route, navigation}) => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.home.apptLoading);
   const [visible, setVisible] = useState(false);
   const userInfo = useSelector((state) => state.auth.userInfo);
+  const [locationAddons, setAddOns] = useState(null);
 
   const {
     params: {past, item, location},
   } = route;
+
+  useEffect(() => {
+    getAddonData();
+  }, [location]);
+
+  const getAddonData = useCallback(async () => {
+    const locationId = get(location, 'bookerLocationId');
+    if (locationId) {
+      const addonData = await API.findAddonServices({
+        LocationID: locationId,
+        AddonsOnly: true,
+      });
+      setAddOns(addonData);
+    }
+  }, [location]);
 
   const timezone = moment()
     .utcOffset(get(item, 'appointment.StartDateTimeOffset'))
@@ -38,13 +60,15 @@ const ApptDetails = ({route, navigation}) => {
   const services = getServicesFromAppointment(item);
 
   const onEdit = () => {
-    dispatch(editOrRebookFromAppointment(location, item)).then((res) => {
-      if (past) {
-        navigation.navigate('Book', {screen: 'DateTime'});
-      } else {
-        navigation.navigate('Book', {screen: 'Services'});
-      }
-    });
+    dispatch(editOrRebookFromAppointment(location, item, locationAddons)).then(
+      (res) => {
+        if (past) {
+          navigation.navigate('Book', {screen: 'DateTime'});
+        } else {
+          navigation.navigate('Book', {screen: 'Services'});
+        }
+      },
+    );
   };
 
   const onCancel = () => {
@@ -80,6 +104,8 @@ const ApptDetails = ({route, navigation}) => {
   );
 
   const addons = get(item, 'appointment.AddOnItems', []);
+
+  console.log('locationAddons:', locationAddons);
 
   return (
     <View style={rootStyle.container}>
@@ -151,6 +177,32 @@ const ApptDetails = ({route, navigation}) => {
                   </Text>
                 </Text>
               ))}
+            </View>
+          ) : null}
+
+          {get(locationAddons, 'Results', []).length && services.length ? (
+            <View style={styles.boxContainer}>
+              <Text style={styles.headerText}>Add-ons</Text>
+              {services.map((s, i) => {
+                const serviceAddons = getAddons(
+                  s,
+                  item,
+                  get(locationAddons, 'Results', []),
+                );
+                return (
+                  <View key={i}>
+                    <Text>{i === 0 ? 'Me' : `Guest ${i}`}</Text>
+                    {serviceAddons.map((sA, j) => (
+                      <Text style={styles.titleText}>
+                        {sA.ServiceName}{' '}
+                        <Text style={styles.price}>
+                          (${get(sA, 'PriceInfo.Amount')})
+                        </Text>
+                      </Text>
+                    ))}
+                  </View>
+                );
+              })}
             </View>
           ) : null}
 

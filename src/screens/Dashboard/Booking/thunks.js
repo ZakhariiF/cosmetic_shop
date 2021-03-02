@@ -442,16 +442,20 @@ export const bookedForMoreUser = (obj) => async (dispatch) => {
   }
 };
 
-export const editOrRebookFromAppointment = (location, appointment) => async (
-  dispatch,
-) => {
+export const editOrRebookFromAppointment = (
+  location,
+  appointment,
+  addonsData = null,
+) => async (dispatch) => {
   const extensionData = getExtensionFromAppointment(appointment);
   const locationId = get(location, 'bookerLocationId');
   dispatch(getServices(locationId));
-  const addons = await API.findAddonServices({
-    LocationID: locationId,
-    AddonsOnly: true,
-  });
+  const addons = addonsData
+    ? addonsData
+    : await API.findAddonServices({
+        LocationID: locationId,
+        AddonsOnly: true,
+      });
 
   const tempArr = convertAppointmentToState(
     appointment,
