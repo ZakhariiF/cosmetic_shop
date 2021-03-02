@@ -16,15 +16,10 @@ import styles from './styles';
 import {get} from 'lodash';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  setIsEdit,
-  setLocation,
-  setmemberCount,
-  setExtensionAddon,
-} from '../../Booking/thunks';
+import {editOrRebookFromAppointment} from '../../Booking/thunks';
 import Indicator from 'components/Indicator';
 import {cancelAppointment, cancelItinerary} from '../../thunks';
-import {openMaps} from 'utils';
+import {openMaps, checkExtension, getServicesFromAppointment} from 'utils';
 import {getAppointments} from '../../thunks';
 
 const ApptDetails = ({route, navigation}) => {
@@ -40,90 +35,16 @@ const ApptDetails = ({route, navigation}) => {
   const timezone = moment()
     .utcOffset(get(item, 'appointment.StartDateTimeOffset'))
     .utcOffset();
-  const services = get(item, 'appointment.AppointmentTreatments', []).filter(
-    (service) => service.TreatmentName !== 'Extensions',
-  );
-
-  const extensionData = get(item, 'appointment.AppointmentTreatments', []).find(
-    (service) => service.TreatmentName === 'Extensions',
-  );
-
-  const checkExtension = (service) => {
-    let extension = get(item, 'appointment.AppointmentTreatments', []).find(
-      (s) =>
-        s.AppointmentID === service.AppointmentID &&
-        s.TreatmentName === 'Extensions',
-    );
-
-    if (!extension) {
-      return (
-        get(item, `appointments.appoint_${service.AppointmentID}.Notes`, '') ||
-        ''
-      ).includes('Extensions added.');
-    }
-
-    return extension;
-  };
+  const services = getServicesFromAppointment(item);
 
   const onEdit = () => {
-    let tempArr = services.map((service, idx) => {
-      const extension = checkExtension(service);
-
-      return {
-        userType: idx === 0 ? 'Me' : 'Guest ' + idx,
-        date: {
-          date: moment(get(service, 'StartDateTimeOffset')).format(
-            'YYYY-MM-DDTHH:mm:ssZ',
-          ),
-          time: {
-            startTime: get(service, 'StartDateTimeOffset'),
-            endTime: get(service, 'EndDateTimeOffset'),
-            timezone: moment()
-              .utcOffset(get(service, 'StartDateTimeOffset'))
-              .utcOffset(),
-          },
-        },
-
-        rooms: get(service, 'RoomID'),
-        employees: get(service, 'EmployeeID'),
-        services: {
-          Name: get(service, 'TreatmentName'),
-          Price: {Amount: get(service, 'Treatment.Price.Amount')},
-          ...service.Treatment,
-        },
-        customer: item.Customer,
-        extension: extension
-          ? {
-              price: get(extensionData, 'TagPrice.Amount', 20),
-              name: 'Yes',
-              room: get(extensionData, 'RoomID'),
-              employee: get(extensionData, 'EmployeeID'),
-            }
-          : undefined,
-      };
+    dispatch(editOrRebookFromAppointment(location, item)).then((res) => {
+      if (past) {
+        navigation.navigate('Book', {screen: 'DateTime'});
+      } else {
+        navigation.navigate('Book', {screen: 'Services'});
+      }
     });
-    dispatch(setLocation(location));
-    dispatch(
-      setExtensionAddon({
-        Name: get(extensionData, 'TreatmentName'),
-        Price: {Amount: get(extensionData, 'Treatment.Price.Amount')},
-        ...get(extensionData, 'Treatment', {}),
-      }),
-    );
-    dispatch(setmemberCount(tempArr));
-    dispatch(
-      setIsEdit({
-        group: item.groupID,
-        appointment: item.appointment.ID,
-        oldLocation: location.bookerLocationId,
-      }),
-    );
-
-    if (past) {
-      navigation.navigate('Book', {screen: 'DateTime'});
-    } else {
-      navigation.navigate('Book', {screen: 'Services'});
-    }
   };
 
   const onCancel = () => {
@@ -133,12 +54,14 @@ const ApptDetails = ({route, navigation}) => {
   const handleCancel = () => {
     setVisible(false);
     if (item.groupID) {
-      dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then((response) => {
-        if (response.type === 'CANCEL_APPT_SUCCESS') {
-          navigation.goBack();
-          getAppts();
-        }
-      });
+      dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then(
+        (response) => {
+          if (response.type === 'CANCEL_APPT_SUCCESS') {
+            navigation.goBack();
+            getAppts();
+          }
+        },
+      );
     } else {
       dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
         if (response.type === 'CANCEL_APPT_SUCCESS') {
@@ -147,11 +70,16 @@ const ApptDetails = ({route, navigation}) => {
         }
       });
     }
-
   };
 
   const getAppts = () =>
     dispatch(getAppointments(get(userInfo, 'bookerID', '')));
+
+  const hasExtension = services.find((service) =>
+    checkExtension(item, service),
+  );
+
+  const addons = get(item, 'appointment.AddOnItems', []);
 
   return (
     <View style={rootStyle.container}>
@@ -166,25 +94,10 @@ const ApptDetails = ({route, navigation}) => {
 
             <Dialog.Button
               color="black"
-              style={
-                {
-                  // backgroundColor: Colors.dimGray,
-                }
-              }
               label="No"
               onPress={() => setVisible(false)}
             />
-            <Dialog.Button
-              color="black"
-              style={
-                {
-                  // backgroundColor: Colors.dimGray,
-                }
-              }
-              label="Yes"
-              onPress={handleCancel}
-            />
-            {/* <Dialog.Button label="" onPress={handleDelete} /> */}
+            <Dialog.Button color="black" label="Yes" onPress={handleCancel} />
           </Dialog.Container>
         </View>
         <ScrollView>
@@ -227,42 +140,46 @@ const ApptDetails = ({route, navigation}) => {
             ))}
           </View>
 
-          <View style={styles.boxContainer}>
-            <Text style={styles.headerText}>
-              {services.length > 1 ? 'Extensions' : 'Extension'}
-            </Text>
-            {services.map((service, idx) => {
-              const extension = checkExtension(service);
-              if (!extension) {
-                return null;
-              }
-              return (
-                <View>
-                  {services.length > 1 && (
-                    <Text>{idx === 0 ? 'Me' : `Guest ${idx}`}</Text>
-                  )}
-                  <Text style={styles.titleText}>
-                    Yes
-                    <Text style={styles.price}>
-                      (${get(service, 'Treatment.Price.Amount')})
-                    </Text>
-                  </Text>
-                </View>
-              );
-            })}
-          </View>
-
-          {get(item, 'appointment.AddOnItems', []).length ? (
+          {addons.length ? (
             <View style={styles.boxContainer}>
               <Text style={styles.headerText}>Add-ons</Text>
-              <Text style={styles.titleText}>
-                Liquid Glass <Text style={styles.price}>($10)</Text>
-              </Text>
-              <Text style={styles.titleText}>
-                Scalp Massage <Text style={styles.price}>($10)</Text>
-              </Text>
+              {addons.map((a, i) => (
+                <Text style={styles.titleText}>
+                  {a.Name}{' '}
+                  <Text style={styles.price}>
+                    (${get(a, 'TagPrice.Amount')})
+                  </Text>
+                </Text>
+              ))}
             </View>
           ) : null}
+
+          {hasExtension && (
+            <View style={styles.boxContainer}>
+              <Text style={styles.headerText}>
+                {services.length > 1 ? 'Extensions' : 'Extension'}
+              </Text>
+              {services.map((service, idx) => {
+                const extension = checkExtension(item, service);
+                if (!extension) {
+                  return null;
+                }
+                return (
+                  <View>
+                    {services.length > 1 && (
+                      <Text>{idx === 0 ? 'Me' : `Guest ${idx}`}</Text>
+                    )}
+                    <Text style={styles.titleText}>
+                      Yes
+                      <Text style={styles.price}>
+                        (${get(service, 'Treatment.Price.Amount')})
+                      </Text>
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          )}
 
           <View style={styles.boxContainer}>
             <Text style={styles.headerText}>Date & Time</Text>

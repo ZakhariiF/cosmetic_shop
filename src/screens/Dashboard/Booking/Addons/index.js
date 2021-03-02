@@ -35,7 +35,9 @@ const Addons = ({navigation}) => {
   const isExtension = useSelector((state) => state.booking.isExtension);
   const data = useSelector((state) => state.booking.addons);
   const isLoading = useSelector((state) => state.booking.addonsLoading);
-  const selectedLocation = useSelector((state) => state.booking.selectedLocation);
+  const selectedLocation = useSelector(
+    (state) => state.booking.selectedLocation,
+  );
 
   const [totalAddon, setTotaladdons] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -66,7 +68,7 @@ const Addons = ({navigation}) => {
   const calculateAddon = () => {
     let addonARR = get(totalGuests, `[${activeTab}].addons`) || [];
     let totalPrice = addonARR.reduce(
-      (acc, e) => acc + (get(e, 'PriceInfo.Amount', 0)),
+      (acc, e) => acc + get(e, 'PriceInfo.Amount', 0),
       0,
     );
     setTotaladdons(addonARR.length);
@@ -175,7 +177,9 @@ const Addons = ({navigation}) => {
                 {...e}
                 totalGuests={totalGuests}
                 onAddon={addonPress}
-                active={true}
+                active={(totalGuests[activeTab].addons || []).find(
+                  (a) => a.ServiceID === e.item.ServiceID,
+                )}
                 onInfoPress={(itemz) => {
                   setVisible(true);
                   setinfoItem(itemz);

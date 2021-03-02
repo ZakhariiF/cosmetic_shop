@@ -21,8 +21,9 @@ import BookingTab from 'components/BookingTab';
 import {
   applyPromoCode,
   createAppointment,
-  createGuestAppointment, setExtensionType,
-} from "../thunks";
+  createGuestAppointment,
+  setExtensionType,
+} from '../thunks';
 import Indicator from 'components/Indicator';
 import {getAppointments} from 'screens/Dashboard/thunks';
 import {cancelItinerary, cancelAppt} from 'services';
@@ -63,7 +64,7 @@ const Review = ({navigation, route}) => {
       let addonPrice = 0;
       if (get(e, 'addons')) {
         addonPrice = e.addons.reduce(
-          (val, item) => (get(item, 'PriceInfo.Amount', 0)) + val,
+          (val, item) => get(item, 'PriceInfo.Amount', 0) + val,
           0,
         );
       }
@@ -180,10 +181,23 @@ const Review = ({navigation, route}) => {
     for (let i = 0; i < totalGuests.length; i++) {
       const startTime = totalGuests[i]?.date.time.startDateTime;
       const timezone = totalGuests[i]?.date.time.timezone;
-      const endTime = moment(startTime)
+      let endTime = moment(startTime)
         .add(totalGuests[i]?.services.TotalDuration, 'minutes')
         .utcOffset(timezone)
         .format('YYYY-MM-DDTHH:mm:ssZ');
+
+      let extraNotes = (totalGuests[i].addons || []).reduce((obj, current) => {
+        endTime = moment(endTime)
+          .add(current.Duration, 'minutes')
+          .utcOffset(timezone)
+          .format('YYYY-MM-DDTHH:mm:ssZ');
+        return `${obj} AddOn: ${current.ServiceName}. `;
+      }, route.params.Notes || '');
+
+      if (totalGuests[i].extension && totalGuests[i].extension.name === 'Yes') {
+        extraNotes = `${extraNotes} Extensions Added.`;
+      }
+
       const guestObj = {
         EmployeeID: totalGuests[i]?.employees,
         RoomID: totalGuests[i]?.rooms,
@@ -197,10 +211,7 @@ const Review = ({navigation, route}) => {
           HomePhone: get(userInfo, 'primaryPhone', ''),
           ID: get(userInfo, 'bookerID', ''),
         },
-        AppointmentNotes:
-          totalGuests[i].extension && totalGuests[i].extension.name === 'Yes'
-            ? `Extensions added. ${route.params.Notes || ''}`
-            : route.params.Notes || '',
+        AppointmentNotes: extraNotes,
       };
       guestData.push(guestObj);
     }
@@ -213,6 +224,8 @@ const Review = ({navigation, route}) => {
       GroupName: `${get(userInfo, 'firstname', '')}'s friends`,
       ItineraryItems: guestList(),
     };
+
+    console.log('Multiple:', obj);
 
     dispatch(createGuestAppointment(obj)).then((res) => {
       if (res.payload && res.payload.IsSuccess) {

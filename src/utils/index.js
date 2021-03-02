@@ -1,10 +1,11 @@
 import {Alert, Linking, Platform} from 'react-native';
 import {Images} from '../constant';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import Geolocation from '@react-native-community/geolocation';
-// import {createConfig, signIn, getUser} from '@okta/okta-react-native';
-import config from 'constant/config';
+
 import {trackOnce} from 'utils/RadarHelper';
+import {get} from 'lodash';
+import moment from 'moment';
+
 export const renderTabImages = (index) => {
   switch (index) {
     case 0:
@@ -91,36 +92,38 @@ export const requestUserLocationLocation = () => {
       Platform.OS === 'ios'
         ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
         : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-    ).then((response) => {
-      console.log(response);
-      if (response === RESULTS.GRANTED) {
-        // Geolocation.getCurrentPosition(
-        //   (position) => {
-        //     resolve(position);
-        //   },
-        //   (error) => {
-        //     console.log(error.code, error.message);
-        //   },
-        //   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-        // );
-        trackOnce(resolve, reject);
-      } else if (response === RESULTS.UNAVAILABLE) {
-        reject(response);
-        // Alert.alert(
-        //   'Error',
-        //   'We cannot find any hardware to fetch location on your device.',
-        // );
-      } else {
-        reject(response);
-        // Alert.alert(
-        //   'Error',
-        //   'Please, change your settings to allow DryBar to access your location.',
-        // );
-      }
-    }).catch(err => {
-      console.log(err);
-      reject(err);
-    })
+    )
+      .then((response) => {
+        console.log(response);
+        if (response === RESULTS.GRANTED) {
+          // Geolocation.getCurrentPosition(
+          //   (position) => {
+          //     resolve(position);
+          //   },
+          //   (error) => {
+          //     console.log(error.code, error.message);
+          //   },
+          //   {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          // );
+          trackOnce(resolve, reject);
+        } else if (response === RESULTS.UNAVAILABLE) {
+          reject(response);
+          // Alert.alert(
+          //   'Error',
+          //   'We cannot find any hardware to fetch location on your device.',
+          // );
+        } else {
+          reject(response);
+          // Alert.alert(
+          //   'Error',
+          //   'Please, change your settings to allow DryBar to access your location.',
+          // );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        reject(err);
+      });
   });
 };
 
@@ -210,7 +213,6 @@ export const findStoresFromPointWithTitle = (
   let storesSlugsByTitle = [];
 
   if (searchStr && searchStr !== '') {
-
     storesByTitle = locationData
       .filter((location) => {
         return (
@@ -361,4 +363,129 @@ export const mapGraphqlToNavigator = {
   barfly: 'BarflyMembership',
   'my account': 'MyAccount',
   booking: 'Book',
+};
+
+export const checkExtension = (appointment, service) => {
+  let extension = get(
+    appointment,
+    'appointment.AppointmentTreatments',
+    [],
+  ).find(
+    (s) =>
+      s.AppointmentID === service.AppointmentID &&
+      s.TreatmentName === 'Extensions',
+  );
+
+  if (!extension) {
+    return (
+      get(
+        appointment,
+        `appointments.appoint_${service.AppointmentID}.Notes`,
+        '',
+      ) || ''
+    ).includes('Extensions added.');
+  }
+
+  return extension;
+};
+
+export const getAddons = (service, appointment, addons) => {
+  const addOnsByService = [];
+
+  const currentAppointment = get(
+    appointment,
+    `appointments.appoint_${service.AppointmentID}`,
+    '',
+  );
+
+  if (currentAppointment.AddOnItems && currentAppointment.AddOnItems.length) {
+    currentAppointment.AddOnItems.forEach((a) => {
+      const addonData = addons.find((i) => i.ServiceID == a.ItemID);
+      if (addonData) {
+        addOnsByService.push(addonData);
+      }
+    });
+  }
+
+  const notes = get(currentAppointment, 'Notes', '');
+
+  if (notes && notes !== '') {
+    addons.forEach((a, i) => {
+      if (
+        notes.includes(`AddOn: ${a.ServiceName}`) &&
+        !addOnsByService.map((as) => as.ServiceID).includes(a.ServiceID)
+      ) {
+        addOnsByService.push(a);
+      }
+    });
+  }
+
+  return addOnsByService;
+};
+
+export const getServicesFromAppointment = (appointment) => {
+  const services = get(
+    appointment,
+    'appointment.AppointmentTreatments',
+    [],
+  ).filter((service) => service.TreatmentName !== 'Extensions');
+  return services;
+};
+
+export const getExtensionFromAppointment = (appointment) => {
+  const extensionData = get(
+    appointment,
+    'appointment.AppointmentTreatments',
+    [],
+  ).find((service) => service.TreatmentName === 'Extensions');
+  return extensionData;
+};
+
+export const convertAppointmentToState = (appointment, addons) => {
+  const services = getServicesFromAppointment(appointment);
+  const extensionData = getExtensionFromAppointment(appointment);
+
+  const tempArr = services.map((service, idx) => {
+    const extension = checkExtension(appointment, service);
+    const addonsData = getAddons(service, appointment, addons);
+
+    return {
+      userType: idx === 0 ? 'Me' : 'Guest ' + idx,
+      addons: addonsData,
+      date: {
+        date: moment(get(service, 'StartDateTimeOffset')).format(
+          'YYYY-MM-DDTHH:mm:ssZ',
+        ),
+
+        time: {
+          startTime: get(service, 'StartDateTimeOffset'),
+          endTime: get(service, 'EndDateTimeOffset'),
+          timezone: moment()
+            .utcOffset(get(service, 'StartDateTimeOffset'))
+            .utcOffset(),
+        },
+      },
+
+      rooms: get(service, 'RoomID'),
+      employees: get(service, 'EmployeeID'),
+      services: {
+        Name: get(service, 'TreatmentName'),
+        Price: {Amount: get(service, 'Treatment.Price.Amount')},
+        ...service.Treatment,
+      },
+      customer: appointment.Customer,
+      extension: extension
+        ? {
+            price: get(extensionData, 'TagPrice.Amount', 20),
+            name: 'Yes',
+            room: get(extensionData, 'RoomID'),
+            employee: get(extensionData, 'EmployeeID'),
+          }
+        : undefined,
+    };
+  });
+
+  console.log('ConvertAppoitnmentToState:', tempArr);
+
+  return tempArr;
 };
