@@ -37,8 +37,8 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 
 static void InitializeMParticle(UIApplication *application) {
-  MParticleOptions *options = [MParticleOptions optionsWithKey:@"06b902ebd97f0d4bac36022c8798b365"
-                                                        secret:@"6otTKZ_0NSwLmLSWw7_6-mPAW1p9lTC3KFXIj09ibmIFQI6l8_rFrW_iVTtEAapk"];
+  MParticleOptions *options = [MParticleOptions optionsWithKey:@"us1-eefc1854d6fb724391f9a229050a9b73"
+                                                        secret:@"jsgsFr4favRfc1TMgibD-o3isAxros6xnbmE1nuFUPOWmMiQyOlwRGK3qx24bDv1"];
   [[MParticle sharedInstance] startWithOptions:options];
 
 }
