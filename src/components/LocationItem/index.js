@@ -18,6 +18,7 @@ import {distance} from 'utils/RadarHelper';
 const LocationItem = ({
   navigation,
   item,
+  index,
   onBook,
   customerInfo,
   onFavIcon,
@@ -29,10 +30,10 @@ const LocationItem = ({
 }) => {
   const [dis, setDis] = useState(null);
   useEffect(() => {
-    if (currentLocation) {
+    if (currentLocation && index < 10) {
       getDistance();
     }
-  }, []);
+  }, [currentLocation, index]);
 
   const getDistance = useCallback(async () => {
     const _dis = await distance(
