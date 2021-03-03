@@ -10,11 +10,13 @@ import {useSelector} from 'react-redux';
 import {get} from 'lodash';
 import Radar from 'react-native-radar';
 import {hasRadarPermission} from 'utils/RadarHelper';
+import Welcome from 'screens/Welcome';
 
 const Root = createStackNavigator();
 
 const AppContainer = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
+  const firstLoggedIn = useSelector((state) => state.auth.loggedInCount === 0);
   const [token, setToken] = useState(null);
 
   const customerId = get(userInfo, 'bookerID');
@@ -60,13 +62,19 @@ const AppContainer = () => {
     } else {
       setToken(null);
     }
-  }, [userInfo, customerId]);
+  }, [userInfo, customerId])
+
+  console.log('FirstLoggedIn:', firstLoggedIn);
 
   return (
     <NavigationContainer ref={navigationRef}>
       <Root.Navigator headerMode="none">
         {token ? (
-          <Root.Screen name="Dashboard" component={TabStack} />
+          firstLoggedIn ? (
+            <Root.Screen name="Welcome" component={Welcome} />
+          ) : (
+            <Root.Screen name="Dashboard" component={TabStack} />
+          )
         ) : (
           <Root.Screen name="Auth" component={AuthNavigator} />
         )}

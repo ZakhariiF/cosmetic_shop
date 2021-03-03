@@ -70,4 +70,7 @@ export default {
   devider1: require('assets/images/ic-divider-1.png'),
   devider2: require('assets/images/ic-divider-2.png'),
   devider3: require('assets/images/ic-divider-3.png'),
+  welcomescreen_book: require('assets/images/welcomescreen_book.png'),
+  welcomescreen_appts: require('assets/images/welcomescreen_myappts.png'),
+  welcomescreen_myacct: require('assets/images/welcomescreen_myacct.png'),
 };

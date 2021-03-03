@@ -28,20 +28,12 @@ import {get} from 'lodash';
 import {getCustomerInfo, loginSuccess} from 'screens/Auth/thunks';
 import {gqlLoadHome} from 'constant/contentfulHomeActions';
 import {getGlobalConfig} from 'constant/contentfulActions';
-import {
-  editOrRebookFromAppointment,
-  getLocations,
-  setExtensionAddon,
-  setIsEdit,
-  setLocation,
-  setmemberCount,
-} from "../Booking/thunks";
+import {editOrRebookFromAppointment, getLocations} from '../Booking/thunks';
 import moment from 'moment';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 import {getUser} from '@okta/okta-react-native';
 import Dialog from 'react-native-dialog';
-import { checkExtension, getExtensionFromAppointment } from "utils";
 
 import styles from './styles';
 
@@ -110,7 +102,6 @@ const Home = ({navigation}) => {
   };
 
   const onEdit = (item, location, past) => {
-
     MParticle.logEvent('Home - Rebook', MParticle.EventType.Navigation, {
       'Source Page': 'Home',
       'Book Type': 'Rebook',

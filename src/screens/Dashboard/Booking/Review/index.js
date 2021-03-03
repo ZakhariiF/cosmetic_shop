@@ -88,6 +88,15 @@ const Review = ({navigation, route}) => {
       .utcOffset(timezone)
       .format('YYYY-MM-DDTHH:mm:ssZ');
 
+    const addons = get(totalGuests, '[0].addons', []);
+
+    addons.forEach((a) => {
+      endTime = moment(endTime)
+        .add(a.Duration, 'minutes')
+        .utcOffset(timezone)
+        .format('YYYY-MM-DDTHH:mm:ssZ');
+    });
+
     const items = [
       {
         EmployeeID: get(totalGuests, '[0].employees', ''),
@@ -97,8 +106,6 @@ const Review = ({navigation, route}) => {
         RoomID: get(totalGuests, '[0].rooms'),
       },
     ];
-
-    const addons = get(totalGuests, '[0].addons', []);
 
     // if (addons && addons.length) {
     //   addons.forEach((e) => {

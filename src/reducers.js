@@ -19,7 +19,10 @@ const appReducer = combineReducers({
 
 export default (state, action) => {
   if (action.type === 'LOGOUT_SUCCESS' || action.type === 'LOGOUT_ERROR') {
-    state.auth = authIntialState;
+    state.auth = {
+      ...authIntialState,
+      loggedInCount: state.auth.loggedInCount,
+    };
   }
   return appReducer(state, action);
 };
