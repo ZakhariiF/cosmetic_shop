@@ -63,6 +63,9 @@ export const types = {
   LOGOUT_REQUEST: 'LOGOUT_REQUEST',
   LOGOUT_SUCCESS: 'LOGOUT_SUCCESS',
   LOGOUT_ERROR: 'LOGOUT_ERROR',
+
+  // SET_LOGGEDIN_COUNT
+  INCREASE_LOGGEDIN_COUNT: 'INCREASE_LOGGEDIN_COUNT',
 };
 
 export const authIntialState = {
@@ -75,6 +78,7 @@ export const authIntialState = {
   isUpdate: false,
   favItem: '',
   isResend: false,
+  loggedInCount: 0,
 };
 
 // Reducer
@@ -234,6 +238,7 @@ const AuthReducer = (state = authIntialState, action) => {
       };
 
     case types.LOGOUT_SUCCESS:
+      console.log(state.loggedInCount);
       return {
         ...state,
         token: null,
@@ -283,6 +288,11 @@ const AuthReducer = (state = authIntialState, action) => {
       return {
         ...state,
         isPasswordLoading: false,
+      };
+    case types.INCREASE_LOGGEDIN_COUNT:
+      return {
+        ...state,
+        loggedInCount: state.loggedInCount + 1,
       };
 
     default:
@@ -427,6 +437,10 @@ export const authActions = {
 
   logoutError: () => ({
     type: types.LOGOUT_ERROR,
+  }),
+
+  increaseLoggedInCount: () => ({
+    type: types.INCREASE_LOGGEDIN_COUNT,
   }),
 };
 

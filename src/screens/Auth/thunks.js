@@ -233,3 +233,7 @@ export const resendEmail = (email) => async (dispatch) => {
     return dispatch(authActions.resendEmailError());
   }
 };
+
+export const increaseLoggedInCount = () => (dispatch) => {
+  dispatch(authActions.increaseLoggedInCount());
+}
