@@ -90,11 +90,14 @@ const Review = ({navigation, route}) => {
 
     const addons = get(totalGuests, '[0].addons', []);
 
+    let extraNotes = route.params.Notes || '';
+
     addons.forEach((a) => {
       endTime = moment(endTime)
         .add(a.Duration, 'minutes')
         .utcOffset(timezone)
         .format('YYYY-MM-DDTHH:mm:ssZ');
+      extraNotes = `${extraNotes} AddOn: ${a.ServiceName}.`;
     });
 
     const items = [
@@ -164,7 +167,7 @@ const Review = ({navigation, route}) => {
       ResourceTypeID: 1,
       LocationID: get(selectedLocation, 'bookerLocationId', ''),
       // LocationID:'1639',
-      Notes: route.params.Notes || '',
+      Notes: extraNotes,
     };
 
     dispatch(
