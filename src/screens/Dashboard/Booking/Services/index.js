@@ -1,5 +1,12 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Alert,
+} from 'react-native';
 import MParticle from 'react-native-mparticle';
 import {useQuery} from '@apollo/client';
 import Header from 'components/Header/Header';
@@ -64,15 +71,17 @@ const Services = ({navigation}) => {
     }
 
     dispatch(setmemberCount(tempArr));
-    onNext(tempArr);
+    // onNext(tempArr);
   };
 
-  const onNext = (tempArr) => {
-    let isServices = tempArr.every((e) => e.services);
+  const onNext = useCallback(() => {
+    let isServices = totalGuests.every((e) => e.services);
     if (isServices) {
       navigation.navigate('Addons');
+    } else {
+      Alert.alert('Warning', 'Please make selection for all guests.');
     }
-  };
+  }, [totalGuests]);
 
   return (
     <View style={rootStyle.container}>
@@ -81,8 +90,8 @@ const Services = ({navigation}) => {
       <Header
         title="WHAT SERVICE?"
         safeBackColor={Colors.bg}
-        // isNext
-        // onNext={onNext}
+        isNext
+        onNext={onNext}
       />
       <View style={rootStyle.innerContainer}>
         <FlatList
