@@ -122,7 +122,7 @@ const AccountStyle = ({navigation}) => {
             {/* {[1, 2, 3, 4].map((e, i) => ( */}
             {get(data, 'styles', []).map((e, i) => {
               return (
-                <View >
+                <View>
                   <Image source={{uri: e.featuredImage}} style={styles.imageStyle} />
                   <Text style={styles.swiperTextStyle}>{e.title}</Text>
                 </View>
@@ -148,8 +148,7 @@ const AccountStyle = ({navigation}) => {
                   <>
                     <DottedView number={200} />
 
-                    <TouchableWithoutFeedback
-                      onPress={() => playVideo(e.featuredVideo)}>
+                    <TouchableWithoutFeedback onPress={() => playVideo(e.featuredVideo)}>
                       <View style={styles.playerContainer}>
                         <Image
                           source={{uri: e.featuredImage}}

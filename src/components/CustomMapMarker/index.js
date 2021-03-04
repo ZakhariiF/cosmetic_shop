@@ -20,29 +20,28 @@ const {width} = Dimensions.get('window');
 const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
   const dispatch = useDispatch();
   const [dis, setDis] = useState(null);
-  // useEffect(() => {
-  //   if (currentLocation) {
-  //     getDistance();
-  //   }
-  // }, [currentLocation]);
-  // const getDistance = async () => {
-  //   console.log('get Distance function call');
-  //   try {
-  //     const _dis = await distance(
-  //       {
-  //         latitude: Number(currentLocation.latitude),
-  //         longitude: Number(currentLocation.longitude),
-  //       },
-  //       {
-  //         latitude: Number(get(item, 'contact.coordinates[0]')),
-  //         longitude: Number(get(item, 'contact.coordinates[1]')),
-  //       },
-  //     );
-  //     setDis(_dis);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  useEffect(() => {
+    if (currentLocation && selected) {
+      getDistance();
+    }
+  }, [currentLocation, selected]);
+  const getDistance = async () => {
+    try {
+      const _dis = await distance(
+        {
+          latitude: Number(currentLocation.latitude),
+          longitude: Number(currentLocation.longitude),
+        },
+        {
+          latitude: Number(get(item, 'contact.coordinates[0]')),
+          longitude: Number(get(item, 'contact.coordinates[1]')),
+        },
+      );
+      setDis(_dis);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const phoneNumber = get(item, 'contact.phoneNumber');
   const isBookable =
     item.bookerLocationId &&

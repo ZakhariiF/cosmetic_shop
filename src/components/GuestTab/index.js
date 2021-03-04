@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -17,6 +17,17 @@ const GuestTab = ({routeName}) => {
   const data = useSelector((state) => state.booking.totalGuests);
   const activeTab = useSelector((state) => state.booking.activeGuestTab);
   const isExtension = useSelector((state) => state.booking.isExtension);
+  const scrollView = useRef();
+
+  useEffect(() => {
+    if (scrollView && scrollView.current) {
+      scrollView.current.scrollTo({
+        y: 0,
+        x: (activeTab > 0 ? (activeTab - 1) : 0) * 120,
+        animated: true,
+      });
+    }
+  }, [activeTab]);
 
   const renderData = (index) => {
     switch (routeName) {
@@ -57,7 +68,10 @@ const GuestTab = ({routeName}) => {
 
   return (
     <View>
-      <ScrollView horizontal contentContainerStyle={styles.container}>
+      <ScrollView
+        horizontal
+        contentContainerStyle={styles.container}
+        ref={scrollView}>
         {data.map((e, i) => {
           return (
             <TouchableOpacity
