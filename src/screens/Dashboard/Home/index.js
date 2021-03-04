@@ -169,6 +169,10 @@ const Home = ({navigation}) => {
         return navigation.navigate('Account', {
           screen: 'BarflyMembership',
         });
+      } else if (link === 'events') {
+        return navigation.navigate('Account', {
+          screen: 'Events',
+        });
       }
     }
   };
