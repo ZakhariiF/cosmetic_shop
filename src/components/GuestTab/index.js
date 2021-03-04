@@ -32,8 +32,8 @@ const GuestTab = ({routeName}) => {
   };
 
   const renderServices = (index) => {
-    if (get(data[index], 'services.name')) {
-      return `- ${data[index].services.name}`;
+    if (get(data[index], 'services.Name')) {
+      return `- ${data[index].services.Name}`;
     }
   };
 
