@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   dryicon: {
-    height: 22,
+    height: 40,
     width: 22,
+    marginTop: -13,
   },
 });

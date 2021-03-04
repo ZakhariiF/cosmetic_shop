@@ -87,7 +87,7 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
                 <Image
                   source={Images.blowout}
                   resizeMode="contain"
-                  style={styles.icon}
+                  style={styles.dryicon}
                 />
                 <View>
                   <Text style={styles.infoText} numberOfLines={2}>
@@ -347,8 +347,9 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   dryicon: {
-    height: 22,
+    height: 40,
     width: 22,
+    marginTop: -14,
   },
   editButton: {
     height: 60,

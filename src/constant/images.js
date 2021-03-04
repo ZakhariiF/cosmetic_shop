@@ -28,7 +28,7 @@ export default {
   chaser: require('../assets/images/chaser.png'),
   cardImageFront: require('../assets/images/card-front.png'),
   cardImageBack: require('../assets/images/card-back.png'),
-  dryer: require('../assets/images/dryer.png'),
+  dryer: require('../assets/images/Buttercup.png'),
   polygon: require('../assets/images/polygon.png'),
   down_arrow: require('../assets/images/down_arrow.png'),
   gray_card: require('assets/images/gray_card.png'),
