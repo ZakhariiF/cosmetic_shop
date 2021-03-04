@@ -69,12 +69,7 @@ const Review = ({navigation, route}) => {
         );
       }
 
-      return (
-        acc +
-        get(e.services, 'Price.Amount', 0) +
-        addonPrice -
-        get(promoInfo, 'DiscountAmount', 0)
-      );
+      return acc + get(e.services, 'Price.Amount', 0) + addonPrice;
     }, 0);
 
     setTotal(totalPrice);
@@ -235,8 +230,6 @@ const Review = ({navigation, route}) => {
       ItineraryItems: guestList(),
     };
 
-    console.log('Multiple:', obj);
-
     dispatch(createGuestAppointment(obj)).then((res) => {
       if (res.payload && res.payload.IsSuccess) {
         dispatch(getAppointments(get(userInfo, 'bookerID', '')));
@@ -280,9 +273,6 @@ const Review = ({navigation, route}) => {
       },
     );
   };
-
-  // console.log('selectedLocation', selectedLocation);
-  // console.log('CouponCode', promoInfo);
 
   return (
     <View style={rootStyle.container}>
@@ -469,14 +459,43 @@ const Review = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
 
-          <PromoInput onApply={onApply} />
+          <PromoInput onApply={onApply} promoInfo={promoInfo} />
 
-          <View style={styles.totalContainer}>
+          <View
+            style={[
+              styles.totalContainer,
+              {marginTop: 25},
+              !promoInfo && {marginBottom: 5},
+            ]}>
             <Text style={styles.titleText}>Estimated Total *</Text>
             <Text style={[styles.headerText, styles.price, {fontSize: 18}]}>
               ${estimateTotal}
             </Text>
           </View>
+
+          {promoInfo && (
+            <>
+              <View style={styles.totalContainer}>
+                <Text style={styles.titleText}>Discount *</Text>
+                <Text style={[styles.headerText, styles.price, {fontSize: 18}]}>
+                  {promoInfo && promoInfo.DiscountType === 0
+                    ? `$${promoInfo.DiscountAmount}`
+                    : `${promoInfo.DiscountAmount}%`}
+                </Text>
+              </View>
+              <View style={[styles.totalContainer, {marginBottom: 5}]}>
+                <Text style={styles.titleText}>Net Total *</Text>
+                <Text style={[styles.headerText, styles.price, {fontSize: 18}]}>
+                  $
+                  {estimateTotal -
+                    (promoInfo.DiscountType
+                      ? (promoInfo.DiscountAmount / 100) * estimateTotal
+                      : promoInfo.DiscountAmount * totalGuests.length)}
+                </Text>
+              </View>
+            </>
+          )}
+
           <TouchableOpacity onPress={onToggleCancel}>
             <View style={styles.cancelContainer}>
               {showCancel ? (
@@ -588,12 +607,12 @@ const styles = StyleSheet.create({
   totalContainer: {
     height: 68,
     backgroundColor: Colors.dimGray,
-    marginTop: 25,
+    // marginTop: 25,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
     flexDirection: 'row',
-    marginBottom: 5,
+    // marginBottom: 5,
   },
   cancelContainer: {
     flexDirection: 'row',

@@ -105,8 +105,6 @@ const ApptDetails = ({route, navigation}) => {
 
   const addons = get(item, 'appointment.AddOnItems', []);
 
-  console.log('locationAddons:', locationAddons);
-
   return (
     <View style={rootStyle.container}>
       <Header title="APPOINTMENT DETAILS" isTab />
@@ -180,7 +178,7 @@ const ApptDetails = ({route, navigation}) => {
             </View>
           ) : null}
 
-          {get(locationAddons, 'Results', []).length && services.length ? (
+          {services.length > 1 && get(locationAddons, 'Results', []).length && services.length ? (
             <View style={styles.boxContainer}>
               <Text style={styles.headerText}>Add-ons</Text>
               {services.map((s, i) => {
