@@ -278,7 +278,7 @@ export const applyPromoCode = (locId, code) => async (dispatch) => {
   dispatch(bookingActions.promoCodeRequest());
   try {
     const data = await API.promoCode(locId, code);
-    console.log('promo code data', data);
+
     if (data.IsSuccess) {
       AlertHelper.showSuccess('Coupon applied successfully');
       return dispatch(bookingActions.promoCodeSuccess(data));
@@ -461,6 +461,7 @@ export const editOrRebookFromAppointment = (
     appointment,
     get(addons, 'Results', []),
   );
+  // dispatch();
   dispatch(setLocation(location));
   dispatch(
     setExtensionAddon({
@@ -469,6 +470,25 @@ export const editOrRebookFromAppointment = (
       ...get(extensionData, 'Treatment', {}),
     }),
   );
+  const couponCode = get(
+    appointment,
+    'appointment.AppointmentPayment.CouponCode',
+  );
+  if (couponCode) {
+    dispatch(
+      bookingActions.promoCodeSuccess({
+        CouponCode: couponCode,
+        DiscountAmount: get(
+          appointment,
+          'appointment.AppointmentTreatments[0].DynamicPrice.Discount.Amount',
+        ),
+        DiscountType: 0,
+      }),
+    );
+  } else {
+    dispatch(bookingActions.promoCodeSuccess(null));
+  }
+
   dispatch(bookingActions.getAddonSuccess(addons));
   dispatch(setmemberCount(tempArr));
   return dispatch(

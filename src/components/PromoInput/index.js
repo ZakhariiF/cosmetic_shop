@@ -6,10 +6,11 @@ import {
   View,
   Text,
 } from 'react-native';
+import {get} from 'lodash';
 import {Colors, Fonts} from 'constant';
 
-const PromoInput = ({onApply}) => {
-  const [promo, setPromo] = useState('');
+const PromoInput = ({onApply, promoInfo}) => {
+  const [promo, setPromo] = useState(get(promoInfo, 'CouponCode', ''));
   return (
     <View style={styles.container}>
       <View style={{width: '75%'}}>
