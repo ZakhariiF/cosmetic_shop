@@ -1,5 +1,5 @@
 export default {
-  bg: require('../assets/images/bg.png'),
+  bg: require('../assets/images/NewApp_LoginImage_828x1792_Masks.jpg'),
   blowout: require('../assets/images/blowout.png'),
   welcome_logo: require('../assets/images/welcome_logo.png'),
   google: require('../assets/images/google.png'),
