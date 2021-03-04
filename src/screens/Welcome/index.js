@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {Image, View} from 'react-native';
+import {ImageBackground, View} from 'react-native';
 import Slick from 'react-native-slick';
 import {Dimensions} from 'react-native';
 import {Images} from 'constant';
@@ -41,12 +41,21 @@ const Welcome = () => {
     <View style={{flex: 1}}>
       <Slick
         loop={false}
-        onTouchStart={onTouchEnd}
+        onTouchEnd={onTouchEnd}
         index={currentSlide}
         dotStyle={{backgroundColor: 'transparent'}}
         activeDotStyle={{backgroundColor: 'transparent'}}>
         {WelcomeImages.map((img, i) => (
-          <Image source={img} key={i} style={{width, height}} />
+          <ImageBackground
+            source={img}
+            key={i}
+            style={{
+              width,
+              height,
+            }}
+            resizeMode="stretch"
+          />
+
         ))}
       </Slick>
     </View>
