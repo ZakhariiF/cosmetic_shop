@@ -33,7 +33,7 @@ const Services = ({navigation}) => {
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
-  const [isChecked, setChecked] = useState(true);
+  const [isChecked, setChecked] = useState(false);
   const [isInfo, setInfo] = useState(false);
   const [infoItem, setinfoItem] = useState({});
 
