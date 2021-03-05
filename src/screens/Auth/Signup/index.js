@@ -9,7 +9,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import SocialLogin from 'components/SocialLogin';
 import {Images} from 'constant';
 import {isValidEmail} from 'utils';
-import CheckBox from "components/Checkbox";
+import CheckBox from 'components/Checkbox';
 
 const Signup = ({navigation}) => {
   const [email, setEmail] = useState('');
