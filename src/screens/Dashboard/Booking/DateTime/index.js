@@ -355,7 +355,13 @@ const DateTime = ({navigation}) => {
           <WeekDays
             currentWeek={currentWeek}
             onDateChange={(date) => {
-              setSelectedDate(new Date(date));
+              const today = new Date();
+              let updatedDate = new Date(date);
+
+              if (today.getTime() > updatedDate.getTime()) {
+                updatedDate = today();
+              }
+              setSelectedDate(updatedDate);
             }}
             // onDateChange={() => navigation.navigate('Notes')}
             selectDate={selectedDate}
