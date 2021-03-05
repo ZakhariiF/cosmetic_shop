@@ -107,7 +107,7 @@ const Home = ({navigation}) => {
       'Book Type': 'Rebook',
     });
 
-    dispatch(editOrRebookFromAppointment(location, item)).then((res) => {
+    dispatch(editOrRebookFromAppointment(location, item, past)).then((res) => {
       if (past) {
         navigation.navigate('Book', {screen: 'DateTime'});
       } else {

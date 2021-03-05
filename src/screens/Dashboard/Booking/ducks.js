@@ -124,6 +124,10 @@ export const types = {
   MULTI_GUEST_AVAIL_DATES_REQUEST: 'MULTI_GUEST_AVAIL_DATES_REQUEST',
   MULTI_GUEST_AVAIL_DATES_SUCCESS: 'MULTI_GUEST_AVAIL_DATES_SUCCESS',
   MULTI_GUEST_AVAIL_DATES_ERROR: 'MULTI_GUEST_AVAIL_DATES_ERROR',
+
+
+  // RESET BOOKING STATE
+  RESET_BOOKING: 'RESET_BOOKING',
 };
 
 export const bookingIntialState = {
@@ -623,12 +627,6 @@ const BookingReducer = (state = bookingIntialState, action) => {
         multiUserSlots: availbilityTimes,
       };
 
-    case types.MULTI_USER_TIMESLOTS_ERROR:
-      return {
-        ...state,
-        slotsLoading: false,
-      };
-
     // BOOKING FORM
 
     case types.BOOKING_FORM_REQUEST:
@@ -647,6 +645,12 @@ const BookingReducer = (state = bookingIntialState, action) => {
       return {
         ...state,
         isBooking: false,
+      };
+
+    case types.RESET_BOOKING:
+      return {
+        ...state,
+        ...bookingIntialState,
       };
 
     default:
@@ -934,5 +938,9 @@ export const bookingActions = {
 
   bookingFormError: () => ({
     type: types.BOOKING_FORM_ERROR,
+  }),
+
+  resetBooking: () => ({
+    type: types.RESET_BOOKING,
   }),
 };

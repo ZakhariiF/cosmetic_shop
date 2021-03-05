@@ -19,7 +19,6 @@ import Button from 'components/Button';
 import {getUser} from '@okta/okta-react-native';
 import {loginSuccess} from 'screens/Auth/thunks';
 
-
 const MyAppts = ({navigation}) => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.home.apptLoading);
@@ -50,13 +49,15 @@ const MyAppts = ({navigation}) => {
   const getAppts = () => dispatch(getAppointments(customerId));
 
   const onEdit = (item, location, isRebook = false) => {
-    dispatch(editOrRebookFromAppointment(location, item)).then((res) => {
-      if (isRebook) {
-        navigation.navigate('Book', {screen: 'DateTime'});
-      } else {
-        navigation.navigate('Book', {screen: 'Services'});
-      }
-    });
+    dispatch(editOrRebookFromAppointment(location, item, isRebook)).then(
+      (res) => {
+        if (isRebook) {
+          navigation.navigate('Book', {screen: 'DateTime'});
+        } else {
+          navigation.navigate('Book', {screen: 'Services'});
+        }
+      },
+    );
   };
 
   const onCancel = (item, location) => {

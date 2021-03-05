@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Login from 'screens/Auth/Login';
@@ -44,6 +44,8 @@ import ExtensionPolicy from 'screens/Dashboard/MyAccount/ExtensionPolicy';
 import AccountStyle from 'screens/Dashboard/MyAccount/AccountStyle';
 import FindLocation from 'screens/Dashboard/MyAccount/FindLocation';
 import BookingForm from 'screens/Dashboard/Booking/BookingForm';
+import {useDispatch} from 'react-redux';
+import {resetBooking} from 'screens/Dashboard/Booking/thunks';
 
 const AuthStack = createStackNavigator();
 const AppointStack = createStackNavigator();
@@ -117,23 +119,31 @@ const AccountNavigator = () => (
   </AccountStack.Navigator>
 );
 
-const BookingNavigator = () => (
-  <BookStack.Navigator headerMode="none">
-    <BookStack.Screen name="Location" component={Location} />
-    <BookStack.Screen name="ShopDetail" component={ShopDetail} />
-    <BookStack.Screen name="Coming" component={Coming} />
-    <BookStack.Screen name="BookingForm" component={BookingForm} />
-    <BookStack.Screen name="Services" component={Services} />
-    <BookStack.Screen name="Addons" component={Addons} />
-    <BookStack.Screen name="DateTime" component={DateTime} />
-    <BookStack.Screen name="Stylists" component={Stylists} />
-    <BookStack.Screen name="Notes" component={Notes} />
-    <BookStack.Screen name="ApptHold" component={ApptHold} />
-    <BookStack.Screen name="Review" component={Review} />
-    <BookStack.Screen name="Addcc" component={Addcc} />
-    <BookStack.Screen name="Confirmation" component={Confirmation} />
-  </BookStack.Navigator>
-);
+const BookingNavigator = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    return () => {
+      return dispatch(resetBooking());
+    };
+  }, []);
+  return (
+    <BookStack.Navigator headerMode="none">
+      <BookStack.Screen name="Location" component={Location} />
+      <BookStack.Screen name="ShopDetail" component={ShopDetail} />
+      <BookStack.Screen name="Coming" component={Coming} />
+      <BookStack.Screen name="BookingForm" component={BookingForm} />
+      <BookStack.Screen name="Services" component={Services} />
+      <BookStack.Screen name="Addons" component={Addons} />
+      <BookStack.Screen name="DateTime" component={DateTime} />
+      <BookStack.Screen name="Stylists" component={Stylists} />
+      <BookStack.Screen name="Notes" component={Notes} />
+      <BookStack.Screen name="ApptHold" component={ApptHold} />
+      <BookStack.Screen name="Review" component={Review} />
+      <BookStack.Screen name="Addcc" component={Addcc} />
+      <BookStack.Screen name="Confirmation" component={Confirmation} />
+    </BookStack.Navigator>
+  );
+};
 
 export const TabStack = () => (
   <Tab.Navigator tabBar={(props) => <CustomTabbar {...props} />}>
