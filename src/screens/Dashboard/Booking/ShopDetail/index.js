@@ -1,12 +1,19 @@
 import React, {useState, useEffect} from 'react';
-import {Image, ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import rootStyle from 'rootStyle';
 import Header from 'components/Header/Header';
 import {Images} from 'constant';
 import styles from './styles';
 import Button from 'components/Button';
 import {get} from 'lodash';
-import {distance, openMaps, requestUserLocationLocation} from 'utils';
+import {call, distance, openMaps, requestUserLocationLocation} from 'utils';
 import {useDispatch} from 'react-redux';
 import {setLocation, setmemberCount} from '../thunks';
 
@@ -99,18 +106,28 @@ const ShopDetail = ({navigation, route}) => {
           </View>
 
           <View style={styles.phoneContainer}>
-            <Text style={rootStyle.commonText}>
-              {get(item, 'contact.phoneNumber')}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                call(get(item, 'contact.phoneNumber'));
+              }}>
+              <Text style={rootStyle.commonText}>
+                {get(item, 'contact.phoneNumber')}
+              </Text>
+            </TouchableOpacity>
             <Image style={styles.callIcon} source={Images.call} />
           </View>
           {(socialData || '') !== '' && (
-            <View style={[styles.phoneContainer, {marginVertical: 0}]}>
-              <Text style={rootStyle.commonText}>
-                {get(item, 'contact.social.instagram')}
-              </Text>
-              <Image source={Images.insta} />
-            </View>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(
+                  `https://www.instagram.com/${socialData.replace(/@/gi, '')}`,
+                );
+              }}>
+              <View style={[styles.phoneContainer, {marginVertical: 0}]}>
+                <Text style={rootStyle.commonText}>{socialData}</Text>
+                <Image source={Images.insta} />
+              </View>
+            </TouchableOpacity>
           )}
 
           <Text style={styles.hour}>Hours</Text>
