@@ -13,7 +13,7 @@ import Header from 'components/Header/Header';
 import rootStyle from 'rootStyle';
 import CheckBox from 'components/Checkbox';
 import {Colors, Fonts} from 'constant';
-import {productInformationCollection} from 'constant/query';
+import {productInformationCollection, productionInformationByReference} from 'constant/query';
 import GuestTab from 'components/GuestTab';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
@@ -159,7 +159,7 @@ const ServiceItem = ({
   activeUser,
   onInfo,
 }) => {
-  const PRODUCT_INFO_QUERY = productInformationCollection(item.ID);
+  const PRODUCT_INFO_QUERY = productionInformationByReference(item.Name);
   const {data, error, loading} = useQuery(PRODUCT_INFO_QUERY);
 
   const isExist = (item) => {

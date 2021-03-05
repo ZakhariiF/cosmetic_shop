@@ -192,6 +192,34 @@ export const productInformationCollection = (productID) => gql`{
   }
 `;
 
+export const productionInformationByReference = (bookerReference) => gql`
+  {
+    productCollection(where: {bookerReference: "${bookerReference}"}) {
+        items {
+          type
+          productId
+          title
+          serviceTime
+          price
+          description {
+            json
+          }
+          bestFor
+          imagesCollection(limit: 10) {
+            items {
+              desktopMedia {
+                url
+              }
+              mobileMedia {
+                url
+              }
+            }
+          }
+        }
+      }
+  }
+`;
+
 export const bannerQuery = () => gql`
   {
     screenCollection(where: {slug: "booking-confirmation-mobile"}) {
