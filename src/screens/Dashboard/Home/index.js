@@ -92,7 +92,7 @@ const Home = ({navigation}) => {
   const getCustomerDetails = () => dispatch(getCustomerInfo(customerId));
 
   const getAppts = () =>
-    dispatch(getAppointments(customerId, 10, moment().format('YYYY-MM-DD')));
+    dispatch(getAppointments(customerId, 20, moment().format('YYYY-MM-DD')));
 
   const getHomeData = async () => {
     try {

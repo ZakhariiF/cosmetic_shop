@@ -13,7 +13,6 @@ import {useNavigation, useNavigationState} from '@react-navigation/native';
 import rootStyle from 'rootStyle';
 import {updateRouteName} from 'utils';
 
-
 const hiddenTabs = ['ShopDetail', 'BookingForm', 'Stylists'];
 
 const BookingTab = ({}) => {

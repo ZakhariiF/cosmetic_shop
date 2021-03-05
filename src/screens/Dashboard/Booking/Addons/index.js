@@ -13,10 +13,10 @@ import rootStyle from 'rootStyle';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   findAddons,
-  getAddons,
+  getAddons, setActiveGuestTab,
   setExtensionType,
   setmemberCount,
-} from '../thunks';
+} from "../thunks";
 import GuestTab from 'components/GuestTab';
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
@@ -117,6 +117,7 @@ const Addons = ({navigation}) => {
 
   const onNext = () => {
     if (!isExtension) {
+      dispatch(setActiveGuestTab(0));
       dispatch(setExtensionType(true));
     } else {
       navigation.navigate('DateTime');
