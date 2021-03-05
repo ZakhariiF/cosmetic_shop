@@ -102,7 +102,6 @@ const Services = ({navigation}) => {
           renderItem={(e) => (
             <ServiceItem
               {...e}
-              isInto={!isChecked && totalGuests.length > 1}
               totalGuests={totalGuests}
               onService={onServiceList}
               activeUser={activeUser}
@@ -154,7 +153,6 @@ export default Services;
 const ServiceItem = ({
   item,
   index,
-  isInto,
   totalGuests,
   onService,
   activeUser,
@@ -209,14 +207,7 @@ const ServiceItem = ({
         <Text style={[styles.itemName, isExist(item) && styles.activeName]}>
           {item.Name}
         </Text>
-        {isInto ? (
-          <Text style={styles.itemPrice}>
-            ${get(item, 'Price.Amount', 0)} x {totalGuests.length} = $
-            {get(item, 'Price.Amount', 0) * totalGuests.length}
-          </Text>
-        ) : (
-          <Text style={styles.itemPrice}>${get(item, 'Price.Amount', 0)}</Text>
-        )}
+        <Text style={styles.itemPrice}>${get(item, 'Price.Amount', 0)}</Text>
       </TouchableOpacity>
     </View>
   );
