@@ -60,15 +60,15 @@ const ApptDetails = ({route, navigation}) => {
   const services = getServicesFromAppointment(item);
 
   const onEdit = () => {
-    dispatch(editOrRebookFromAppointment(location, item, locationAddons)).then(
-      (res) => {
-        if (past) {
-          navigation.navigate('Book', {screen: 'DateTime'});
-        } else {
-          navigation.navigate('Book', {screen: 'Services'});
-        }
-      },
-    );
+    dispatch(
+      editOrRebookFromAppointment(location, item, past, locationAddons),
+    ).then((res) => {
+      if (past) {
+        navigation.navigate('Book', {screen: 'DateTime'});
+      } else {
+        navigation.navigate('Book', {screen: 'Services'});
+      }
+    });
   };
 
   const onCancel = () => {
@@ -178,7 +178,9 @@ const ApptDetails = ({route, navigation}) => {
             </View>
           ) : null}
 
-          {services.length > 1 && get(locationAddons, 'Results', []).length && services.length ? (
+          {services.length > 1 &&
+          get(locationAddons, 'Results', []).length &&
+          services.length ? (
             <View style={styles.boxContainer}>
               <Text style={styles.headerText}>Add-ons</Text>
               {services.map((s, i) => {

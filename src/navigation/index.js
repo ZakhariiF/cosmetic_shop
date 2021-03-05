@@ -62,9 +62,7 @@ const AppContainer = () => {
     } else {
       setToken(null);
     }
-  }, [userInfo, customerId])
-
-  console.log('FirstLoggedIn:', firstLoggedIn);
+  }, [userInfo, customerId]);
 
   return (
     <NavigationContainer ref={navigationRef}>

@@ -442,9 +442,14 @@ export const bookedForMoreUser = (obj) => async (dispatch) => {
   }
 };
 
+export const resetBooking = () => (dispatch) => {
+  dispatch(bookingActions.resetBooking());
+};
+
 export const editOrRebookFromAppointment = (
   location,
   appointment,
+  rebook=false,
   addonsData = null,
 ) => async (dispatch) => {
   const extensionData = getExtensionFromAppointment(appointment);
@@ -491,6 +496,9 @@ export const editOrRebookFromAppointment = (
 
   dispatch(bookingActions.getAddonSuccess(addons));
   dispatch(setmemberCount(tempArr));
+  if (rebook) {
+    return setIsEdit(false);
+  }
   return dispatch(
     setIsEdit({
       group: appointment.groupID,
