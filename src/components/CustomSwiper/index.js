@@ -5,6 +5,7 @@ import {get} from 'lodash';
 
 const CustomSwiper = ({images}) => {
   const [activeScreen, setActiveScreen] = useState(0);
+  const [modalWidth, setModalWidth] = useState(0);
 
   const onScrollEnd = (e) => {
     let contentOffset = e.nativeEvent.contentOffset;
@@ -15,7 +16,9 @@ const CustomSwiper = ({images}) => {
   };
 
   return (
-    <View style={{marginTop: 15}}>
+    <View
+      style={{marginTop: 15}}
+      onLayout={({nativeEvent}) => setModalWidth(nativeEvent.layout.width)}>
       <ScrollView
         decelerationRate={0}
         snapToInterval={140}
@@ -33,9 +36,12 @@ const CustomSwiper = ({images}) => {
             <Image
               key={i}
               resizeMode="contain"
-              style={styles.imageContainer}
+              style={[
+                styles.imageContainer,
+                {width: modalWidth - 20, height: modalWidth - 20},
+              ]}
               source={{
-                uri: get(e, 'mobileMedia.url') || get(e, 'desktopMedia.url')
+                uri: get(e, 'mobileMedia.url') || get(e, 'desktopMedia.url'),
               }}
             />
           );
@@ -62,9 +68,7 @@ export default CustomSwiper;
 
 const styles = StyleSheet.create({
   imageContainer: {
-    width: 140,
-    height: 140,
-    marginLeft: 5,
+
   },
   dot: {
     height: 8,
