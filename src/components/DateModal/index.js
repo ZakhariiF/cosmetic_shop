@@ -22,7 +22,7 @@ const DateModal = ({
   visible,
   onRequestClose,
   onDateSelection,
-  changeMonth
+  changeMonth,
 }) => {
   const [selectedDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selectedMonth, setSelectedMonth] = useState(
@@ -30,9 +30,9 @@ const DateModal = ({
   );
   const [header, onChangeHeader] = useState();
 
-  useEffect(() => {
-    changeMonth(header);
-  }, [header]);
+  // useEffect(() => {
+  //   changeMonth(header);
+  // }, [header]);
 
   const renderHeader = (date) => {
     setSelectedMonth(moment(Object.values(date)[0]).format('MMMM'));
