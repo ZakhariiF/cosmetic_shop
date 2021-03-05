@@ -110,7 +110,7 @@ const Addons = ({navigation}) => {
   const onSkip = () => {
     let tempArr = totalGuests.map((g) => ({
       ...g,
-      addons: null,
+      addons: undefined,
     }));
     dispatch(setmemberCount(tempArr));
     dispatch(setExtensionType(true));
