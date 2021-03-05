@@ -23,7 +23,7 @@ const GuestTab = ({routeName}) => {
     if (scrollView && scrollView.current) {
       scrollView.current.scrollTo({
         y: 0,
-        x: (activeTab > 0 ? (activeTab - 1) : 0) * 120,
+        x: (activeTab > 0 ? activeTab - 1 : 0) * 120,
         animated: true,
       });
     }
