@@ -69,6 +69,10 @@ const Review = ({navigation, route}) => {
         );
       }
 
+      if (e.extension && e.extension.name === 'Yes' && extensionAddon) {
+        addonPrice += get(extensionAddon, 'Price.Amount', 0);
+      }
+
       return acc + get(e.services, 'Price.Amount', 0) + addonPrice;
     }, 0);
 
