@@ -5,7 +5,6 @@ import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {
   findStoresFromPointWithTitle,
-  isEmptyString,
   requestUserLocationLocation,
 } from 'utils';
 import {FlatList, View, StyleSheet, ScrollView, Dimensions} from 'react-native';
@@ -261,7 +260,7 @@ const FindLocation = ({navigation}) => {
         <SearchBar
           value={searchVal}
           onChangeText={(i) => setSearch(i)}
-          onSearch={searchFilterFunction}
+          onSearch={() => searchFilterFunction()}
         />
         <CheckBox
           isChecked={storeIdx}
