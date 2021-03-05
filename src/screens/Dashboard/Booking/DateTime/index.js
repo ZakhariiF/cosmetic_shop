@@ -400,7 +400,7 @@ const DateTime = ({navigation}) => {
           // let d = moment(new Date());
           setSelectedDate(moment(date).toDate());
         }}
-        changeMonth={(date) => availableDates(date)}
+        // changeMonth={(date) => availableDates(date)}
       />
 
       <LocationModal />
