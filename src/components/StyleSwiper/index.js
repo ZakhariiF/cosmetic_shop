@@ -154,9 +154,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   imageTitleContainer: {
-    height: 40,
+    minHeight: 40,
     width: '60%',
     paddingHorizontal: 10,
+    paddingVertical: 5,
     backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
