@@ -289,19 +289,19 @@ const BookingReducer = (state = bookingIntialState, action) => {
     case types.BOOK_GUEST_APPOINTMENT_REQUEST:
       return {
         ...state,
-        guestLoading: true,
+        bookingLoading: true,
       };
 
     case types.BOOK_GUEST_APPOINTMENT_SUCCESS:
       return {
         ...state,
-        guestLoading: false,
+        bookingLoading: false,
       };
 
     case types.BOOK_GUEST_APPOINTMENT_ERROR:
       return {
         ...state,
-        guestLoading: false,
+        bookingLoading: false,
       };
 
     // ---- GUEST_BOOK_APPOINTMENT ------

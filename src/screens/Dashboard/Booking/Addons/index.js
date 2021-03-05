@@ -24,7 +24,7 @@ import Extensions from '../Extensions';
 import {get} from 'lodash';
 import Indicator from 'components/Indicator';
 import ServiceInfoModal from 'components/ServiceInfoModal';
-import {productInformationCollection} from 'constant/query';
+import {productInformationCollection, productionInformationByReference} from 'constant/query';
 import {useQuery} from '@apollo/client';
 
 const Addons = ({navigation}) => {
@@ -216,7 +216,7 @@ const AddonItem = ({
   active,
   onInfoPress,
 }) => {
-  const PRODUCT_INFO_QUERY = productInformationCollection(item.ServiceID);
+  const PRODUCT_INFO_QUERY = productionInformationByReference(item.Name);
   const {data, error, loading} = useQuery(PRODUCT_INFO_QUERY);
 
   const information = get(data, 'productCollection.items', []);
