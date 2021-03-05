@@ -107,6 +107,15 @@ const Addons = ({navigation}) => {
     dispatch(setmemberCount(tempArr));
   };
 
+  const onSkip = () => {
+    let tempArr = totalGuests.map((g) => ({
+      ...g,
+      addons: null,
+    }));
+    dispatch(setmemberCount(tempArr));
+    dispatch(setExtensionType(true));
+  };
+
   const onBackPress = () => {
     if (isExtension) {
       dispatch(setExtensionType(false));
@@ -147,6 +156,11 @@ const Addons = ({navigation}) => {
         <Extensions navigation={navigation} onSkip={onNext} />
       ) : (
         <View style={rootStyle.innerContainer}>
+          <TouchableOpacity
+            style={styles.skipContainer}
+            onPress={onSkip}>
+            <Text style={styles.skip}>Skip Add-ons</Text>
+          </TouchableOpacity>
           {totalGuests.length > 1 ? (
             <Text style={styles.selectedaddOns}>Add one or add many</Text>
           ) : totalAddon ? (
@@ -154,18 +168,10 @@ const Addons = ({navigation}) => {
               You selected <Text style={styles.selectedText}>{totalAddon}</Text>{' '}
               add ons for a total of ${totalPrice}
             </Text>
-          ) : (
-            <TouchableOpacity
-              style={styles.skipContainer}
-              onPress={() => {
-                dispatch(setExtensionType(true));
-              }}>
-              <Text style={styles.skip}>Skip Add-ons</Text>
-            </TouchableOpacity>
-          )}
+          ) : null}
 
           {totalGuests.length > 1 ? (
-            <View style={{marginTop: 20}}>
+            <View>
               <GuestTab routeName="addons" />
             </View>
           ) : null}
@@ -266,6 +272,7 @@ const styles = StyleSheet.create({
     color: Colors.header_title,
     fontFamily: Fonts.AvenirNextRegular,
     alignSelf: 'center',
+    marginBottom: 20,
   },
   selectedText: {
     fontFamily: Fonts.AvenirNextBold,
@@ -319,6 +326,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 15,
     marginLeft: '11%',
+    marginBottom: 20,
   },
   skip: {
     ...rootStyle.commonText,
