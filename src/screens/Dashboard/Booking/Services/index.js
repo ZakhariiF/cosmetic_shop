@@ -17,7 +17,7 @@ import {productInformationCollection, productionInformationByReference} from 'co
 import GuestTab from 'components/GuestTab';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
-import {getServices, setmemberCount} from '../thunks';
+import { getServices, setActiveGuestTab, setmemberCount } from "../thunks";
 import {get} from 'lodash';
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
@@ -77,6 +77,7 @@ const Services = ({navigation}) => {
   const onNext = useCallback(() => {
     let isServices = totalGuests.every((e) => e.services);
     if (isServices) {
+      dispatch(setActiveGuestTab(0));
       navigation.navigate('Addons');
     } else {
       Alert.alert('Warning', 'Please make selection for all guests.');

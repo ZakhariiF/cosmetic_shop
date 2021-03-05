@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  isUppercaseTitle
+  isUppercaseTitle,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Colors, Fonts, Images} from 'constant';
@@ -42,18 +42,29 @@ const Header = ({
           <MaterialIcons
             name="arrow-back-ios"
             size={25}
-            onPress={onBackPress ? onBackPress : () => {
-              MParticle.logEvent('Back', MParticle.EventType.Navigation, {
-                'Source Page': route.name,
-              });
-              navigation.goBack();
-            }}
+            onPress={
+              onBackPress
+                ? onBackPress
+                : () => {
+                    MParticle.logEvent('Back', MParticle.EventType.Navigation, {
+                      'Source Page': route.name,
+                    });
+                    navigation.goBack();
+                  }
+            }
           />
         ) : (
           <View style={{width: 30}} />
         )}
 
-        <Text style={isUppercaseTitle ? [styles.title, styles.isUppercaseTitle] : [styles.title]}>{title}</Text>
+        <Text
+          style={
+            isUppercaseTitle
+              ? [styles.title, styles.isUppercaseTitle]
+              : [styles.title]
+          }>
+          {title}
+        </Text>
         {isNext ? (
           <TouchableOpacity style={styles.rightContainer} onPress={onNext}>
             <Text style={styles.next}>NEXT</Text>
