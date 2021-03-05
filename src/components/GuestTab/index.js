@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState, useCallback} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -19,15 +19,17 @@ const GuestTab = ({routeName}) => {
   const isExtension = useSelector((state) => state.booking.isExtension);
   const scrollView = useRef();
 
+  const [tabWidths, setTabWidths] = useState(data.map(() => 0));
+
   useEffect(() => {
     if (scrollView && scrollView.current) {
       scrollView.current.scrollTo({
         y: 0,
-        x: (activeTab > 0 ? activeTab - 1 : 0) * 120,
-        animated: true,
+        x: tabWidths.slice(0, activeTab).reduce((s, c) => s + c, 0),
+        animated: false,
       });
     }
-  }, [activeTab]);
+  }, [activeTab, tabWidths]);
 
   const renderData = (index) => {
     switch (routeName) {
@@ -66,6 +68,19 @@ const GuestTab = ({routeName}) => {
     }
   };
 
+  const onSelectTab = (e, i) => {
+    dispatch(setActiveGuestTab(i));
+  };
+
+  const onLayout = useCallback(
+    ({nativeEvent}, i) => {
+      const widths = [...tabWidths];
+      widths[i] = nativeEvent.layout.width;
+      setTabWidths(widths);
+    },
+    [tabWidths],
+  );
+
   return (
     <View>
       <ScrollView
@@ -75,8 +90,9 @@ const GuestTab = ({routeName}) => {
         {data.map((e, i) => {
           return (
             <TouchableOpacity
-              onPress={() => dispatch(setActiveGuestTab(i))}
+              onPress={(e) => onSelectTab(e, i)}
               key={i}
+              onLayout={(e) => onLayout(e, i)}
               style={[
                 styles.listContainer,
                 activeTab == i && styles.activeTab,
