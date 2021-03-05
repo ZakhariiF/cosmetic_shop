@@ -153,9 +153,15 @@ export const onregister = (obj) => async (dispatch) => {
     }
   } catch (error) {
     console.log('error>>>.', error, error.response);
-    AlertHelper.showError(
-      get(error, 'response.data.errorCauses[0].errorSummary', 'Server Error'),
-    );
+    if (get(error, 'response.data.errorCode', '') === 'E0000001') {
+      AlertHelper.showError(
+        'Registration Error:  An account already exists with this email address, please try resetting your password',
+      );
+    } else {
+      AlertHelper.showError(
+        get(error, 'response.data.errorCauses[0].errorSummary', 'Server Error'),
+      );
+    }
     return dispatch(authActions.registerError());
   }
 };
@@ -236,4 +242,4 @@ export const resendEmail = (email) => async (dispatch) => {
 
 export const increaseLoggedInCount = () => (dispatch) => {
   dispatch(authActions.increaseLoggedInCount());
-}
+};
