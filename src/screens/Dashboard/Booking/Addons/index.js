@@ -158,8 +158,7 @@ const Addons = ({navigation}) => {
             <TouchableOpacity
               style={styles.skipContainer}
               onPress={() => {
-                navigation.navigate('DateTime');
-                dispatch(setExtensionType(false));
+                dispatch(setExtensionType(true));
               }}>
               <Text style={styles.skip}>Skip Add-ons</Text>
             </TouchableOpacity>
