@@ -18,7 +18,6 @@ import {gqlLoadEvents} from 'constant/contentfulEventActions';
 import styles from './styles';
 import {get} from 'lodash';
 import Slick from 'react-native-slick';
-import HTMLView from 'react-native-htmlview';
 import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
 
 import EventDetail from 'components/EventDetail';
