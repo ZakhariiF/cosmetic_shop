@@ -85,13 +85,22 @@ const EventDetail = ({
         redirect: 'follow',
       },
     )
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json();
+      })
       .then((res) => {
         if (res.Success) {
           AlertHelper.showSuccess(
             'Someone from the Drybar team will contact you shortly!',
           );
-          resetForm({});
+          resetForm({
+            values: {
+              preferredShop: '',
+              occasion: '',
+              preferredStartTime: '',
+              partySize: '',
+            },
+          });
         } else {
           AlertHelper.showError(
             'Sorry it looks like some information is not quite right.',
@@ -99,8 +108,9 @@ const EventDetail = ({
         }
       })
       .catch((error) => console.log('Error:', error));
-
   };
+
+  console.log('occasions:', occasions);
 
   return (
     <View style={styles.container}>
@@ -125,13 +135,13 @@ const EventDetail = ({
           validationSchema={WufooSchema}>
           {({submitForm, isSubmitting, errors}) => (
             <>
-
               <Field name={'firstName'}>
                 {({field, meta, form: {setFieldValue}}) => (
                   <View style={styles.inputContainer}>
                     <Input
                       name={'First Name'}
                       inputName={'firstName'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -146,6 +156,7 @@ const EventDetail = ({
                     <Input
                       name={'Last Name'}
                       inputName={'lastName'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -160,6 +171,7 @@ const EventDetail = ({
                     <Input
                       name={'Email'}
                       inputName={'email'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -174,6 +186,7 @@ const EventDetail = ({
                     <Input
                       name={'Address 1'}
                       inputName={'address1'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -188,6 +201,7 @@ const EventDetail = ({
                     <Input
                       name={'Address 2'}
                       inputName={'address2'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -202,6 +216,7 @@ const EventDetail = ({
                     <Input
                       name={'City'}
                       inputName={'city'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -216,6 +231,7 @@ const EventDetail = ({
                     <Input
                       name={'State'}
                       inputName={'state'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -230,6 +246,7 @@ const EventDetail = ({
                     <Input
                       name={'Postal Code'}
                       inputName={'postalCode'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -244,6 +261,7 @@ const EventDetail = ({
                     <Input
                       name={'Phone Number'}
                       inputName={'phoneNumber'}
+                      value={field.value}
                       onChangeText={(e) => setFieldValue(field.name, e)}
                     />
                     {!!meta.error && meta.touched && (
@@ -316,6 +334,7 @@ const EventDetail = ({
                       <Input
                         name={'Notes'}
                         inputName={'notes'}
+                        value={field.value}
                         onChangeText={(e) => setFieldValue(field.name, e)}
                         multiline={true}
                       />
