@@ -17,16 +17,15 @@ export const types = {
   UPDATE_CUSTOMER_DETAILS_SUCCESS: 'UPDATE_CUSTOMER_DETAILS_SUCCESS',
   UPDATE_CUSTOMER_DETAILS_FAIL: 'UPDATE_CUSTOMER_DETAILS_FAIL',
 
-
   // SET MEMBERSHIP LOCATION
-  SET_MEMBERSHIP_LOCATION: 'SET_MEMBERSHIP_LOCATION'
+  SET_MEMBERSHIP_LOCATION: 'SET_MEMBERSHIP_LOCATION',
 };
 
 export const accountIntialState = {
   membership: null,
   accountLoading: false,
   location: null,
-  details: null
+  details: null,
 };
 
 // Reducer
@@ -44,7 +43,7 @@ const AccountReducer = (state = accountIntialState, action) => {
       return {
         ...state,
         accountLoading: false,
-        membership: action.payload
+        membership: action.payload,
       };
 
     case types.GET_CUSTOMER_MEMBERSHIP_ERROR:
@@ -58,29 +57,28 @@ const AccountReducer = (state = accountIntialState, action) => {
     case types.GET_CUSTOMER_DETAILS_REQUEST:
       return {
         ...state,
-        accountLoading: true
-      }
+        accountLoading: true,
+      };
 
     case types.GET_CUSTOMER_DETAILS_SUCCESS:
-
       return {
         ...state,
         accountLoading: false,
-        details: action.payload
-      }
+        details: action.payload,
+      };
 
     case types.GET_CUSTOMER_DETAILS_FAIL:
       return {
         ...state,
         accountLoading: false,
-      }
+      };
 
     // -------- UPDATE CUSTOMER DETAILS ----------
     case types.UPDATE_CUSTOMER_DETAILS_REQUEST:
       return {
         ...state,
-        accountLoading: true
-      }
+        accountLoading: true,
+      };
 
     case types.UPDATE_CUSTOMER_DETAILS_SUCCESS:
       return {
@@ -88,21 +86,21 @@ const AccountReducer = (state = accountIntialState, action) => {
         accountLoading: false,
         details: {
           ...state.details,
-          ...action.payload
-        }
-      }
+          ...action.payload,
+        },
+      };
 
     case types.UPDATE_CUSTOMER_DETAILS_FAIL:
       return {
         ...state,
         accountLoading: false,
-      }
+      };
 
     case types.SET_MEMBERSHIP_LOCATION:
       return {
         ...state,
         location: action.payload,
-      }
+      };
 
     default:
       return state;
@@ -117,8 +115,9 @@ export const accountActions = {
     type: types.GET_CUSTOMER_MEMBERSHIP_REQUEST,
   }),
 
-  getCustomerMembershipSuccess: () => ({
+  getCustomerMembershipSuccess: (payload) => ({
     type: types.GET_CUSTOMER_MEMBERSHIP_SUCCESS,
+    payload,
   }),
 
   getCustomerMembershipError: () => ({
@@ -153,11 +152,9 @@ export const accountActions = {
     type: types.UPDATE_CUSTOMER_DETAILS_FAIL,
   }),
 
-
   // ---- Set Location ------
   setMembershipLocation: (payload) => ({
     type: types.SET_MEMBERSHIP_LOCATION,
     payload,
   }),
-
 };

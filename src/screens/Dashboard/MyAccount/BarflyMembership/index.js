@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {get} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
+import moment from 'moment';
 import {
   ScrollView,
   View,
@@ -56,6 +57,11 @@ const BarflyMembership = ({navigation}) => {
   const [selectedMembership, setSelectedMembership] = useState(null);
   const dispatch = useDispatch();
 
+  const customerMembershipLevelId = get(
+    customerMembership,
+    'MembershipBenefit.MembershipLevelID',
+  );
+
   React.useMemo(() => {
     if (loading || error) {
       return null;
@@ -65,11 +71,14 @@ const BarflyMembership = ({navigation}) => {
 
   useEffect(() => {
     const customerId = get(userInfo, 'bookerID');
-    const locationId = get(customerMembershipLocation, 'bookerLocationId');
+    const locationId = get(
+      locationData,
+      'storeCollection.items[0].bookerLocationId',
+    );
     if (locationId && customerId) {
       dispatch(getCustomerMembership(customerId, locationId));
     }
-  }, [userInfo, customerMembershipLocation]);
+  }, [userInfo, locationData]);
 
   useEffect(() => {
     const locationId = get(customerMembershipLocation, 'bookerLocationId');
@@ -235,6 +244,41 @@ const BarflyMembership = ({navigation}) => {
             </Modal>
           </View>
 
+          {customerMembership && (
+            <View>
+              <View style={styles.barflyContainer}>
+                <Text style={styles.barfly}>Your Membership</Text>
+
+                <Text style={styles.customerMembershipTitle}>
+                  {customerMembershipLevelId === 53809
+                    ? 'The Signature'
+                    : 'The Premium'}
+                </Text>
+
+                <View style={styles.billContainer}>
+                  <Text>
+                    Next bill date:
+                    {moment(
+                      get(customerMembership, 'NextChargeDateOffset'),
+                    ).format('MM/DD/YYYY')}
+                  </Text>
+                  <Text>
+                    Last bill date:
+                    {moment(
+                      get(customerMembership, 'LastChargeDateOffset'),
+                    ).format('MM/DD/YYYY')}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.barflyContainer}>
+                <Text style={styles.barfly}>
+                  {get(customerMembership, 'AvailableQuantity')} Barfly
+                  Membership Benefits Available
+                </Text>
+              </View>
+            </View>
+          )}
+
           <View style={styles.barflyContainer}>
             <Text style={styles.barfly}>Barfly Membership Options</Text>
           </View>
@@ -281,18 +325,21 @@ const BarflyMembership = ({navigation}) => {
                 <Text style={styles.monthText}> / month</Text>
               </Text>
               <Text style={styles.tax}>+ tax (where applicable)</Text>
-              <Button
-                name="Select"
-                containerStyle={styles.buttonContainer}
-                disabled={
-                  customerMembership &&
-                  customerMembership.ID ===
-                    get(membershipDataByLocation, '[0].ID')
-                }
-                onButtonPress={() =>
-                  upgradeMembership(get(membershipDataByLocation, '[0]'))
-                }
-              />
+              {![53809, 102304].includes(customerMembershipLevelId) && (
+                <Button
+                  name="Select"
+                  containerStyle={styles.buttonContainer}
+                  onButtonPress={() =>
+                    upgradeMembership(get(membershipDataByLocation, '[0]'))
+                  }
+                />
+              )}
+
+              {customerMembershipLevelId === 53809 && (
+                <Text style={{marginVertical: 15, paddingVertical: 10}}>
+                  Your Current Plan
+                </Text>
+              )}
             </View>
           </View>
 
@@ -344,19 +391,23 @@ const BarflyMembership = ({navigation}) => {
                 <Text style={styles.monthText}> / month</Text>
               </Text>
               <Text style={styles.tax}>+ tax (where applicable)</Text>
-
-              <Button
-                name="Select"
-                containerStyle={styles.buttonContainer}
-                disabled={
-                  customerMembership &&
-                  customerMembership.ID ===
-                    get(membershipDataByLocation, '[1].ID')
-                }
-                onButtonPress={() =>
-                  upgradeMembership(get(membershipDataByLocation, '[1]'))
-                }
-              />
+              {customerMembershipLevelId !== 112304 ? (
+                <Button
+                  name={
+                    customerMembershipLevelId === 53809
+                      ? 'Upgrade to Premium'
+                      : 'Select'
+                  }
+                  containerStyle={styles.buttonContainer}
+                  onButtonPress={() =>
+                    upgradeMembership(get(membershipDataByLocation, '[1]'))
+                  }
+                />
+              ) : (
+                <Text style={{marginVertical: 15, paddingVertical: 10}}>
+                  Your Current Plan
+                </Text>
+              )}
             </View>
           </View>
 
@@ -366,8 +417,9 @@ const BarflyMembership = ({navigation}) => {
           {/*  disabled={!selectedMembership}*/}
           {/*  onButtonPress={upgradeMembership}*/}
           {/*/>*/}
-
-          <Text style={styles.cancelMembership}>Cancel Membership</Text>
+          {customerMembershipLevelId && (
+            <Text style={styles.cancelMembership}>Cancel Membership</Text>
+          )}
         </View>
       </ScrollView>
 

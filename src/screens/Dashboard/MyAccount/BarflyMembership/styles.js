@@ -109,12 +109,22 @@ export default StyleSheet.create({
     backgroundColor: Colors.dimGray,
   },
   barflyContainer: {
-    height: 44,
     borderTopWidth: 1,
     borderTopColor: Colors.seprator,
     marginVertical: 15,
     backgroundColor: Colors.white,
     justifyContent: 'center',
+    paddingVertical: 10,
+  },
+  billContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  customerMembershipTitle: {
+    fontSize: 16,
+    marginLeft: 15,
+    marginVertical: 10,
   },
   selectedContainer: {
     borderWidth: 2,
