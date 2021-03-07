@@ -5,11 +5,12 @@ const requestRadarPermission = (background) => {
 };
 
 export const hasRadarPermission = (customerId) => {
+  console.log('HasRadarPermission:', customerId);
   setUser(customerId);
   Radar.getPermissionsStatus().then((status) => {
     switch (status) {
       case 'GRANTED_BACKGROUND':
-        Radar.startTrackingResponsive();
+        Radar.startTrackingContinuous();
         console.log('RADAR PERMISSION GRANTED_BACKGROUND:');
         break;
       case 'GRANTED_FOREGROUND':
