@@ -29,12 +29,14 @@ import * as API from 'services';
 
 import styles from './styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AlertHelper } from "utils/AlertHelper";
+import {AlertHelper} from 'utils/AlertHelper';
 
 const BarflyMembership = ({navigation}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const customerMembership = useSelector((state) => state.account.membership);
-  const customerMembershipLocation = useSelector((state) => state.account.location);
+  const customerMembershipLocation = useSelector(
+    (state) => state.account.location,
+  );
 
   const BARFLY_QUERY = screenBarfly();
   const {data, error, loading} = useQuery(BARFLY_QUERY);
@@ -168,7 +170,9 @@ const BarflyMembership = ({navigation}) => {
         thankMessage: get(data, 'barfly.thankYou'),
       });
     } else {
-      AlertHelper.showError('Please select the store at first');
+      AlertHelper.showError(
+        'Please select a store first, prices vary by location.',
+      );
     }
   };
 
@@ -193,10 +197,18 @@ const BarflyMembership = ({navigation}) => {
 
             <Modal visible={showLocationModal}>
               <View style={{backgroundColor: Colors.modal_bg}}>
-
-                <View style={{margin: 40, backgroundColor: Colors.bg, padding: 10}}>
-                  <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20}}>
-                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>Select Preferred Store</Text>
+                <View
+                  style={{margin: 40, backgroundColor: Colors.bg, padding: 10}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: 20,
+                    }}>
+                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                      Select Preferred Store
+                    </Text>
                     <MaterialCommunityIcons
                       name="close"
                       size={25}
@@ -210,7 +222,10 @@ const BarflyMembership = ({navigation}) => {
                         data={searchedLocations}
                         contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}
                         renderItem={({item}) => (
-                          <LocationItem item={item} key={item.bookerLocationId} />
+                          <LocationItem
+                            item={item}
+                            key={item.bookerLocationId}
+                          />
                         )}
                       />
                     </View>
