@@ -5,13 +5,13 @@ const requestRadarPermission = (background) => {
 };
 
 export const hasRadarPermission = (customerId) => {
-  console.log('HasRadarPermission:', customerId);
   setUser(customerId);
+  Radar.requestPermissions(true);
+
   Radar.getPermissionsStatus().then((status) => {
     switch (status) {
       case 'GRANTED_BACKGROUND':
         Radar.startTrackingContinuous();
-        console.log('RADAR PERMISSION GRANTED_BACKGROUND:');
         break;
       case 'GRANTED_FOREGROUND':
         console.log('GRANTED_FOREGROUND Permission granted');
@@ -37,7 +37,6 @@ const setUser = (userId) => {
 export const trackOnce = (resolve, reject) => {
   Radar.trackOnce()
     .then((result) => {
-      console.log('Radar Track Once Success', result);
       resolve(result.location);
     })
     .catch((err) => {
