@@ -105,6 +105,8 @@ const ApptDetails = ({route, navigation}) => {
 
   const addons = get(item, 'appointment.AddOnItems', []);
 
+  console.log('Appointment Details: ', item);
+
   return (
     <View style={rootStyle.container}>
       <Header title="APPOINTMENT DETAILS" isTab />

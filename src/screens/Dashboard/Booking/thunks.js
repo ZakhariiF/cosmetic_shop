@@ -449,7 +449,7 @@ export const resetBooking = () => (dispatch) => {
 export const editOrRebookFromAppointment = (
   location,
   appointment,
-  rebook=false,
+  rebook = false,
   addonsData = null,
 ) => async (dispatch) => {
   const extensionData = getExtensionFromAppointment(appointment);
@@ -480,15 +480,12 @@ export const editOrRebookFromAppointment = (
     'appointment.AppointmentPayment.CouponCode',
   );
   if (couponCode) {
+    const specials = get(
+      appointment,
+      'appointment.AppointmentTreatments[0].DynamicPrice.Specials',
+    ).find((s) => s.SpecialTypeID === 2);
     dispatch(
-      bookingActions.promoCodeSuccess({
-        CouponCode: couponCode,
-        DiscountAmount: get(
-          appointment,
-          'appointment.AppointmentTreatments[0].DynamicPrice.Discount.Amount',
-        ),
-        DiscountType: 0,
-      }),
+      bookingActions.promoCodeSuccess(specials),
     );
   } else {
     dispatch(bookingActions.promoCodeSuccess(null));
