@@ -4,7 +4,7 @@ import rootStyle from 'rootStyle';
 
 export default StyleSheet.create({
   topImg: {
-    height: 230,
+    height: 140,
     width: '100%',
     backgroundColor: Colors.white,
   },

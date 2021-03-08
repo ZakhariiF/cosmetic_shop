@@ -75,173 +75,175 @@ const Contactus = () => {
             }}
           />
         </View>
-        {showSuccess && (
+        {showSuccess ? (
           <Text style={[styles.writeMsg, {fontSize: 20, textAlign: 'center'}]}>
             You have submitted successfully
           </Text>
+        ) : (
+          <View style={rootStyle.innerContainer}>
+            <Text style={styles.writeMsg}>Write us a message.</Text>
+            <Formik
+              initialValues={{}}
+              enableReinitialize
+              onSubmit={onSubmit}
+              validationSchema={contactUsSchema}>
+              {({submitForm, isSubmitting}) => (
+                <>
+                  <View style={styles.inputContainer}>
+                    <Field name={'name'}>
+                      {({field, meta, form: {setFieldValue}}) => (
+                        <View>
+                          <Input
+                            id={'name'}
+                            name={'Name'}
+                            inputName={'name'}
+                            onChangeText={(e) => setFieldValue(field.name, e)}
+                          />
+                          {!!meta.error && meta.touched && (
+                            <Text style={styles.errorText}>{meta.error}</Text>
+                          )}
+                        </View>
+                      )}
+                    </Field>
+                    <Field name={'email'}>
+                      {({field, meta, form: {setFieldValue}}) => (
+                        <View>
+                          <Input
+                            id={'email'}
+                            name={'Email'}
+                            inputName={'email'}
+                            onChangeText={(e) => setFieldValue(field.name, e)}
+                          />
+                          {!!meta.error && meta.touched && (
+                            <Text style={styles.errorText}>{meta.error}</Text>
+                          )}
+                        </View>
+                      )}
+                    </Field>
+                    <Field name={'phoneNumber'}>
+                      {({field, meta, form: {setFieldValue}}) => (
+                        <View>
+                          <Input
+                            id={'phone_number'}
+                            name={'Phone Number'}
+                            inputName={'phoneNumber'}
+                            onChangeText={(e) => setFieldValue(field.name, e)}
+                          />
+                          {!!meta.error && meta.touched && (
+                            <Text style={styles.errorText}>{meta.error}</Text>
+                          )}
+                        </View>
+                      )}
+                    </Field>
+                  </View>
+                  <Field name={'message'}>
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.yourmsg}>Message</Text>
+                        <TextInput
+                          id={'message'}
+                          name={'message'}
+                          multiline
+                          onChangeText={(e) => setFieldValue(field.name, e)}
+                          style={styles.input}
+                        />
+                        {!!meta.error && meta.touched && (
+                          <Text style={styles.errorText}>{meta.error}</Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
+                  <Button
+                    onButtonPress={submitForm}
+                    name={'Submit'}
+                    disabled={isSubmitting}
+                  />
+                </>
+              )}
+            </Formik>
+
+            <Text style={styles.writeMsg}>Follow us on social media.</Text>
+
+            <View style={styles.socialContainer}>
+              <View style={styles.instaContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      get(data, 'screenContactCollection.items[0].instagramUrl'),
+                    )
+                  }>
+                  <AntDesign name="instagram" size={30} />
+                  <Text style={styles.instaName}>
+                    {get(data, 'screenContactCollection.items[0].instagram')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.instaContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      get(data, 'screenContactCollection.items[0].facebookUrl'),
+                    )
+                  }>
+                  <EvilIcons name="sc-facebook" size={30} />
+                  <Text style={styles.instaName}>
+                    {get(data, 'screenContactCollection.items[0].facebook')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <Text style={styles.writeMsg}>Need another help? Call Us.</Text>
+            <View style={styles.serviceContainer}>
+              <Text style={styles.serviceHeader}>Drybar Services</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  call(get(data, 'screenContactCollection.items[0].phone1'))
+                }>
+                <View style={styles.serviceInnerCont}>
+                  <Text style={styles.number}>
+                    {get(data, 'screenContactCollection.items[0].phone1')}
+                  </Text>
+                  <Image
+                    resizeMode="contain"
+                    style={styles.callIcon}
+                    source={Images.call}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.serviceContainer}>
+              <Text style={styles.serviceHeader}>Drybar Products</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  call(get(data, 'screenContactCollection.items[0].phone1'))
+                }>
+                <View style={styles.serviceInnerCont}>
+                  <Text style={styles.number}>
+                    {get(data, 'screenContactCollection.items[0].phone2')}
+                  </Text>
+                  <Image
+                    resizeMode="contain"
+                    style={styles.callIcon}
+                    source={Images.call}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.dotContainer}>
+              <DottedView number={200} />
+            </View>
+
+            <View style={styles.bottomImg}>
+              <Image source={Images.giftcard} style={styles.bottomIcon} />
+            </View>
+          </View>
         )}
 
-        <View style={rootStyle.innerContainer}>
-          <Text style={styles.writeMsg}>Write us a message.</Text>
-          <Formik
-            initialValues={{}}
-            enableReinitialize
-            onSubmit={onSubmit}
-            validationSchema={contactUsSchema}>
-            {({submitForm, isSubmitting}) => (
-              <>
-                <View style={styles.inputContainer}>
-                  <Field name={'name'}>
-                    {({field, meta, form: {setFieldValue}}) => (
-                      <View>
-                        <Input
-                          id={'name'}
-                          name={'Name'}
-                          inputName={'name'}
-                          onChangeText={(e) => setFieldValue(field.name, e)}
-                        />
-                        {!!meta.error && meta.touched && (
-                          <Text style={styles.errorText}>{meta.error}</Text>
-                        )}
-                      </View>
-                    )}
-                  </Field>
-                  <Field name={'email'}>
-                    {({field, meta, form: {setFieldValue}}) => (
-                      <View>
-                        <Input
-                          id={'email'}
-                          name={'Email'}
-                          inputName={'email'}
-                          onChangeText={(e) => setFieldValue(field.name, e)}
-                        />
-                        {!!meta.error && meta.touched && (
-                          <Text style={styles.errorText}>{meta.error}</Text>
-                        )}
-                      </View>
-                    )}
-                  </Field>
-                  <Field name={'phoneNumber'}>
-                    {({field, meta, form: {setFieldValue}}) => (
-                      <View>
-                        <Input
-                          id={'phone_number'}
-                          name={'Phone Number'}
-                          inputName={'phoneNumber'}
-                          onChangeText={(e) => setFieldValue(field.name, e)}
-                        />
-                        {!!meta.error && meta.touched && (
-                          <Text style={styles.errorText}>{meta.error}</Text>
-                        )}
-                      </View>
-                    )}
-                  </Field>
-                </View>
-                <Field name={'message'}>
-                  {({field, meta, form: {setFieldValue}}) => (
-                    <View>
-                      <Text style={styles.yourmsg}>Message</Text>
-                      <TextInput
-                        id={'message'}
-                        name={'message'}
-                        multiline
-                        onChangeText={(e) => setFieldValue(field.name, e)}
-                        style={styles.input}
-                      />
-                      {!!meta.error && meta.touched && (
-                        <Text style={styles.errorText}>{meta.error}</Text>
-                      )}
-                    </View>
-                  )}
-                </Field>
-                <Button
-                  onButtonPress={submitForm}
-                  name={'Submit'}
-                  disabled={isSubmitting}
-                />
-              </>
-            )}
-          </Formik>
 
-          <Text style={styles.writeMsg}>Follow us on social media.</Text>
-
-          <View style={styles.socialContainer}>
-            <View style={styles.instaContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL(
-                    get(data, 'screenContactCollection.items[0].instagramUrl'),
-                  )
-                }>
-                <AntDesign name="instagram" size={30} />
-                <Text style={styles.instaName}>
-                  {get(data, 'screenContactCollection.items[0].instagram')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.instaContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL(
-                    get(data, 'screenContactCollection.items[0].facebookUrl'),
-                  )
-                }>
-                <EvilIcons name="sc-facebook" size={30} />
-                <Text style={styles.instaName}>
-                  {get(data, 'screenContactCollection.items[0].facebook')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <Text style={styles.writeMsg}>Need another help? Call Us.</Text>
-          <View style={styles.serviceContainer}>
-            <Text style={styles.serviceHeader}>Drybar Services</Text>
-            <TouchableOpacity
-              onPress={() =>
-                call(get(data, 'screenContactCollection.items[0].phone1'))
-              }>
-              <View style={styles.serviceInnerCont}>
-                <Text style={styles.number}>
-                  {get(data, 'screenContactCollection.items[0].phone1')}
-                </Text>
-                <Image
-                  resizeMode="contain"
-                  style={styles.callIcon}
-                  source={Images.call}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.serviceContainer}>
-            <Text style={styles.serviceHeader}>Drybar Products</Text>
-            <TouchableOpacity
-              onPress={() =>
-                call(get(data, 'screenContactCollection.items[0].phone1'))
-              }>
-              <View style={styles.serviceInnerCont}>
-                <Text style={styles.number}>
-                  {get(data, 'screenContactCollection.items[0].phone2')}
-                </Text>
-                <Image
-                  resizeMode="contain"
-                  style={styles.callIcon}
-                  source={Images.call}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.dotContainer}>
-            <DottedView number={200} />
-          </View>
-
-          <View style={styles.bottomImg}>
-            <Image source={Images.giftcard} style={styles.bottomIcon} />
-          </View>
-        </View>
       </KeyboardAwareScrollView>
       {loading && <Indicator />}
     </View>
