@@ -121,6 +121,7 @@ const Location = ({navigation}) => {
       const position = await requestUserLocationLocation();
       const latitude = get(position, 'latitude');
       const longitude = get(position, 'longitude');
+
       setCurrentLocation({
         latitude,
         longitude,

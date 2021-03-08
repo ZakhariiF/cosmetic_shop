@@ -9,7 +9,7 @@ export default StyleSheet.create({
     backgroundColor: Colors.white,
   },
   topImage: {
-    height: '100%',
+    height: 140,
     width: '100%',
   },
   writeMsg: {
