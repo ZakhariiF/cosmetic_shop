@@ -246,3 +246,24 @@ export const bannerQuery = () => gql`
     }
   }
 `;
+
+export const contactUsQuery = () => gql`
+  {
+    screenContactCollection(where: {slug: "contact"}) {
+      items {
+        title
+        slug
+        instagram
+        instagramUrl
+        facebook
+        facebookUrl
+        hero {
+          fileName
+          url
+        }
+        phone1
+        phone2
+      }
+    }
+  }
+`;
