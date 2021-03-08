@@ -64,6 +64,23 @@ const DateTime = ({navigation}) => {
   }, [selectedLocation]);
 
   useEffect(() => {
+    if (multiuserSlots && multiuserSlots.length) {
+      if (
+        moment(selectedDate).format('YYYY-MM-DD') !==
+        moment(multiuserSlots[0].startDateTime).format('YYYY-MM-DD')
+      ) {
+        setSelectedDate(
+          new Date(
+            moment(multiuserSlots[0].startDateTime).format(
+              'YYYY-MM-DDT00:00:00Z',
+            ),
+          ),
+        );
+      }
+    }
+  }, [multiuserSlots]);
+
+  useEffect(() => {
     var currentDate = moment(selectedDate);
     var weekStart = currentDate.clone().startOf('isoweek');
     var days = [];
@@ -104,7 +121,7 @@ const DateTime = ({navigation}) => {
     // availableDates(selectedDate);
 
     const locationId = get(selectedLocation, 'bookerLocationId', '');
-    console.log('SelectedLocation:', selectedLocation);
+
     if (locationId && locationId !== '') {
       let multiUserobj = {
         locationId: locationId,
@@ -177,7 +194,7 @@ const DateTime = ({navigation}) => {
         if (tempArr[idx].addons && tempArr[idx].addons.length) {
           tempArr[idx].addons = tempArr[idx].addons.map((i) => ({
             ...i,
-            employees: employeeId
+            employees: employeeId,
           }));
         }
       }
@@ -283,7 +300,6 @@ const DateTime = ({navigation}) => {
                 rooms: extensionroom,
                 serviceId: extensionAddon.ID,
               };
-
             }
           });
         }

@@ -125,7 +125,6 @@ export const types = {
   MULTI_GUEST_AVAIL_DATES_SUCCESS: 'MULTI_GUEST_AVAIL_DATES_SUCCESS',
   MULTI_GUEST_AVAIL_DATES_ERROR: 'MULTI_GUEST_AVAIL_DATES_ERROR',
 
-
   // RESET BOOKING STATE
   RESET_BOOKING: 'RESET_BOOKING',
 };
@@ -590,6 +589,11 @@ const BookingReducer = (state = bookingIntialState, action) => {
       let availbilityTimes = [];
 
       get(action.payload, 'availability').forEach((item) => {
+        if (moment(item.startDateTime).isBefore(moment(new Date()))) {
+
+          console.log(item.start(), new Date());
+          return;
+        }
         let startTime = moment(item.startDateTime);
         let endTime = moment(item.endDateTime);
 
@@ -624,7 +628,9 @@ const BookingReducer = (state = bookingIntialState, action) => {
       return {
         ...state,
         slotsLoading: false,
-        multiUserSlots: availbilityTimes,
+        multiUserSlots: availbilityTimes.sort(
+          (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+        ),
       };
 
     // BOOKING FORM
