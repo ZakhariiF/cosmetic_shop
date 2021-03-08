@@ -111,12 +111,13 @@ const AccountService = ({navigation}) => {
     }
   }, [searchVal, locationData]);
 
-  const getServiceData = async () => {
+  const getServiceData = useCallback(async () => {
     try {
       const res = await getServices(selectedStore.bookerLocationId);
       const services = res.Treatments;
+
       const bookerServiceNames = services.map((s) =>
-        (s.Name || '').toLocaleLowerCase().trim(),
+        (s.Name || '').toLowerCase().trim(),
       );
       const bookerServiceIds = services.map((s) => '' + s.ID);
 
@@ -127,7 +128,7 @@ const AccountService = ({navigation}) => {
           [],
         ).map((item) => {
           let idx = bookerServiceNames.indexOf(
-            (item.title || '').toLocaleLowerCase().trim(),
+            (item.title || '').toLowerCase().trim(),
           );
           if (idx < 0) {
             idx = bookerServiceIds.indexOf(item.productId);
@@ -145,7 +146,7 @@ const AccountService = ({navigation}) => {
         }),
       );
     } catch (e) {}
-  };
+  }, [selectedStore]);
 
   useEffect(() => {
     if (selectedStore && selectedStore.bookerLocationId) {

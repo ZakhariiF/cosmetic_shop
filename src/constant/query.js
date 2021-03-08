@@ -56,6 +56,7 @@ export const screenAddOnsCollections = () => gql`
             title
             subtitle
             price
+            productId
             description {
               json
             }
