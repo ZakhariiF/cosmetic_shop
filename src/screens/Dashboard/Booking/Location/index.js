@@ -147,8 +147,6 @@ const Location = ({navigation}) => {
       <BookingTab />
       <MapView
         showsUserLocation
-        // customMapStyle={mapStyle}
-        // provider={PROVIDER_GOOGLE}
         provider={null}
         ref={mapRef}
         style={{
@@ -159,21 +157,25 @@ const Location = ({navigation}) => {
         }
         region={coords}>
         {(allLocations || []).map((e, i) => (
-          <CustomMapMarker
+          <MapView.Marker
             coordinate={{
               latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
               longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
-            selected={selectedLocationId === e.bookerLocationId}
-            item={e}
-            navigation={navigation}
-            currentLocation={currentLocation}
-            onClose={() => setSelectedLocation(-1)}
+            animation
             onPress={() => onMarker(e)}
-          />
-
+          >
+            <CustomMapMarker
+              selected={selectedLocationId === e.bookerLocationId}
+              item={e}
+              navigation={navigation}
+              currentLocation={currentLocation}
+              onClose={() => setSelectedLocation(-1)}
+              onPress={() => onMarker(e)}
+            />
+          </MapView.Marker>
         ))}
       </MapView>
 
