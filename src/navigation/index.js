@@ -6,17 +6,19 @@ import {Platform} from 'react-native';
 import {navigationRef} from './RootNavigation';
 import {createConfig, getAccessToken} from '@okta/okta-react-native';
 import configFile from 'constant/config';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
 import Radar from 'react-native-radar';
 import {hasRadarPermission} from 'utils/RadarHelper';
 import Welcome from 'screens/Welcome';
+import {setCurrentLocation} from 'screens/Dashboard/thunks';
 
 const Root = createStackNavigator();
 
 const AppContainer = () => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const firstLoggedIn = useSelector((state) => state.auth.loggedInCount === 0);
+  const dispatch = useDispatch();
   const [token, setToken] = useState(null);
 
   const customerId = get(userInfo, 'bookerID');
@@ -37,11 +39,17 @@ const AppContainer = () => {
   Radar.on('clientLocation', (result) => {
     // do something with result.location
     console.log('Radar clientLocation:', result);
+    dispatch(
+      setCurrentLocation({
+        latitude: get(result, 'location.latitude'),
+        longitude: get(result, 'location.longitude'),
+      }),
+    );
   });
 
   Radar.on('location', (result) => {
     // do something with result.location, result.user
-    console.log('radar clientLocation:', result);
+    console.log('radar location:', result);
   });
 
   useEffect(() => {

@@ -45,18 +45,19 @@ const Location = ({navigation}) => {
   const isFavLoad = useSelector((state) => state.booking.isFavLoading);
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const currentLocation = useSelector((state) => state.home.currentLocation);
+
+  console.log('CurrentLocation:', currentLocation);
   const useCurrentLocation = useSelector(
     (state) => state.home.useCurrentLocation,
   );
 
   useEffect(() => {
-    getUserLocation();
-  }, []);
-
-  useEffect(() => {
     if (useCurrentLocation && searchVal === '' && currentLocation) {
-      setCoords(currentLocation);
+      setCoords({
+        ...coords,
+        ...currentLocation,
+      });
       searchFilterFunction(currentLocation);
     } else if (!useCurrentLocation && searchVal === '') {
       setCoords(defaultPoint);
@@ -116,23 +117,6 @@ const Location = ({navigation}) => {
     return data;
   }, [loading, error, data]);
 
-  const getUserLocation = async () => {
-    try {
-      const position = await requestUserLocationLocation();
-      const latitude = get(position, 'latitude');
-      const longitude = get(position, 'longitude');
-
-      setCurrentLocation({
-        latitude,
-        longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      });
-    } catch (e) {
-      console.log('Can not get the current user location');
-    }
-  };
-
   const onMarker = (item) => {
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
@@ -170,18 +154,11 @@ const Location = ({navigation}) => {
         style={{
           flex: 1,
         }}
-        initialRegion={searchVal.length ? coords : currentLocation || coords}
+        initialRegion={
+          searchVal.length ? coords : {...coords, ...(currentLocation || {})}
+        }
         region={coords}>
         {(allLocations || []).map((e, i) => (
-          // <MapView.Marker
-          //   key={i}
-          //   coordinate={{
-          //     latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
-          //     longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
-          //     latitudeDelta: LATITUDE_DELTA,
-          //     longitudeDelta: LONGITUDE_DELTA,
-          //   }}
-          //   animation>
           <CustomMapMarker
             coordinate={{
               latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
@@ -196,7 +173,7 @@ const Location = ({navigation}) => {
             onClose={() => setSelectedLocation(-1)}
             onPress={() => onMarker(e)}
           />
-          // </MapView.Marker>
+
         ))}
       </MapView>
 

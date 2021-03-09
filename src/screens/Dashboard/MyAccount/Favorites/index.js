@@ -31,27 +31,7 @@ const Favorites = () => {
   const [count, setCount] = useState(0);
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
-  const [currentLocation, setCurrentLocation] = useState(null);
-
-  const getUserLocation = async () => {
-    try {
-      const position = await requestUserLocationLocation();
-      console.log("&&&&&&&&&", position);
-      const latitude = get(position, 'latitude');
-      const longitude = get(position, 'longitude');
-
-      setCurrentLocation({
-        latitude,
-        longitude,
-      });
-    } catch (e) {
-      console.log('Can not get the current user location');
-    }
-  };
-
-  useEffect(() => {
-    getUserLocation();
-  }, []);
+  const currentLocation = useSelector((state) => state.home.currentLocation);
 
   useEffect(() => {
     if (search.length && count > 0) {
