@@ -205,8 +205,11 @@ export const getAvailableDates = (obj) => async (dispatch) => {
   dispatch(bookingActions.getAvailSlotsRequest());
   try {
     const data = await API.availableDates(obj);
-    console.log('single  pile dates>>', data);
-    return dispatch(bookingActions.getAvailSlotsSuccess(data));
+    return dispatch(
+      bookingActions.getAvailSlotsSuccess(
+        get(data, '[0].serviceCategories[0].services[0].availability'),
+      ),
+    );
   } catch (error) {
     if (error.response.status === 401) {
       dispatch(bookingActions.getAvailSlotsError());
@@ -221,7 +224,7 @@ export const getAvailableDates = (obj) => async (dispatch) => {
 export const getMultiUserDates = (obj) => async (dispatch) => {
   dispatch(bookingActions.getMultiDatesRequest());
   try {
-    const data = await API.multiUserDates(obj);
+    const data = await API.multiUserTimeSlots(obj);
 
     console.log('multi pile dates>>', data);
     return dispatch(bookingActions.getMultiDatesSuccess(data));
@@ -465,8 +468,9 @@ export const editOrRebookFromAppointment = (
   const tempArr = convertAppointmentToState(
     appointment,
     get(addons, 'Results', []),
+    rebook,
   );
-  // dispatch();
+
   dispatch(setLocation(location));
   dispatch(
     setExtensionAddon({
@@ -484,9 +488,7 @@ export const editOrRebookFromAppointment = (
       appointment,
       'appointment.AppointmentTreatments[0].DynamicPrice.Specials',
     ).find((s) => s.SpecialTypeID === 2);
-    dispatch(
-      bookingActions.promoCodeSuccess(specials),
-    );
+    dispatch(bookingActions.promoCodeSuccess(specials));
   } else {
     dispatch(bookingActions.promoCodeSuccess(null));
   }

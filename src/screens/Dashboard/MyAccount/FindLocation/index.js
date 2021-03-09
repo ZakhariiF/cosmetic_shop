@@ -3,10 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import MapView from 'react-native-maps';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
-import {
-  findStoresFromPointWithTitle,
-  requestUserLocationLocation,
-} from 'utils';
+import {findStoresFromPointWithTitle, requestUserLocationLocation} from 'utils';
 import {FlatList, View, StyleSheet, ScrollView, Dimensions} from 'react-native';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
@@ -32,7 +29,7 @@ const window = Dimensions.get('window');
 const {width, height} = window;
 
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.01;
+const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 var arrayHolder = [];
@@ -62,8 +59,8 @@ const FindLocation = ({navigation}) => {
   const [coords, setCoords] = useState({
     latitude: 34.0577908,
     longitude: -118.3622365,
-    latitudeDelta: 0.015 * 8,
-    longitudeDelta: 0.0121 * 8,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA,
   });
 
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -114,8 +111,8 @@ const FindLocation = ({navigation}) => {
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
       longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
-      latitudeDelta: 0.015 * 8,
-      longitudeDelta: 0.0121 * 8,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     });
 
     if (selectedLocationIndex === idx) {
@@ -129,8 +126,8 @@ const FindLocation = ({navigation}) => {
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
       longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
-      latitudeDelta: 0.015 * 8,
-      longitudeDelta: 0.0121 * 8,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
     });
   };
 
@@ -178,8 +175,8 @@ const FindLocation = ({navigation}) => {
           longitude: Number(
             get(newData, '[0].contact.coordinates[1]', -118.2580306),
           ),
-          latitudeDelta: 0.015 * 8,
-          longitudeDelta: 0.0121 * 8,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
         });
       }
     },
@@ -232,16 +229,17 @@ const FindLocation = ({navigation}) => {
             coordinate={{
               latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
               longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
-              latitudeDelta: 0.015 * 8,
-              longitudeDelta: 0.0121 * 8,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
             }}
-            animation
-            onPress={() => onMarker(e, i)}>
+            animation>
             <CustomMapMarker
               selected={selectedLocationIndex === i}
               item={e}
               navigation={navigation}
               currentLocation={currentLocation}
+              onClose={() => setSelectedLocation(-1)}
+              onPress={() => onMarker(e, i)}
             />
           </MapView.Marker>
         ))}

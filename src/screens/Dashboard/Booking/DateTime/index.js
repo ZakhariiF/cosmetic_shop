@@ -14,8 +14,8 @@ import moment from 'moment';
 import {monthName} from 'utils';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  getAvailableDates,
   getEmplyeesData,
-  getMultiUserDates,
   getMultiUserTimeSlots,
   getServices,
   setmemberCount,
@@ -35,6 +35,9 @@ const DateTime = ({navigation}) => {
   const dispatch = useDispatch();
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const activeTab = useSelector((state) => state.booking.activeGuestTab);
+  const weekAvailableDates = useSelector(
+    (state) => state.booking.availableDates,
+  );
 
   const fromDate = get(totalGuests, `[${activeTab}].date.date`);
 
@@ -47,11 +50,25 @@ const DateTime = ({navigation}) => {
   );
   const isEmpLoading = useSelector((state) => state.booking.isEmpLoading);
   const [selectedDate, setSelectedDate] = useState(
-    fromDate ? new Date(fromDate) : new Date(),
+    fromDate ? new Date(fromDate) : null,
   );
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [currentWeek, setcurrentWeek] = useState([]);
   const services = useSelector((state) => state.booking.services);
+
+  useEffect(() => {
+    if (!selectedDate && weekAvailableDates && weekAvailableDates.length) {
+      const timezone = moment().utcOffset(weekAvailableDates[0]).utcOffset();
+
+      setSelectedDate(
+        new Date(
+          moment(weekAvailableDates[0])
+            .utcOffset(timezone)
+            .format('YYYY-MM-DDT00:00:00'),
+        ),
+      );
+    }
+  }, [selectedDate, weekAvailableDates]);
 
   useEffect(() => {
     if (
@@ -64,60 +81,44 @@ const DateTime = ({navigation}) => {
   }, [selectedLocation]);
 
   useEffect(() => {
-    if (multiuserSlots && multiuserSlots.length) {
-      if (
-        moment(selectedDate).format('YYYY-MM-DD') !==
-        moment(multiuserSlots[0].startDateTime).format('YYYY-MM-DD')
-      ) {
-        setSelectedDate(
-          new Date(
-            moment(multiuserSlots[0].startDateTime).format(
-              'YYYY-MM-DDT00:00:00Z',
-            ),
-          ),
-        );
-      }
-    }
-  }, [multiuserSlots]);
+    availableDates(new Date());
+  }, []);
 
   useEffect(() => {
-    var currentDate = moment(selectedDate);
-    var weekStart = currentDate.clone().startOf('isoweek');
-    var days = [];
+    if (selectedDate) {
+      var currentDate = moment(selectedDate);
+      var weekStart = currentDate.clone().startOf('isoweek');
+      var days = [];
 
-    for (var i = 0; i <= 6; i++) {
-      days.push({
-        day: moment(weekStart).add(i, 'days').format('ddd'),
-        date: moment(weekStart).add(i, 'days').format('DD'),
-        fulldate: moment(weekStart).add(i, 'days').format(),
-        disable: moment() > moment(weekStart).add(i, 'days'),
-      });
+      for (var i = 0; i <= 6; i++) {
+        days.push({
+          day: moment(weekStart).add(i, 'days').format('ddd'),
+          date: moment(weekStart).add(i, 'days').format('DD'),
+          fulldate: moment(weekStart).add(i, 'days').format(),
+          disable: moment() > moment(weekStart).add(i, 'days'),
+        });
+      }
+      setcurrentWeek(days);
     }
-    setcurrentWeek(days);
   }, [selectedDate]);
 
   const availableDates = (date) => {
+    const now = moment(date);
+    const weekfirstDay = now.clone().weekday(1);
+    const weekLastDay = now.clone().weekday(7);
     let multiUserobj = {
-      locationId: get(selectedLocation, 'bookerLocationId', ''),
-      fromDateTime: moment(date).startOf('month').format(),
-      IncludeEmployees: true,
-      IncludeFreelancers: false,
+      locationIds: get(selectedLocation, 'bookerLocationId', ''),
+      fromDate: moment(weekfirstDay).format('YYYY-MM-DDT00:00:00'),
+      toDate: moment(weekLastDay).format('YYYY-MM-DDT00:00:00'),
     };
 
-    let tempArr = [];
-
-    totalGuests.forEach((element) => {
-      tempArr.push({
-        serviceId: element.services.ID,
-      });
-    });
-
-    multiUserobj.Itineraries = tempArr;
-
-    dispatch(getMultiUserDates(multiUserobj));
+    dispatch(getAvailableDates(multiUserobj));
   };
 
   useEffect(() => {
+    if (!selectedDate) {
+      return;
+    }
     // availableDates(selectedDate);
 
     const locationId = get(selectedLocation, 'bookerLocationId', '');
@@ -347,7 +348,11 @@ const DateTime = ({navigation}) => {
     <View style={rootStyle.container}>
       <BookingTab />
       <View style={rootStyle.sizeBox} />
-      <Header title="DATE & TIME" safeBackColor={Colors.bg} />
+      <Header
+        title="DATE & TIME"
+        safeBackColor={Colors.bg}
+        onBackPress={() => navigation.navigate('Addons')}
+      />
 
       <View style={rootStyle.innerContainer}>
         <Text style={styles.heading}>
