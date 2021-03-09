@@ -20,6 +20,7 @@ export const types = {
 
   // ---- SET USE CURRENT LOCATION ---
   SET_GLOBAL_CONFIG: 'SET_GLOBAL_CONFIG',
+
 };
 
 export const homeIntialState = {

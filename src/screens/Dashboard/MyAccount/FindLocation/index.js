@@ -224,24 +224,30 @@ const FindLocation = ({navigation}) => {
         initialRegion={searchVal.length ? coords : currentLocation}
         region={coords}>
         {locationItems.map((e, i) => (
-          <MapView.Marker
-            key={i}
+          // <MapView.Marker
+          //   key={i}
+          //   coordinate={{
+          //     latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
+          //     longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
+          //     latitudeDelta: LATITUDE_DELTA,
+          //     longitudeDelta: LONGITUDE_DELTA,
+          //   }}
+          //   animation>
+          <CustomMapMarker
+            selected={selectedLocationIndex === i}
+            item={e}
+            navigation={navigation}
+            currentLocation={currentLocation}
+            onClose={() => setSelectedLocation(-1)}
+            onPress={() => onMarker(e, i)}
             coordinate={{
               latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
               longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
-            animation>
-            <CustomMapMarker
-              selected={selectedLocationIndex === i}
-              item={e}
-              navigation={navigation}
-              currentLocation={currentLocation}
-              onClose={() => setSelectedLocation(-1)}
-              onPress={() => onMarker(e, i)}
-            />
-          </MapView.Marker>
+          />
+          // </MapView.Marker>
         ))}
       </MapView>
       <View style={rootStyle.innerContainer}>
