@@ -54,7 +54,6 @@ const LocationModal = forwardRef((props, ref) => {
     searchVal,
     locationData,
     onSelect,
-    currentLocation,
     setUseCurrentLocation,
     useCurrentLocation,
   } = props;
@@ -65,6 +64,8 @@ const LocationModal = forwardRef((props, ref) => {
   const navigation = useNavigation();
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const data = useSelector((state) => state.booking.locations);
+  const currentLocation = useSelector((state) => state.home.currentLocation);
+
   const route = useRoute();
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,

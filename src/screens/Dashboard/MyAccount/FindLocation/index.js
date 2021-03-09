@@ -63,7 +63,7 @@ const FindLocation = ({navigation}) => {
     longitudeDelta: LONGITUDE_DELTA,
   });
 
-  const [currentLocation, setCurrentLocation] = useState(null);
+  const currentLocation = useSelector((state) => state.home.currentLocation);
   const useCurrentLocation = useSelector(
     (state) => state.home.useCurrentLocation,
   );
@@ -71,28 +71,6 @@ const FindLocation = ({navigation}) => {
   if (error) {
     // return AlertHelper.showError('Server error');
   }
-
-  const getUserLocation = async () => {
-    try {
-      const position = await requestUserLocationLocation();
-      console.log('Current Location:', position);
-      const latitude = get(position, 'latitude');
-      const longitude = get(position, 'longitude');
-
-      setCurrentLocation({
-        latitude: latitude,
-        longitude: longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      });
-    } catch (e) {
-      console.log('Can not get the current user location', e);
-    }
-  };
-
-  useEffect(() => {
-    getUserLocation();
-  }, []);
 
   React.useMemo(() => {
     if (loading || error) {
@@ -189,7 +167,10 @@ const FindLocation = ({navigation}) => {
 
   useEffect(() => {
     if (useCurrentLocation && searchVal === '' && currentLocation) {
-      setCoords(currentLocation);
+      setCoords({
+        ...coords,
+        ...currentLocation,
+      });
       searchFilterFunction(currentLocation);
     } else if (!useCurrentLocation && searchVal === '') {
       setCoords(defaultPoint);
@@ -221,18 +202,12 @@ const FindLocation = ({navigation}) => {
         style={{
           flex: 0.8,
         }}
-        initialRegion={searchVal.length ? coords : currentLocation}
+        initialRegion={
+          searchVal.length ? coords : {...coords, ...(currentLocation || {})}
+        }
         region={coords}>
         {locationItems.map((e, i) => (
-          // <MapView.Marker
-          //   key={i}
-          //   coordinate={{
-          //     latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
-          //     longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
-          //     latitudeDelta: LATITUDE_DELTA,
-          //     longitudeDelta: LONGITUDE_DELTA,
-          //   }}
-          //   animation>
+
           <CustomMapMarker
             selected={selectedLocationIndex === i}
             item={e}
@@ -247,7 +222,6 @@ const FindLocation = ({navigation}) => {
               longitudeDelta: LONGITUDE_DELTA,
             }}
           />
-          // </MapView.Marker>
         ))}
       </MapView>
       <View style={rootStyle.innerContainer}>
