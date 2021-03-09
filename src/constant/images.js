@@ -42,7 +42,7 @@ export default {
   mix: require('assets/images/mix.png'),
   lady: require('assets/images/lady.png'),
   myappts: require('assets/images/myappts.png'),
-  barflymember: require('assets/images/barflymember.png'),
+  barflymember: require('assets/images/barflymembership.png'),
   account: require('assets/images/account.png'),
   addons: require('assets/images/addons.png'),
   barley_banner: require('assets/images/barley_banner.png'),
