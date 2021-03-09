@@ -33,8 +33,6 @@ const ScreenOptions = ({navigation}) => {
               styles.circle,
               i === 2 && {
                 justifyContent: 'flex-start',
-                backgroundColor: Colors.yellow,
-                borderColor: Colors.header_title,
               },
             ]}>
             <Image resizeMode="contain" source={e.icon} style={e.style} />
