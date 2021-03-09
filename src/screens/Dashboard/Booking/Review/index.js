@@ -195,7 +195,10 @@ const Review = ({navigation, route}) => {
         .utcOffset(timezone)
         .format('YYYY-MM-DDTHH:mm:ssZ');
 
+      let totalDuration = get(totalGuests, `[${i}].services.TotalDuration`, 45);
+
       let extraNotes = (totalGuests[i].addons || []).reduce((obj, current) => {
+        totalDuration += current.Duration;
         endTime = moment(endTime)
           .add(current.Duration, 'minutes')
           .utcOffset(timezone)
@@ -211,8 +214,9 @@ const Review = ({navigation, route}) => {
         EmployeeID: totalGuests[i]?.employees,
         RoomID: totalGuests[i]?.rooms,
         StartDateTimeOffset: startTime,
-        EndDateTimeOffset: endTime,
+        // EndDateTimeOffset: endTime,
         TreatmentID: totalGuests[i]?.services.ID,
+        TotalDuration: totalDuration,
         Guest: {
           FirstName: get(userInfo, 'firstname', ''),
           LastName: get(userInfo, 'lastname', ''),
