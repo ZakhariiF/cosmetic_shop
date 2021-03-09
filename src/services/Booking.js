@@ -91,15 +91,6 @@ export const availableDates = (data) =>
     })
     .then((response) => response.data);
 
-export const multiUserDates = (data) =>
-  client
-    .post('/booker/MultiGuest1Day', {
-      method: 'POST',
-      urlParams: {},
-      data,
-    })
-    .then((response) => response.data);
-
 export const findLocation = (data) =>
   client
     .post('/booker/FindLocations', {

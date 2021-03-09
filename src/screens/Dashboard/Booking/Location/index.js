@@ -21,7 +21,7 @@ const window = Dimensions.get('window');
 const {width, height} = window;
 
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.01;
+const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 var arrayHolder = [];
@@ -134,7 +134,6 @@ const Location = ({navigation}) => {
   };
 
   const onMarker = (item) => {
-    // childRef.current.onMin();
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
       longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
@@ -182,13 +181,20 @@ const Location = ({navigation}) => {
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
-            animation
-            onPress={() => onMarker(e)}>
+            animation>
             <CustomMapMarker
+              coordinate={{
+                latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
+                longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+              }}
               selected={selectedLocationId === e.bookerLocationId}
               item={e}
               navigation={navigation}
               currentLocation={currentLocation}
+              onClose={() => setSelectedLocation(-1)}
+              onPress={() => onMarker(e)}
             />
           </MapView.Marker>
         ))}

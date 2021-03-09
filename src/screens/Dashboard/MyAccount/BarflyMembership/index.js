@@ -31,6 +31,7 @@ import * as API from 'services';
 import styles from './styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AlertHelper} from 'utils/AlertHelper';
+import BarflyFormModal from 'components/BarflyFormModal';
 
 const BarflyMembership = ({navigation}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -38,6 +39,8 @@ const BarflyMembership = ({navigation}) => {
   const customerMembershipLocation = useSelector(
     (state) => state.account.location,
   );
+
+  const [membershipAction, setMembershipAction] = useState('');
 
   const BARFLY_QUERY = screenBarfly();
   const {data, error, loading} = useQuery(BARFLY_QUERY);
@@ -119,6 +122,7 @@ const BarflyMembership = ({navigation}) => {
 
   const closeSelectionLocationDialog = () => {
     setSearchedLocations([]);
+    setShowLocationModal(false);
   };
 
   const onSelectLocation = (item) => {
@@ -400,7 +404,7 @@ const BarflyMembership = ({navigation}) => {
                   }
                   containerStyle={styles.buttonContainer}
                   onButtonPress={() =>
-                    upgradeMembership(get(membershipDataByLocation, '[1]'))
+                    customerMembershipLevelId === 53809 ? setMembershipAction('Upgrade') :upgradeMembership(get(membershipDataByLocation, '[1]'))
                   }
                 />
               ) : (
@@ -418,9 +422,16 @@ const BarflyMembership = ({navigation}) => {
           {/*  onButtonPress={upgradeMembership}*/}
           {/*/>*/}
           {customerMembershipLevelId && (
-            <Text style={styles.cancelMembership}>Cancel Membership</Text>
+            <TouchableOpacity onPress={() => setMembershipAction('Cancel')}>
+              <Text style={styles.cancelMembership}>Cancel Membership</Text>
+            </TouchableOpacity>
           )}
         </View>
+        <BarflyFormModal
+          visible={membershipAction !== ''}
+          membershipAction={membershipAction}
+          onRequestClose={() => setMembershipAction('')}
+        />
       </ScrollView>
 
       {loading || locationLoading ? <Indicator /> : null}

@@ -441,7 +441,11 @@ export const getExtensionFromAppointment = (appointment) => {
   return extensionData;
 };
 
-export const convertAppointmentToState = (appointment, addons) => {
+export const convertAppointmentToState = (
+  appointment,
+  addons,
+  isRebook = false,
+) => {
   const services = getServicesFromAppointment(appointment);
   const extensionData = getExtensionFromAppointment(appointment);
 
@@ -452,19 +456,21 @@ export const convertAppointmentToState = (appointment, addons) => {
     return {
       userType: idx === 0 ? 'Me' : 'Guest ' + idx,
       addons: addonsData,
-      date: {
-        date: moment(get(service, 'StartDateTimeOffset')).format(
-          'YYYY-MM-DDTHH:mm:ssZ',
-        ),
+      date: isRebook
+        ? null
+        : {
+            date: moment(get(service, 'StartDateTimeOffset')).format(
+              'YYYY-MM-DDTHH:mm:ssZ',
+            ),
 
-        time: {
-          startTime: get(service, 'StartDateTimeOffset'),
-          endTime: get(service, 'EndDateTimeOffset'),
-          timezone: moment()
-            .utcOffset(get(service, 'StartDateTimeOffset'))
-            .utcOffset(),
-        },
-      },
+            time: {
+              startTime: get(service, 'StartDateTimeOffset'),
+              endTime: get(service, 'EndDateTimeOffset'),
+              timezone: moment()
+                .utcOffset(get(service, 'StartDateTimeOffset'))
+                .utcOffset(),
+            },
+          },
 
       rooms: get(service, 'RoomID'),
       employees: get(service, 'EmployeeID'),

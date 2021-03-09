@@ -14,10 +14,19 @@ import {useDispatch} from 'react-redux';
 import {setLocation} from 'screens/Dashboard/Booking/thunks';
 import {openMaps, call} from 'utils';
 import {distance} from 'utils/RadarHelper';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import MapView from 'react-native-maps';
 
 const {width} = Dimensions.get('window');
 
-const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
+const CustomMapMarker = ({
+  selected,
+  item,
+  navigation,
+  currentLocation,
+  onClose,
+  onPress,
+}) => {
   const dispatch = useDispatch();
   const [dis, setDis] = useState(null);
   useEffect(() => {
@@ -49,76 +58,90 @@ const CustomMapMarker = ({selected, item, navigation, currentLocation}) => {
     get(item, 'settings.bookable', false);
 
   return (
-    <View pointerEvents="none">
+    <View style={{position: 'relative', pointerEvents: 'none', zIndex: 100}}>
       {selected ? (
-        <View style={styles.container}>
-          <View style={styles.innerContainer}>
-            <View style={styles.nameContainer}>
-              <Text style={styles.locName}>{get(item, 'title')}</Text>
-              <View
-                onTouchStart={() =>
-                  openMaps(
-                    get(item, 'title'),
-                    get(item, 'contact.coordinates[0]', 34.1434376),
-                    get(item, 'contact.coordinates[1]', 34.1434376),
-                  )
-                }>
-                <Image source={Images.loc} />
-              </View>
-            </View>
-
-            <Text style={styles.location}>
-              {get(item, 'contact.street1')}
-              {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
-              {get(item, 'contact.postalCode')}
-            </Text>
-
-            <View style={styles.nameContainer}>
-              <View>
-                {dis && (
-                  <Text style={styles.miles}>
-                    {dis.status === 'SUCCESS'
-                      ? dis.routes.car.distance.text
-                      : ''}
-                  </Text>
-                )}
-                <TouchableOpacity onPress={() => call(phoneNumber)}>
-                  <Text style={styles.contactNo}>
-                    <Image
-                      source={Images.phone}
-                      style={{tintColor: Colors.header_title}}
-                    />
-
-                    {'  '}
-                    {phoneNumber}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {isBookable && (
-                <View
-                  onTouchStart={() => {
-                    dispatch(setLocation(item));
-                    navigation.navigate('Book', {screen: 'Coming'});
+        <MapView.Callout>
+          <View style={styles.container}>
+            <View style={styles.innerContainer}>
+              <View style={{flexDirection: 'row-reverse', zIndex: 2}}>
+                <Fontisto
+                  name="close-a"
+                  color={Colors.header_title}
+                  size={20}
+                  onPress={() => {
+                    onClose();
                   }}
-                  style={styles.buttonContainer}>
-                  <Text style={styles.selectText}>Select</Text>
+                />
+              </View>
+              <View style={styles.nameContainer}>
+                <Text style={styles.locName}>{get(item, 'title')}</Text>
+                <View
+                  onTouchStart={() =>
+                    openMaps(
+                      get(item, 'title'),
+                      get(item, 'contact.coordinates[0]', 34.1434376),
+                      get(item, 'contact.coordinates[1]', 34.1434376),
+                    )
+                  }>
+                  <Image source={Images.loc} />
                 </View>
-              )}
+              </View>
+
+              <Text style={styles.location}>
+                {get(item, 'contact.street1')}
+                {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
+                {get(item, 'contact.postalCode')}
+              </Text>
+
+              <View style={styles.nameContainer}>
+                <View>
+                  {dis && (
+                    <Text style={styles.miles}>
+                      {dis.status === 'SUCCESS'
+                        ? dis.routes.car.distance.text
+                        : ''}
+                    </Text>
+                  )}
+                  <TouchableOpacity onPress={() => call(phoneNumber)}>
+                    <Text style={styles.contactNo}>
+                      <Image
+                        source={Images.phone}
+                        style={{tintColor: Colors.header_title}}
+                      />
+
+                      {'  '}
+                      {phoneNumber}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {isBookable && (
+                  <View
+                    onTouchStart={() => {
+                      dispatch(setLocation(item));
+                      navigation.navigate('Book', {screen: 'Coming'});
+                    }}
+                    style={styles.buttonContainer}>
+                    <Text style={styles.selectText}>Select</Text>
+                  </View>
+                )}
+              </View>
             </View>
+            <View style={styles.triangle} />
           </View>
-          <View style={styles.triangle} />
-        </View>
+        </MapView.Callout>
       ) : null}
-      <Image
-        source={
-          selected
-            ? Images.gray_pin
-            : item.type === 'Retail Store'
-            ? Images.fav_marker
-            : Images.yellow_pin
-        }
-        resizeMode="contain"
-      />
+      <TouchableOpacity onPress={onPress}>
+        <Image
+          source={
+            selected
+              ? Images.gray_pin
+              : item.type === 'Retail Store'
+              ? Images.fav_marker
+              : Images.yellow_pin
+          }
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -129,6 +152,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 8,
+    position: 'absolute',
+    left: -10,
+    bottom: 40,
+    zIndex: 102,
   },
   miles: {
     fontSize: 13,

@@ -153,6 +153,7 @@ export const bookingIntialState = {
   isEmpLoading: false,
   isFavLoading: false,
   multiUserSlots: [],
+  availableDates: [],
   isBooking: false,
   extensionAddon: null,
 };
@@ -336,27 +337,10 @@ const BookingReducer = (state = bookingIntialState, action) => {
       };
 
     case types.AVAILABLE_DATES_SUCCESS:
-      let tempArr = [];
-
-      // console.log('action.payload', action.payload);
-
-      if (get(action.payload, '[0].serviceCategories')) {
-        action.payload[0].serviceCategories
-          .filter(
-            (e) =>
-              e.serviceCategoryId ===
-              state.totalGuests[state.activeGuestTab].services.Category.ID,
-          )
-          .map((e) => {
-            tempArr.push(e.services[0]);
-          });
-      }
-
-      // console.log('tempArr>>', tempArr);
 
       return {
         ...state,
-        availableSlots: tempArr,
+        availableDates: action.payload,
         slotsLoading: false,
       };
 
@@ -375,41 +359,10 @@ const BookingReducer = (state = bookingIntialState, action) => {
       };
 
     case types.MULTI_GUEST_AVAIL_DATES_SUCCESS:
-      const availbilityTimes1 = [];
-      get(action.payload, 'availability').forEach((item) => {
-        let startTime = moment(item.startDateTime);
-        let endTime = moment(item.endDateTime);
 
-        const timezone = moment().utcOffset(item.startDateTime).utcOffset();
-
-        const aTimes = [];
-
-        while (startTime < endTime) {
-          aTimes.push({
-            ...item,
-            timezone,
-            startDateTime: startTime
-              .utcOffset(timezone)
-              .format('YYYY-MM-DDTHH:mm:ssZ'),
-          });
-          startTime = startTime.add(15, 'minutes');
-        }
-        if (aTimes.length === 0) {
-          aTimes.push({
-            ...item,
-            timezone,
-            startDateTime: startTime
-              .utcOffset(timezone)
-              .format('YYYY-MM-DDTHH:mm:ssZ'),
-          });
-        }
-
-        availbilityTimes = availbilityTimes.concat(aTimes);
-      });
       return {
         ...state,
-        multiUserSlots: availbilityTimes1,
-        slotsLoading: false,
+        availableDates: action.payload,
       };
 
     case types.MULTI_USER_TIMESLOTS_ERROR:

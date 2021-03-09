@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     width: '85%',
     alignSelf: 'center',
     backgroundColor: Colors.white,
-    height: height * 0.6,
+    height: height * 0.75,
     paddingHorizontal: 8,
   },
   headerContainer: {

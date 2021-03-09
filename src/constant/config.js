@@ -25,6 +25,7 @@ export default {
     apiKey: '2V0P-FHL0-E3OP-7HEW',
     genericPartyFormId: 'm639jay05gnt4z',
     contactFormId: 'z1srujeu0vb2dvk',
+    membershipSignupFormId: 'q1h4eg4w190zl46',
   },
   googleMapAPIKey: 'AIzaSyCI8V2hqQehtgQjoXW51kKuMibchXwlD4M'
 };
