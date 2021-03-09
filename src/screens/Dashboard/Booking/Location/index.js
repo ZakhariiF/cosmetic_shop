@@ -46,8 +46,8 @@ const Location = ({navigation}) => {
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const currentLocation = useSelector((state) => state.home.currentLocation);
+  const [collapsed, setCollapsed] = useState(false);
 
-  console.log('CurrentLocation:', currentLocation);
   const useCurrentLocation = useSelector(
     (state) => state.home.useCurrentLocation,
   );
@@ -150,7 +150,7 @@ const Location = ({navigation}) => {
         provider={null}
         ref={mapRef}
         style={{
-          flex: 1,
+          flex: collapsed ? 1 : 0.5,
         }}
         initialRegion={
           searchVal.length ? coords : {...coords, ...(currentLocation || {})}
@@ -192,6 +192,7 @@ const Location = ({navigation}) => {
             dispatch(setUseCurrentLocation(!useCurrentLocation))
           }
           useCurrentLocation={useCurrentLocation}
+          onCollapse={(c) => setCollapsed(c)}
         />
       ) : null}
 

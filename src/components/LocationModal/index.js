@@ -56,6 +56,7 @@ const LocationModal = forwardRef((props, ref) => {
     onSelect,
     setUseCurrentLocation,
     useCurrentLocation,
+    onCollapse,
   } = props;
   const dispatch = useDispatch();
   const routes = useNavigationState((state) => state.routes);
@@ -94,6 +95,12 @@ const LocationModal = forwardRef((props, ref) => {
       Filter: activeTab === 0 ? 'Closest' : 'Favorite',
     });
   }, [activeTab]);
+
+  useEffect(() => {
+    if (onCollapse) {
+      onCollapse(min);
+    }
+  }, [min, onCollapse]);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', _keyboardDidShow);
