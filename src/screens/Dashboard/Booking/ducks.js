@@ -733,22 +733,6 @@ export const bookingActions = {
   getAvailSlotsError: () => ({
     type: types.AVAILABLE_DATES_ERROR,
   }),
-
-  // GET MULTI GUEST AVAIL DATES
-
-  getMultiDatesRequest: () => ({
-    type: types.MULTI_GUEST_AVAIL_DATES_REQUEST,
-  }),
-
-  getMultiDatesSuccess: (payload) => ({
-    type: types.MULTI_GUEST_AVAIL_DATES_SUCCESS,
-    payload,
-  }),
-
-  getMultiDatesError: () => ({
-    type: types.MULTI_USER_TIMESLOTS_ERROR,
-  }),
-
   // -------- FIND LOCATION ------
 
   getLocRequest: () => ({
