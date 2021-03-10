@@ -132,8 +132,6 @@ const ApptDetails = ({route, navigation}) => {
     .map((service) => checkExtension(item, service))
     .filter((e) => !!e);
 
-  console.log('Appointment Has Extension:', hasExtension);
-
   const addons = get(item, 'appointment.AddOnItems', []);
 
   return (
@@ -209,10 +207,13 @@ const ApptDetails = ({route, navigation}) => {
             </View>
           ) : null}
 
-          {serviceAddons.length ? (
+          {serviceAddons.length > 0 ? (
             <View style={styles.boxContainer}>
               <Text style={styles.headerText}>Add-ons</Text>
               {services.map((s, i) => {
+                if (serviceAddons[i].length === 0) {
+                  return null;
+                }
                 return (
                   <View key={i}>
                     <Text>{i === 0 ? 'Me' : `Guest ${i}`}</Text>
@@ -230,7 +231,7 @@ const ApptDetails = ({route, navigation}) => {
             </View>
           ) : null}
 
-          {hasExtension.length && (
+          {hasExtension.length > 0 && (
             <View style={styles.boxContainer}>
               <Text style={styles.headerText}>
                 {services.length > 1 ? 'Extensions' : 'Extension'}
