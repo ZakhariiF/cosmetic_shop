@@ -128,9 +128,11 @@ const ApptDetails = ({route, navigation}) => {
   const getAppts = () =>
     dispatch(getAppointments(get(userInfo, 'bookerID', '')));
 
-  const hasExtension = services.find((service) =>
-    checkExtension(item, service),
-  );
+  const hasExtension = services
+    .map((service) => checkExtension(item, service))
+    .filter((e) => !!e);
+
+  console.log('Appointment Has Extension:', hasExtension);
 
   const addons = get(item, 'appointment.AddOnItems', []);
 
@@ -228,7 +230,7 @@ const ApptDetails = ({route, navigation}) => {
             </View>
           ) : null}
 
-          {hasExtension && (
+          {hasExtension.length && (
             <View style={styles.boxContainer}>
               <Text style={styles.headerText}>
                 {services.length > 1 ? 'Extensions' : 'Extension'}
@@ -246,7 +248,7 @@ const ApptDetails = ({route, navigation}) => {
                     <Text style={styles.titleText}>
                       Yes
                       <Text style={styles.price}>
-                        (${get(service, 'Treatment.Price.Amount')})
+                        (${get(extension, 'Treatment.Price.Amount', 20)})
                       </Text>
                     </Text>
                   </View>
@@ -276,7 +278,15 @@ const ApptDetails = ({route, navigation}) => {
               {!past ? 'Estimated Total *' : 'Total'}
             </Text>
             <Text style={[styles.headerText, styles.price, {fontSize: 18}]}>
-              ${serviceTotalPrice + addonPrice}
+              $
+              {serviceTotalPrice +
+                addonPrice +
+                (services.length > 1
+                  ? hasExtension.reduce(
+                      (s, e) => s + get(e, 'Treatment.Price.Amount', 20),
+                      0,
+                    )
+                  : 0)}
             </Text>
           </View>
 

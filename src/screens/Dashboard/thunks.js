@@ -104,3 +104,7 @@ export const setGlobalConfig = (config) => (dispatch) => {
 export const setCurrentLocation = (location) => (dispatch) => {
   dispatch(homeActions.setCurrentLocation(location));
 };
+
+export const setRadarPermission = (permission) => (dispatch) => {
+  dispatch(homeActions.setRadarPermission(permission));
+};

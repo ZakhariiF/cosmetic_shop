@@ -4,30 +4,39 @@ const requestRadarPermission = (background) => {
   Radar.requestPermissions(background);
 };
 
-export const hasRadarPermission = (customerId) => {
+export const getRadarPermission = () => {
+  return new Promise((resolve, reject) => {
+    Radar.getPermissionsStatus()
+      .then((status) => {
+        switch (status) {
+          case 'GRANTED_BACKGROUND':
+            console.log('GRANTED_BACKGROUND Permission granted');
+            Radar.startTrackingContinuous();
+            break;
+          case 'GRANTED_FOREGROUND':
+            console.log('GRANTED_FOREGROUND Permission granted');
+            break;
+          case 'DENIED':
+            console.log('RADAR PERMISSION DENIED');
+            requestRadarPermission(false);
+            break;
+          case 'UNKNOWN':
+            console.log('RADAR PERMISSION UNKWOWN');
+            requestRadarPermission(false);
+            break;
+          default:
+            break;
+        }
+        return resolve(status);
+      })
+      .catch((err) => reject(err));
+  });
+};
+
+export const hasRadarPermission = async (customerId) => {
   setUser(customerId);
   Radar.requestPermissions(true);
-
-  Radar.getPermissionsStatus().then((status) => {
-    switch (status) {
-      case 'GRANTED_BACKGROUND':
-        Radar.startTrackingContinuous();
-        break;
-      case 'GRANTED_FOREGROUND':
-        console.log('GRANTED_FOREGROUND Permission granted');
-        break;
-      case 'DENIED':
-        console.log('RADAR PERMISSION DENIED');
-        requestRadarPermission(false);
-        break;
-      case 'UNKNOWN':
-        console.log('RADAR PERMISSION UNKWOWN');
-        requestRadarPermission(false);
-        break;
-      default:
-        break;
-    }
-  });
+  return getRadarPermission();
 };
 const setUser = (userId) => {
   console.log('Radar User Id', userId);
