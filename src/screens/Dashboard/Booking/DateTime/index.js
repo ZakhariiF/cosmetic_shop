@@ -98,7 +98,9 @@ const DateTime = ({navigation}) => {
           day: moment(weekStart).add(i, 'days').format('ddd'),
           date: moment(weekStart).add(i, 'days').format('DD'),
           fulldate: moment(weekStart).add(i, 'days').format(),
-          disable: moment() > moment(weekStart).add(i, 'days'),
+          disable:
+            moment().format('YYYY-MM-DD') >
+            moment(weekStart).add(i, 'days').format('YYYY-MM-DD'),
         });
       }
       setcurrentWeek(days);
@@ -383,7 +385,7 @@ const DateTime = ({navigation}) => {
               let updatedDate = new Date(date);
 
               if (today.getTime() > updatedDate.getTime()) {
-                updatedDate = today();
+                updatedDate = today;
               }
               setSelectedDate(updatedDate);
             }}

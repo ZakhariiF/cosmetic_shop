@@ -46,8 +46,6 @@ const Addcc = () => {
       },
     };
 
-    console.log('payload>>', data);
-
     dispatch(addCreditCard(data));
   };
 
