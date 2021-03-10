@@ -1,4 +1,4 @@
-import {get} from 'lodash';
+
 import moment from 'moment';
 
 // Types
@@ -23,6 +23,9 @@ export const types = {
 
   // ---- SET CURRENT LOCATION ----
   SET_CURRENT_LOCATION: 'SET_CURRENT_LOCATION',
+
+  // ---- SET RADAR PERMISSION ----
+  SET_RADAR_PERMISSION: 'SET_RADAR_PERMISSION',
 };
 
 export const homeIntialState = {
@@ -32,6 +35,7 @@ export const homeIntialState = {
   useCurrentLocation: true,
   config: null,
   currentLocation: false,
+  radarPermission: null,
 };
 
 // Reducer
@@ -112,7 +116,16 @@ const HomeReducer = (state = homeIntialState, action) => {
     case types.SET_CURRENT_LOCATION:
       return {
         ...state,
-        currentLocation: action.payload,
+        currentLocation: {
+          ...state.currentLocation,
+          ...action.payload,
+        },
+      };
+
+    case types.SET_RADAR_PERMISSION:
+      return {
+        ...state,
+        radarPermission: action.payload,
       };
 
     default:
@@ -169,6 +182,12 @@ export const homeActions = {
   // -------- SET CURRENT LOCATION ----------------
   setCurrentLocation: (payload) => ({
     type: types.SET_CURRENT_LOCATION,
+    payload,
+  }),
+
+  // ------- SET RADAR PERMISSION ----------------
+  setRadarPermission: (payload) => ({
+    type: types.SET_RADAR_PERMISSION,
     payload,
   }),
 };

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   Image,
   ScrollView,
@@ -13,7 +13,8 @@ import {Images} from 'constant';
 import styles from './styles';
 import Button from 'components/Button';
 import {get} from 'lodash';
-import {call, distance, openMaps, requestUserLocationLocation} from 'utils';
+import {call, openMaps, requestUserLocationLocation} from 'utils';
+import {distance} from 'utils/RadarHelper';
 import {useDispatch} from 'react-redux';
 import {setLocation, setmemberCount} from '../thunks';
 
@@ -27,6 +28,27 @@ const ShopDetail = ({navigation, route}) => {
   const socialData = get(item, 'contact.social.instagram');
 
   const [currentLocation, setCurrentLocation] = useState(null);
+
+  const [dis, setDis] = useState(null);
+  useEffect(() => {
+    if (currentLocation) {
+      getDistance();
+    }
+  }, [currentLocation]);
+
+  const getDistance = useCallback(async () => {
+    const _dis = await distance(
+      {
+        latitude: Number(currentLocation.latitude),
+        longitude: Number(currentLocation.longitude),
+      },
+      {
+        latitude: Number(get(item, 'contact.coordinates[0]')),
+        longitude: Number(get(item, 'contact.coordinates[1]')),
+      },
+    );
+    setDis(_dis);
+  }, [currentLocation]);
 
   const getUserLocation = async () => {
     try {
@@ -87,17 +109,11 @@ const ShopDetail = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
 
-            {currentLocation && (
+            {dis && (
               <Text style={styles.shopMiles}>
-                {Math.round(
-                  distance(
-                    currentLocation.latitude,
-                    currentLocation.longitude,
-                    get(item, 'contact.coordinates[0]', 34.1434376),
-                    get(item, 'contact.coordinates[1]', 34.1434376),
-                  ),
-                )}{' '}
-                miles away
+                {dis.status === 'SUCCESS'
+                  ? `${dis.routes.car.distance.text} away`
+                  : ''}
               </Text>
             )}
 

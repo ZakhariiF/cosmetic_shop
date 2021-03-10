@@ -23,7 +23,7 @@ import {types} from 'screens/Dashboard/Booking/ducks';
 import CustomMapMarker from 'components/CustomMapMarker';
 import {geolocateSearchLocation} from 'services/Google';
 import CheckBox from 'components/Checkbox';
-import {setUseCurrentLocation} from 'screens/Dashboard/thunks';
+import { setCurrentLocation, setUseCurrentLocation } from "screens/Dashboard/thunks";
 
 const window = Dimensions.get('window');
 const {width, height} = window;
@@ -57,6 +57,31 @@ const FindLocation = ({navigation}) => {
   const [selectedLocationIndex, setSelectedLocation] = useState(-1);
 
   const currentLocation = useSelector((state) => state.home.currentLocation);
+
+  const radarPermission = useSelector((state) => state.home.radarPermission);
+  useEffect(() => {
+    if (radarPermission !== 'GRANTED_BACKGROUND') {
+      getUserLocation();
+    }
+  }, [radarPermission]);
+
+  const getUserLocation = async () => {
+    try {
+      const position = await requestUserLocationLocation();
+      const latitude = get(position, 'latitude');
+      const longitude = get(position, 'longitude');
+
+      dispatch(
+        setCurrentLocation({
+          latitude,
+          longitude,
+        }),
+      );
+    } catch (e) {
+      console.log('Can not get the current user location');
+    }
+  };
+
   const useCurrentLocation = useSelector(
     (state) => state.home.useCurrentLocation,
   );

@@ -6,7 +6,10 @@ import LocationModal from 'components/LocationModal';
 import CustomMapMarker from 'components/CustomMapMarker';
 import {useDispatch, useSelector} from 'react-redux';
 import {getLocations, setLocation} from '../thunks';
-import {setUseCurrentLocation} from 'screens/Dashboard/thunks';
+import {
+  setUseCurrentLocation,
+  setCurrentLocation,
+} from 'screens/Dashboard/thunks';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {requestUserLocationLocation, findStoresFromPointWithTitle} from 'utils';
@@ -16,6 +19,7 @@ import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 import {StyleSheet} from 'react-native';
 import {Colors, Fonts} from 'constant';
+import {hasRadarPermission} from 'utils/RadarHelper';
 // import { getDistance, getPreciseDistance } from 'geolib'
 const window = Dimensions.get('window');
 const {width, height} = window;
@@ -70,6 +74,31 @@ const Location = ({navigation}) => {
     }
   }, [useCurrentLocation, searchVal, currentLocation]);
 
+  const radarPermission = useSelector((state) => state.home.radarPermission);
+
+  useEffect(() => {
+    if (radarPermission !== 'GRANTED_BACKGROUND') {
+      getUserLocation();
+    }
+  }, [radarPermission]);
+
+  const getUserLocation = async () => {
+    try {
+      const position = await requestUserLocationLocation();
+      const latitude = get(position, 'latitude');
+      const longitude = get(position, 'longitude');
+
+      dispatch(
+        setCurrentLocation({
+          latitude,
+          longitude,
+        }),
+      );
+    } catch (e) {
+      console.log('Can not get the current user location');
+    }
+  };
+
   if (error) {
     // return AlertHelper.showError('Server error');
   }
@@ -98,7 +127,6 @@ const Location = ({navigation}) => {
       dispatch(getLocations(newData));
 
       if (newData.length) {
-
         setCoords({
           ...coords,
           latitude: newData[0].contact.coordinates[0],

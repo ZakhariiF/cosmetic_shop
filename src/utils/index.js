@@ -383,7 +383,7 @@ export const checkExtension = (appointment, service) => {
         `appointments.appoint_${service.AppointmentID}.Notes`,
         '',
       ) || ''
-    ).includes('Extensions added.');
+    ).includes('Extensions Added.');
   }
 
   return extension;

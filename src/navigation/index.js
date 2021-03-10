@@ -9,9 +9,9 @@ import configFile from 'constant/config';
 import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
 import Radar from 'react-native-radar';
-import {hasRadarPermission} from 'utils/RadarHelper';
+import {hasRadarPermission, trackOnce} from 'utils/RadarHelper';
 import Welcome from 'screens/Welcome';
-import {setCurrentLocation} from 'screens/Dashboard/thunks';
+import {setCurrentLocation, setRadarPermission} from 'screens/Dashboard/thunks';
 
 const Root = createStackNavigator();
 
@@ -21,7 +21,6 @@ const AppContainer = () => {
   const dispatch = useDispatch();
   const [token, setToken] = useState(null);
 
-  const customerId = get(userInfo, 'bookerID');
   const configApp = useCallback(async () => {
     if (Platform.OS === 'ios') {
       await createConfig({
@@ -37,8 +36,6 @@ const AppContainer = () => {
   }, []);
 
   Radar.on('clientLocation', (result) => {
-    // do something with result.location
-    console.log('Radar clientLocation:', result);
     dispatch(
       setCurrentLocation({
         latitude: get(result, 'location.latitude'),
@@ -49,7 +46,6 @@ const AppContainer = () => {
 
   Radar.on('location', (result) => {
     // do something with result.location, result.user
-    console.log('radar location:', result);
   });
 
   useEffect(() => {
@@ -58,6 +54,11 @@ const AppContainer = () => {
 
   useEffect(() => {
     if (userInfo) {
+      const customerId = get(userInfo, 'bookerID');
+      if (!customerId) {
+        return;
+      }
+
       try {
         const t = getAccessToken();
         setToken(t);
@@ -65,12 +66,15 @@ const AppContainer = () => {
         console.log('Get Access Token Error:', e);
       }
       if (customerId) {
-        hasRadarPermission(customerId);
+        hasRadarPermission(customerId).then((res) => {
+          console.log('Radar Status:', res);
+          dispatch(setRadarPermission(res));
+        });
       }
     } else {
       setToken(null);
     }
-  }, [userInfo, customerId]);
+  }, [userInfo]);
 
   return (
     <NavigationContainer ref={navigationRef}>

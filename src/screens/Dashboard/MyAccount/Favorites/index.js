@@ -16,6 +16,7 @@ import {setFavoriteLocation} from 'screens/Dashboard/Booking/thunks';
 import {types} from 'screens/Dashboard/Booking/ducks';
 import {requestUserLocationLocation, findStoresFromPointWithTitle} from 'utils';
 import {geolocateSearchLocation} from 'services/Google';
+import {setCurrentLocation} from 'screens/Dashboard/thunks';
 
 var arrayHolder = [];
 
@@ -32,6 +33,7 @@ const Favorites = () => {
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
   const currentLocation = useSelector((state) => state.home.currentLocation);
+  const radarPermission = useSelector((state) => state.home.radarPermission);
 
   useEffect(() => {
     if (search.length && count > 0) {
@@ -51,6 +53,29 @@ const Favorites = () => {
 
   if (error) {
   }
+
+  useEffect(() => {
+    if (radarPermission !== 'GRANTED_BACKGROUND') {
+      getUserLocation();
+    }
+  }, [radarPermission]);
+
+  const getUserLocation = async () => {
+    try {
+      const position = await requestUserLocationLocation();
+      const latitude = get(position, 'latitude');
+      const longitude = get(position, 'longitude');
+
+      dispatch(
+        setCurrentLocation({
+          latitude,
+          longitude,
+        }),
+      );
+    } catch (e) {
+      console.log('Can not get the current user location');
+    }
+  };
 
   React.useMemo(() => {
     if (loading || error) {
