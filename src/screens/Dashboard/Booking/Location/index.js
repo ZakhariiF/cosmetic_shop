@@ -34,8 +34,6 @@ const defaultPoint = {
 };
 
 const Location = ({navigation}) => {
-  const [coords, setCoords] = useState(defaultPoint);
-
   const dispatch = useDispatch();
   const childRef = useRef(null);
   const mapRef = useRef(null);
@@ -52,12 +50,19 @@ const Location = ({navigation}) => {
     (state) => state.home.useCurrentLocation,
   );
 
+  const [coords, setCoords] = useState(
+    useCurrentLocation && currentLocation
+      ? {...defaultPoint, ...currentLocation}
+      : defaultPoint,
+  );
+
   useEffect(() => {
     if (useCurrentLocation && searchVal === '' && currentLocation) {
       setCoords({
         ...coords,
         ...currentLocation,
       });
+
       searchFilterFunction(currentLocation);
     } else if (!useCurrentLocation && searchVal === '') {
       setCoords(defaultPoint);
@@ -93,6 +98,7 @@ const Location = ({navigation}) => {
       dispatch(getLocations(newData));
 
       if (newData.length) {
+
         setCoords({
           ...coords,
           latitude: newData[0].contact.coordinates[0],
@@ -152,9 +158,7 @@ const Location = ({navigation}) => {
         style={{
           flex: collapsed ? 1 : 0.5,
         }}
-        initialRegion={
-          searchVal.length ? coords : {...coords, ...(currentLocation || {})}
-        }
+        initialRegion={coords}
         region={coords}>
         {(allLocations || []).map((e, i) => (
           <MapView.Marker
@@ -165,8 +169,7 @@ const Location = ({navigation}) => {
               longitudeDelta: LONGITUDE_DELTA,
             }}
             animation
-            onPress={() => onMarker(e)}
-          >
+            onPress={() => onMarker(e)}>
             <CustomMapMarker
               selected={selectedLocationId === e.bookerLocationId}
               item={e}

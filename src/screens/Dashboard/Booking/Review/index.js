@@ -25,8 +25,8 @@ import {
   setExtensionType,
 } from '../thunks';
 import Indicator from 'components/Indicator';
-import {getAppointments} from 'screens/Dashboard/thunks';
-import {cancelItinerary, cancelAppt} from 'services';
+import {getAppointments, cancelAppointment, cancelItinerary} from 'screens/Dashboard/thunks';
+// import {cancelItinerary, cancelAppt} from 'services';
 import MParticle from 'react-native-mparticle';
 
 const Review = ({navigation, route}) => {
@@ -250,9 +250,9 @@ const Review = ({navigation, route}) => {
 
   const editAppt = async () => {
     if (!fromEdit.group) {
-      await cancelAppt(fromEdit.appointment);
+      dispatch(cancelAppointment(fromEdit.appointment));
     } else {
-      await cancelItinerary(fromEdit.group, fromEdit.oldLocation);
+      dispatch(cancelItinerary(fromEdit.group, fromEdit.oldLocation));
     }
 
     if (totalGuests.length === 1) {
