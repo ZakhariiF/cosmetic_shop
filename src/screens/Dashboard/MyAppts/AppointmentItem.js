@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 4,
     minHeight: 20,
-    maxHeight: 300,
+    maxHeight: 500,
     marginBottom: 30,
   },
   dateContainer: {

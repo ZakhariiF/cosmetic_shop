@@ -67,9 +67,10 @@ const DateTime = ({navigation}) => {
             .format('YYYY-MM-DDT00:00:00'),
         ),
       );
-    } else if (!selectedDate && weekAvailableDates) {
-      setSelectedDate(new Date());
     }
+    // else if (!selectedDate && weekAvailableDates && weekAvailableDates.length === 0) {
+    //   setSelectedDate(new Date());
+    // }
   }, [selectedDate, weekAvailableDates]);
 
   useEffect(() => {

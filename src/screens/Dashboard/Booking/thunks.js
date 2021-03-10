@@ -221,24 +221,6 @@ export const getAvailableDates = (obj) => async (dispatch) => {
   }
 };
 
-export const getMultiUserDates = (obj) => async (dispatch) => {
-  dispatch(bookingActions.getMultiDatesRequest());
-  try {
-    const data = await API.multiUserTimeSlots(obj);
-
-    console.log('multi pile dates>>', data);
-    return dispatch(bookingActions.getMultiDatesSuccess(data));
-  } catch (error) {
-    if (error.response.status === 401) {
-      dispatch(bookingActions.getMultiDatesError());
-      return dispatch(logoutSuccess());
-    } else {
-      AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
-      return dispatch(bookingActions.getMultiDatesError());
-    }
-  }
-};
-
 export const getLocations = (data) => async (dispatch) => {
   dispatch(bookingActions.getLocRequest());
   return dispatch(bookingActions.getLocSuccess(data));
