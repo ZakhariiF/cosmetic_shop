@@ -88,6 +88,8 @@ const ApptDetails = ({route, navigation}) => {
     .utcOffset(get(item, 'appointment.StartDateTimeOffset'))
     .utcOffset();
 
+  console.log('Store Location:', location);
+
   const onEdit = () => {
     dispatch(
       editOrRebookFromAppointment(location, item, past, locationAddons),
@@ -166,9 +168,8 @@ const ApptDetails = ({route, navigation}) => {
             <View style={styles.flexContainer}>
               <Text style={styles.headerText}>Location</Text>
               {!past && (
-                <TouchableOpacity>
-                  <Image source={Images.loc} />
-                </TouchableOpacity>
+                <Image source={Images.loc} />
+
               )}
             </View>
             <Text style={styles.titleText}>{get(location, 'title')}</Text>
