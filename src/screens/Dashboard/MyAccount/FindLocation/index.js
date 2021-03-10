@@ -56,16 +56,14 @@ const FindLocation = ({navigation}) => {
   const mapRef = useRef(null);
   const [selectedLocationIndex, setSelectedLocation] = useState(-1);
 
-  const [coords, setCoords] = useState({
-    latitude: 34.0577908,
-    longitude: -118.3622365,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-  });
-
   const currentLocation = useSelector((state) => state.home.currentLocation);
   const useCurrentLocation = useSelector(
     (state) => state.home.useCurrentLocation,
+  );
+  const [coords, setCoords] = useState(
+    useCurrentLocation && currentLocation
+      ? {...defaultPoint, ...currentLocation}
+      : defaultPoint,
   );
 
   if (error) {
@@ -202,9 +200,7 @@ const FindLocation = ({navigation}) => {
         style={{
           flex: 0.8,
         }}
-        initialRegion={
-          searchVal.length ? coords : {...coords, ...(currentLocation || {})}
-        }
+        initialRegion={coords}
         region={coords}>
         {locationItems.map((e, i) => (
           <MapView.Marker

@@ -14,7 +14,6 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
     }
   }, [currentLocation]);
   const getDistance = async () => {
-    console.log('called distance call')
     const _dis = await distance(
       {
         latitude: Number(currentLocation.latitude),
@@ -22,13 +21,12 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
       },
       {
         latitude: Number(get(item, 'contact.coordinates[0]')),
-        longitude: Number(get(item, 'contact.coordinates[1]'))
-      }
+        longitude: Number(get(item, 'contact.coordinates[1]')),
+      },
     );
     setDis(_dis);
-  }
-  console.log(item);
-  console.log(dis); 
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -56,24 +54,25 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
             />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.shopButton} onPress={() => navigation.navigate('ShopDetail' ,{item})}>
+          <TouchableOpacity
+            style={styles.shopButton}
+            onPress={() =>
+              navigation.navigate('Book', {
+                screen: 'ShopDetail',
+                params: {item},
+              })
+            }>
             <Text style={styles.shopText}>View Shop</Text>
           </TouchableOpacity>
         )}
       </View>
 
       <View style={styles.bottomContainer}>
-        {
-          dis && (
-            <Text style={styles.miles}>
-              {dis.status === "SUCCESS" ?
-                dis.routes.car.distance.text
-              :
-                ""
-              }
-            </Text>
-          )
-        }
+        {dis && (
+          <Text style={styles.miles}>
+            {dis.status === 'SUCCESS' ? dis.routes.car.distance.text : ''}
+          </Text>
+        )}
 
         <View style={[styles.row, {alignItems: 'center'}]}>
           <Image source={Images.phone} />

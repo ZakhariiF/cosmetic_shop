@@ -58,7 +58,9 @@ const HomeReducer = (state = homeIntialState, action) => {
           (e) =>
             (e.appointment.IsPastDue ||
               moment(e.appointment.StartDateTimeOffset) < moment(new Date())) &&
-            !e.appointment.IsCancelled,
+            !e.appointment.IsCancelled &&
+            moment(new Date()).subtract(3, 'months') <
+              moment(e.appointment.StartDateTimeOffset),
         ),
       };
 

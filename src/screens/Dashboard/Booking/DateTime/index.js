@@ -67,6 +67,8 @@ const DateTime = ({navigation}) => {
             .format('YYYY-MM-DDT00:00:00'),
         ),
       );
+    } else if (!selectedDate && weekAvailableDates) {
+      setSelectedDate(new Date());
     }
   }, [selectedDate, weekAvailableDates]);
 
@@ -108,7 +110,7 @@ const DateTime = ({navigation}) => {
     const weekLastDay = now.clone().weekday(7);
     let multiUserobj = {
       locationIds: get(selectedLocation, 'bookerLocationId', ''),
-      fromDate: moment(weekfirstDay).format('YYYY-MM-DDT00:00:00'),
+      fromDate: weekfirstDay.format('YYYY-MM-DDT00:00:00'),
       toDate: moment(weekLastDay).format('YYYY-MM-DDT00:00:00'),
     };
 

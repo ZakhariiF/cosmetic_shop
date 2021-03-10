@@ -34,6 +34,8 @@ const ApptDetails = ({route, navigation}) => {
   const [visible, setVisible] = useState(false);
   const userInfo = useSelector((state) => state.auth.userInfo);
   const [locationAddons, setAddOns] = useState(null);
+  const [addonPrice, setAddonPrice] = useState(0);
+  const [serviceAddons, setServiceAddons] = useState([]);
 
   const {
     params: {past, item, location},
@@ -54,10 +56,37 @@ const ApptDetails = ({route, navigation}) => {
     }
   }, [location]);
 
+  const services = getServicesFromAppointment(item);
+  let serviceTotalPrice = 0;
+  Object.values(get(item, 'appointments')).forEach((s) => {
+    serviceTotalPrice += get(s, 'FinalTotal.Amount', 0);
+  });
+
+  useEffect(() => {
+    const results = get(locationAddons, 'Results', []);
+    if (services.length > 1 && results.length) {
+      const tempServiceAddons = [];
+      let tempAddonPrice = 0;
+      services.forEach((s) => {
+        const tempArray = getAddons(
+          s,
+          item,
+          get(locationAddons, 'Results', []),
+        );
+        tempServiceAddons.push(tempArray);
+        tempAddonPrice += tempArray.reduce(
+          (s, c) => s + get(c, 'PriceInfo.Amount', 0),
+          0,
+        );
+      });
+      setServiceAddons(tempServiceAddons);
+      setAddonPrice(tempAddonPrice);
+    }
+  }, [locationAddons]);
+
   const timezone = moment()
     .utcOffset(get(item, 'appointment.StartDateTimeOffset'))
     .utcOffset();
-  const services = getServicesFromAppointment(item);
 
   const onEdit = () => {
     dispatch(
@@ -104,8 +133,6 @@ const ApptDetails = ({route, navigation}) => {
   );
 
   const addons = get(item, 'appointment.AddOnItems', []);
-
-  console.log('Appointment Details: ', item);
 
   return (
     <View style={rootStyle.container}>
@@ -180,21 +207,14 @@ const ApptDetails = ({route, navigation}) => {
             </View>
           ) : null}
 
-          {services.length > 1 &&
-          get(locationAddons, 'Results', []).length &&
-          services.length ? (
+          {serviceAddons.length ? (
             <View style={styles.boxContainer}>
               <Text style={styles.headerText}>Add-ons</Text>
               {services.map((s, i) => {
-                const serviceAddons = getAddons(
-                  s,
-                  item,
-                  get(locationAddons, 'Results', []),
-                );
                 return (
                   <View key={i}>
                     <Text>{i === 0 ? 'Me' : `Guest ${i}`}</Text>
-                    {serviceAddons.map((sA, j) => (
+                    {serviceAddons[i].map((sA, j) => (
                       <Text style={styles.titleText}>
                         {sA.ServiceName}{' '}
                         <Text style={styles.price}>
@@ -256,7 +276,7 @@ const ApptDetails = ({route, navigation}) => {
               {!past ? 'Estimated Total *' : 'Total'}
             </Text>
             <Text style={[styles.headerText, styles.price, {fontSize: 18}]}>
-              ${get(item, 'appointment.FinalTotal.Amount')}
+              ${serviceTotalPrice + addonPrice}
             </Text>
           </View>
 

@@ -543,8 +543,6 @@ const BookingReducer = (state = bookingIntialState, action) => {
 
       get(action.payload, 'availability').forEach((item) => {
         if (moment(item.startDateTime).isBefore(moment(new Date()))) {
-
-          console.log(item.start(), new Date());
           return;
         }
         let startTime = moment(item.startDateTime);

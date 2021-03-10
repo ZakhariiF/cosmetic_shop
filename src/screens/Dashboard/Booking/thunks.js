@@ -207,7 +207,7 @@ export const getAvailableDates = (obj) => async (dispatch) => {
     const data = await API.availableDates(obj);
     return dispatch(
       bookingActions.getAvailSlotsSuccess(
-        get(data, '[0].serviceCategories[0].services[0].availability'),
+        get(data, '[0].serviceCategories[0].services[0].availability', []),
       ),
     );
   } catch (error) {
