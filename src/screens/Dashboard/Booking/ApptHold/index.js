@@ -12,6 +12,7 @@ import {getCreditCard} from '../thunks';
 import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
 import EmptyContainer from 'components/EmptyContainer';
+import BookingHeader from "components/BookingHeader";
 
 const {width} = Dimensions.get('screen');
 
@@ -45,7 +46,7 @@ const ApptHold = ({navigation, route}) => {
     <View style={rootStyle.container}>
       <BookingTab />
       <View style={rootStyle.sizeBox} />
-      <Header title="APPOINTMENT HOLD" safeBackColor={Colors.bg} />
+      <BookingHeader title="APPOINTMENT HOLD" safeBackColor={Colors.bg} />
       <View style={rootStyle.innerContainer}>
         <View style={rootStyle.seprator} />
 

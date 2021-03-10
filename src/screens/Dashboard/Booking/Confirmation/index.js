@@ -22,6 +22,7 @@ import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import moment from 'moment';
 import {bannerQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
+import BookingHeader from "components/BookingHeader";
 
 const Confirmation = () => {
   const banner_Query = bannerQuery();

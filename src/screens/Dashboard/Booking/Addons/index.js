@@ -120,7 +120,7 @@ const Addons = ({navigation}) => {
     if (isExtension) {
       dispatch(setExtensionType(false));
     } else {
-      navigation.goBack();
+      navigation.navigate('Book', {screen: 'Services'});
     }
   };
 

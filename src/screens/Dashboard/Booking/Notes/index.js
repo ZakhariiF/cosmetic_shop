@@ -9,6 +9,7 @@ import LocationModal from 'components/LocationModal';
 import {setmemberCount} from '../thunks';
 import {useSelector, useDispatch} from 'react-redux';
 import MParticle from "react-native-mparticle";
+import BookingHeader from "components/BookingHeader";
 
 const Notes = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const Notes = ({navigation, route}) => {
     <View style={rootStyle.container}>
       <BookingTab />
       <View style={rootStyle.sizeBox} />
-      <Header title="HAVE ANY REQUESTS?" safeBackColor={Colors.bg} />
+      <BookingHeader title="HAVE ANY REQUESTS?" safeBackColor={Colors.bg} />
       <View style={rootStyle.innerContainer}>
         <Text style={styles.heading}>
           Is it your first time? Anything special we should know about? Would you like to request a favorite stylist? While we can’t guarantee it, we’ll do our very best to make it happen!

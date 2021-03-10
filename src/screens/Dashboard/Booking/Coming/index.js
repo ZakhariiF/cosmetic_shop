@@ -10,6 +10,7 @@ import {setActiveGuestTab, setIsEdit, setmemberCount} from '../thunks';
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
 import MParticle from "react-native-mparticle";
+import BookingHeader from "components/BookingHeader";
 
 const Coming = ({navigation}) => {
   const dispatch = useDispatch();
@@ -63,7 +64,7 @@ const Coming = ({navigation}) => {
     <View style={rootStyle.container}>
       <BookingTab />
       <View style={rootStyle.sizeBox} />
-      <Header title="WHO'S COMING?" safeBackColor={Colors.bg} />
+      <BookingHeader title="WHO'S COMING?" safeBackColor={Colors.bg} />
       <ScrollView
         style={{flex: 1}}
         contentContainerStyle={styles.scrollContainer}>

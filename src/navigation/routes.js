@@ -129,18 +129,18 @@ const BookingNavigator = () => {
   return (
     <BookStack.Navigator headerMode="none">
       <BookStack.Screen name="Location" component={Location} />
-      <BookStack.Screen name="ShopDetail" component={ShopDetail} />
       <BookStack.Screen name="Coming" component={Coming} />
       <BookStack.Screen name="BookingForm" component={BookingForm} />
       <BookStack.Screen name="Services" component={Services} />
       <BookStack.Screen name="Addons" component={Addons} />
       <BookStack.Screen name="DateTime" component={DateTime} />
-      <BookStack.Screen name="Stylists" component={Stylists} />
       <BookStack.Screen name="Notes" component={Notes} />
       <BookStack.Screen name="ApptHold" component={ApptHold} />
       <BookStack.Screen name="Review" component={Review} />
       <BookStack.Screen name="Addcc" component={Addcc} />
       <BookStack.Screen name="Confirmation" component={Confirmation} />
+      <BookStack.Screen name="ShopDetail" component={ShopDetail} />
+      <BookStack.Screen name="Stylists" component={Stylists} />
     </BookStack.Navigator>
   );
 };

@@ -28,6 +28,7 @@ import Indicator from 'components/Indicator';
 import {getAppointments, cancelAppointment, cancelItinerary} from 'screens/Dashboard/thunks';
 // import {cancelItinerary, cancelAppt} from 'services';
 import MParticle from 'react-native-mparticle';
+import BookingHeader from "components/BookingHeader";
 
 const Review = ({navigation, route}) => {
   const [isChecked, setChecked] = useState(false);
@@ -285,7 +286,7 @@ const Review = ({navigation, route}) => {
   return (
     <View style={rootStyle.container}>
       <BookingTab />
-      <Header title="REVIEW" safeBackColor={Colors.bg} />
+      <BookingHeader title="REVIEW" safeBackColor={Colors.bg} />
 
       <View style={rootStyle.innerContainer}>
         <ScrollView>

@@ -23,6 +23,7 @@ import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
 import Indicator from 'components/Indicator';
 import ServiceInfoModal from 'components/ServiceInfoModal';
+import BookingHeader from "components/BookingHeader";
 
 const Services = ({navigation}) => {
   const dispatch = useDispatch();
@@ -88,7 +89,7 @@ const Services = ({navigation}) => {
     <View style={rootStyle.container}>
       <BookingTab />
       <View style={rootStyle.sizeBox} />
-      <Header
+      <BookingHeader
         title="WHAT SERVICE?"
         safeBackColor={Colors.bg}
         isNext
