@@ -93,10 +93,12 @@ const Review = ({navigation, route}) => {
     let extraNotes = route.params.Notes || '';
 
     addons.forEach((a) => {
-      endTime = moment(endTime)
-        .add(a.Duration, 'minutes')
-        .utcOffset(timezone)
-        .format('YYYY-MM-DDTHH:mm:ssZ');
+      if (a.Duration !== 5) {
+        endTime = moment(endTime)
+          .add(a.Duration, 'minutes')
+          .utcOffset(timezone)
+          .format('YYYY-MM-DDTHH:mm:ssZ');
+      }
       extraNotes = `${extraNotes} AddOn: ${a.ServiceName}.`;
     });
 
@@ -199,11 +201,13 @@ const Review = ({navigation, route}) => {
       let totalDuration = get(totalGuests, `[${i}].services.TotalDuration`, 45);
 
       let extraNotes = (totalGuests[i].addons || []).reduce((obj, current) => {
-        totalDuration += current.Duration;
-        endTime = moment(endTime)
-          .add(current.Duration, 'minutes')
-          .utcOffset(timezone)
-          .format('YYYY-MM-DDTHH:mm:ssZ');
+        if (current.Duration !== 5) {
+          totalDuration += current.Duration;
+          endTime = moment(endTime)
+            .add(current.Duration, 'minutes')
+            .utcOffset(timezone)
+            .format('YYYY-MM-DDTHH:mm:ssZ');
+        }
         return `${obj} AddOn: ${current.ServiceName}. `;
       }, route.params.Notes || '');
 
