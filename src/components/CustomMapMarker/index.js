@@ -55,66 +55,67 @@ const CustomMapMarker = ({
     get(item, 'settings.bookable', false);
 
   return (
-    <View pointerEvents="none">
-      {selected ? (
-        <View style={styles.container}>
-          <View style={styles.innerContainer}>
-            <View style={styles.nameContainer}>
-              <Text style={styles.locName}>{get(item, 'title')}</Text>
-              <View
-                onTouchStart={() =>
-                  openMaps(
-                    get(item, 'title'),
-                    get(item, 'contact.coordinates[0]', 34.1434376),
-                    get(item, 'contact.coordinates[1]', 34.1434376),
-                  )
-                }>
-                <Image source={Images.loc} />
-              </View>
-            </View>
+    <View pointerEvents="none" style={{position: 'relative', zIndex: 1000}}>
 
-            <Text style={styles.location}>
-              {get(item, 'contact.street1')}
-              {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
-              {get(item, 'contact.postalCode')}
-            </Text>
-
-            <View style={styles.nameContainer}>
-              <View>
-                {dis && (
-                  <Text style={styles.miles}>
-                    {dis.status === 'SUCCESS'
-                      ? dis.routes.car.distance.text
-                      : ''}
-                  </Text>
-                )}
-                <TouchableOpacity onPress={() => call(phoneNumber)}>
-                  <Text style={styles.contactNo}>
-                    <Image
-                      source={Images.phone}
-                      style={{tintColor: Colors.header_title}}
-                    />
-
-                    {'  '}
-                    {phoneNumber}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {isBookable && (
-                <View
-                  onTouchStart={() => {
-                    dispatch(setLocation(item));
-                    navigation.navigate('Book', {screen: 'Coming'});
-                  }}
-                  style={styles.buttonContainer}>
-                  <Text style={styles.selectText}>Select</Text>
-                </View>
-              )}
+      <View style={selected ? [styles.container, styles.selected] : styles.container}>
+        <View style={styles.innerContainer}>
+          <View style={styles.nameContainer}>
+            <Text style={styles.locName}>{get(item, 'title')}</Text>
+            <View
+              onTouchStart={() => {
+                console.log('Icon Clicked:');
+                openMaps(
+                  get(item, 'title'),
+                  get(item, 'contact.coordinates[0]', 34.1434376),
+                  get(item, 'contact.coordinates[1]', 34.1434376),
+                );
+              }}>
+              <Image source={Images.loc} />
             </View>
           </View>
-          <View style={styles.triangle} />
+
+          <Text style={styles.location}>
+            {get(item, 'contact.street1')}
+            {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
+            {get(item, 'contact.postalCode')}
+          </Text>
+
+          <View style={styles.nameContainer}>
+            <View>
+              {dis && (
+                <Text style={styles.miles}>
+                  {dis.status === 'SUCCESS'
+                    ? dis.routes.car.distance.text
+                    : ''}
+                </Text>
+              )}
+              <TouchableOpacity onPress={() => call(phoneNumber)}>
+                <Text style={styles.contactNo}>
+                  <Image
+                    source={Images.phone}
+                    style={{tintColor: Colors.header_title}}
+                  />
+
+                  {'  '}
+                  {phoneNumber}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {isBookable && (
+              <View
+                onTouchStart={() => {
+                  dispatch(setLocation(item));
+                  navigation.navigate('Book', {screen: 'Coming'});
+                }}
+                style={styles.buttonContainer}>
+                <Text style={styles.selectText}>Select</Text>
+              </View>
+            )}
+          </View>
         </View>
-      ) : null}
+        <View style={styles.triangle} />
+      </View>
+
       <TouchableOpacity onPress={onPress}>
         <Image
           source={
@@ -134,7 +135,11 @@ const CustomMapMarker = ({
 export default CustomMapMarker;
 
 const styles = StyleSheet.create({
+  selected: {
+    opacity: 1,
+  },
   container: {
+    opacity: 0,
     flex: 1,
     marginBottom: 8,
     position: 'absolute',

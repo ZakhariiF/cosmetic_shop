@@ -24,6 +24,7 @@ import CustomMapMarker from 'components/CustomMapMarker';
 import {geolocateSearchLocation} from 'services/Google';
 import CheckBox from 'components/Checkbox';
 import { setCurrentLocation, setUseCurrentLocation } from "screens/Dashboard/thunks";
+import { current } from "@reduxjs/toolkit";
 
 const window = Dimensions.get('window');
 const {width, height} = window;
@@ -60,10 +61,10 @@ const FindLocation = ({navigation}) => {
 
   const radarPermission = useSelector((state) => state.home.radarPermission);
   useEffect(() => {
-    if (radarPermission !== 'GRANTED_BACKGROUND') {
+    if (radarPermission !== 'GRANTED_BACKGROUND' || !currentLocation) {
       getUserLocation();
     }
-  }, [radarPermission]);
+  }, [radarPermission, currentLocation]);
 
   const getUserLocation = async () => {
     try {
