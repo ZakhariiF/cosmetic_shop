@@ -88,8 +88,6 @@ const ApptDetails = ({route, navigation}) => {
     .utcOffset(get(item, 'appointment.StartDateTimeOffset'))
     .utcOffset();
 
-  console.log('Store Location:', location);
-
   const onEdit = () => {
     dispatch(
       editOrRebookFromAppointment(location, item, past, locationAddons),

@@ -9,12 +9,14 @@ export const getRadarPermission = () => {
     Radar.getPermissionsStatus()
       .then((status) => {
         switch (status) {
+          case 'GRANTED_FOREGROUND':
+            requestRadarPermission(false);
+            console.log('GRANTED_FOREGROUND Permission granted');
+            break;
           case 'GRANTED_BACKGROUND':
             console.log('GRANTED_BACKGROUND Permission granted');
-            Radar.startTrackingContinuous();
-            break;
-          case 'GRANTED_FOREGROUND':
-            console.log('GRANTED_FOREGROUND Permission granted');
+            requestRadarPermission(true);
+            Radar.startTrackingResponsive();
             break;
           case 'DENIED':
             console.log('RADAR PERMISSION DENIED');
