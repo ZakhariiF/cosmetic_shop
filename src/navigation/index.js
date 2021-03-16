@@ -66,15 +66,17 @@ const AppContainer = () => {
         console.log('Get Access Token Error:', e);
       }
       if (customerId) {
-        hasRadarPermission(customerId).then((res) => {
-          console.log('Radar Status:', res);
-          dispatch(setRadarPermission(res));
-        });
+        setRadarConfig(customerId);
       }
     } else {
       setToken(null);
     }
   }, [userInfo]);
+
+  const setRadarConfig = async (customerId) => {
+    const status = await hasRadarPermission(customerId);
+    dispatch(setRadarPermission(status));
+  };
 
   return (
     <NavigationContainer ref={navigationRef}>

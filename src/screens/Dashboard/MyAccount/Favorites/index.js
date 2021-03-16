@@ -55,10 +55,10 @@ const Favorites = () => {
   }
 
   useEffect(() => {
-    if (radarPermission !== 'GRANTED_BACKGROUND' || !currentLocation) {
+    if (!currentLocation) {
       getUserLocation();
     }
-  }, [radarPermission, currentLocation]);
+  }, [currentLocation]);
 
   const getUserLocation = async () => {
     try {

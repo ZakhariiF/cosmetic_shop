@@ -77,10 +77,10 @@ const Location = ({navigation}) => {
   const radarPermission = useSelector((state) => state.home.radarPermission);
 
   useEffect(() => {
-    if (radarPermission !== 'GRANTED_BACKGROUND' || !currentLocation) {
+    if (!currentLocation) {
       getUserLocation();
     }
-  }, [radarPermission, currentLocation]);
+  }, [currentLocation]);
 
   const getUserLocation = async () => {
     try {
