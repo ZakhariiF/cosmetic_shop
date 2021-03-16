@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,22 +8,21 @@ import {
   FlatList,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import MParticle from 'react-native-mparticle';
 import Button from 'components/Button';
 import ConfirmationList from 'components/ConfimationList';
-import DottedView from 'components/DottedView';
+
 import AuthHeader from 'components/Header/Authheader';
 import Header from 'components/Header/Header';
 import {Colors, Fonts, Images} from 'constant';
 import rootStyle from 'rootStyle';
 import {useSelector} from 'react-redux';
-import {reset} from 'navigation/RootNavigation';
 import {get} from 'lodash';
 import {openMaps} from 'utils';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import moment from 'moment';
 import {bannerQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
-
 
 const Confirmation = () => {
   const banner_Query = bannerQuery();
@@ -41,6 +40,42 @@ const Confirmation = () => {
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
+
+  useEffect(() => {
+    const timezone = get(totalGuests, '[0].date.time.timezone');
+    const starttime = moment(
+      get(totalGuests, '[0].date.time.startDateTime'),
+    ).utcOffset(timezone);
+
+    const hours = parseInt(starttime.clone().format('HH'), 10);
+    let timeOfDay = 'morning';
+    if (hours >= 12 && hours <= 15) {
+      timeOfDay = 'afternoon';
+    } else if (hours >= 15 && hours < 24) {
+      timeOfDay = 'evening';
+    }
+    MParticle.logEvent(
+      'User confirms their appointment booking',
+      MParticle.EventType.Other,
+      {
+        'Source Page': 'Booking Confirmation Page',
+        Date: starttime.clone().format('YYYY-MM-DD'),
+        Time: starttime.clone().format('HH:mm:ssZ'),
+        'Time of Day': timeOfDay,
+        'Location ID': get(selectedLocation, 'bookerLocationId'),
+        'Location Name': get(selectedLocation, 'title'),
+        'Location Address': `${get(selectedLocation, 'contact.street1')} ${get(
+          selectedLocation,
+          'contact.city',
+        )}, ${get(selectedLocation, 'contact.state')}`,
+        Services: totalGuests.map((s) => get(s, 'services.Name')).join(','),
+        AddOns: totalGuests
+          .map((s) => s.addons.map((a) => a.ServiceName).join(','))
+          .join(','),
+        'Is Rebook': false,
+      },
+    );
+  }, []);
   const openCalendarApp = () => {
     const startDateTime = get(totalGuests, '[0].date.time.startDateTime');
     if (!startDateTime) {
@@ -128,7 +163,6 @@ const Confirmation = () => {
                 source={{uri: bannerImageUrl}}
                 style={styles.chaserIcon}
               />
-
             </>
           )}
         />

@@ -26,7 +26,7 @@ const Addcc = () => {
   console.log('Selected Location:', location);
 
   const onAddCard = () => {
-    MParticle.logEvent('Sace Card', MParticle.EventType.Other, {
+    MParticle.logEvent('Save Card', MParticle.EventType.Other, {
       'Source Page': 'Add card',
     });
 
