@@ -252,7 +252,7 @@ const FindLocation = ({navigation}) => {
       <View style={rootStyle.innerContainer}>
         <View style={{alignItems: 'center'}}>
           <CheckBox
-            titile={'Use Current Location'}
+            title={'Use Current Location'}
             isChecked={useCurrentLocation}
             onPressed={() =>
               dispatch(setUseCurrentLocation(!useCurrentLocation))
@@ -268,7 +268,7 @@ const FindLocation = ({navigation}) => {
         <CheckBox
           isChecked={storeIdx}
           onPressed={() => setStoreIdx(1 - storeIdx)}
-          titile="Retail Locations"
+          title="Retail Locations"
         />
         <FlatList
           data={locationItems}

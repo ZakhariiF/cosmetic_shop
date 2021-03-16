@@ -544,7 +544,7 @@ const Review = ({navigation, route}) => {
           <CheckBox
             isChecked={isChecked}
             onPressed={() => setChecked(!isChecked)}
-            titile="Yes, I understand this policy"
+            title="Yes, I understand this policy"
           />
 
           <Button

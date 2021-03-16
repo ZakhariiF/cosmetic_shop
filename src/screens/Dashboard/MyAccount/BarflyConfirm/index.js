@@ -229,16 +229,21 @@ const BarflyConfirm = ({navigation, route}) => {
           <View>
             <Text>{confirmationData}</Text>
 
+            <View style={styles.checkboxContainer}>
+
+            </View>
+
             <CheckBox
               isChecked={firstChecked}
-              titile={firstCheckboxData}
+              title={firstCheckboxData}
               onPressed={() => setFirstChecked(!firstChecked)}
             />
 
             <CheckBox
               isChecked={secondChecked}
-              titile={secondCheckboxData}
+              title={secondCheckboxData}
               onPressed={() => setSecondChecked(!secondChecked)}
+              onLabelClicked={() => navigation.navigate('TermsOfServices')}
             />
           </View>
           <View>
