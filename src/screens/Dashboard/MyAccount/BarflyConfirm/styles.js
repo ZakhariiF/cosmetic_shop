@@ -12,7 +12,7 @@ export default StyleSheet.create({
     height: 30,
     width: 100,
     display: 'flex',
-    maxWidth: '50%'
+    maxWidth: '50%',
   },
   storeSelectButtonTitle: {
     fontSize: 14,
@@ -22,21 +22,21 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%'
+    width: '100%',
   },
   storeTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    maxWidth: '50%'
+    maxWidth: '50%',
   },
   storeAddress: {
-    display: 'flex',  
-    flexDirection: 'row'
+    display: 'flex',
+    flexDirection: 'row',
   },
   title: {
     color: Colors.header_title,
     fontSize: 18,
-    lineHeight: 45
+    lineHeight: 45,
   },
 
   summaryWrapper: {
@@ -54,12 +54,12 @@ export default StyleSheet.create({
     borderRadius: 50,
     width: 80,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   priceSplitWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 5
+    padding: 5,
   },
   priceSplit: {
     fontSize: 25,
@@ -76,10 +76,10 @@ export default StyleSheet.create({
   },
   priceUnit: {
     fontWeight: 'bold',
-    marginRight: 10
+    marginRight: 10,
   },
   locationTitle: {
     fontWeight: 'bold',
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  },
 });

@@ -127,7 +127,7 @@ const Extensions = ({onSkip}) => {
           <CheckBox
             onPressed={() => setChecked(!isChecked)}
             isChecked={isChecked}
-            titile="Don’t ask me again."
+            title="Don’t ask me again."
           />
         )}
         ListFooterComponentStyle={styles.footerComponent}

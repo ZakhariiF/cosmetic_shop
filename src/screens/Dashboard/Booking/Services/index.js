@@ -119,7 +119,7 @@ const Services = ({navigation}) => {
                 <CheckBox
                   isChecked={isChecked}
                   onPressed={() => setChecked(!isChecked)}
-                  titile="My guests and I will be will be getting different services"
+                  title="My guests and I will be will be getting different services"
                 />
               ) : null}
 

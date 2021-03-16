@@ -79,7 +79,7 @@ const Addcc = () => {
 
             <View style={styles.bottomContainer}>
               <CheckBox
-                titile="Make default?"
+                title="Make default?"
                 isChecked={isdefault}
                 onPressed={() => setDefault(!isdefault)}
               />
