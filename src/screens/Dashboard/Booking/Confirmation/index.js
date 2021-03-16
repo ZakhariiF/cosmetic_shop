@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import Button from 'components/Button';
 import ConfirmationList from 'components/ConfimationList';
 import DottedView from 'components/DottedView';
@@ -22,10 +23,11 @@ import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import moment from 'moment';
 import {bannerQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
-import BookingHeader from "components/BookingHeader";
+
 
 const Confirmation = () => {
   const banner_Query = bannerQuery();
+  const navigation = useNavigation();
 
   const {data} = useQuery(banner_Query);
   const bannerImageUrl = get(
@@ -116,7 +118,9 @@ const Confirmation = () => {
               </View>
               <Button
                 name="Manage Appointments"
-                onButtonPress={() => reset('Dashboard')}
+                onButtonPress={() => {
+                  navigation.navigate('My Appts');
+                }}
               />
 
               <Image
