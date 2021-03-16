@@ -9,6 +9,10 @@
 		<key>LogLevel</key>
 		<string>0</string>
 	</dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.thedrybar.Drybar</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -52,13 +56,13 @@
 		</dict>
 	</dict>
 	<key>NSCalendarsUsageDescription</key>
-	<string>$(PRODUCT_NAME) will have access your calendar to creat event.</string>
+	<string>$(PRODUCT_NAME) will have access your calendar to create event.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>$(PRODUCT_NAME) will have access your contact to creat event.</string>
+	<string>$(PRODUCT_NAME) will have access to your contacts to creat event.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) will have access your location while running and in background to search nearby salon.</string>
+	<string>$(PRODUCT_NAME) will have access to your location while using the app or in the background to search nearby shops.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) wants to access your location while you use the app to search nearby salon.</string>
+	<string>$(PRODUCT_NAME) wants to access your location while using the app to search nearby shops.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -107,9 +111,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-<array>
-    <string>com.thedrybar.Drybar</string>
-</array>
 </dict>
 </plist>
