@@ -151,7 +151,8 @@ const Location = ({navigation}) => {
     return data;
   }, [loading, error, data]);
 
-  const onMarker = (item) => {
+  const onMarker = (item, event) => {
+    console.log('Event:', event);
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
       longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
@@ -189,24 +190,20 @@ const Location = ({navigation}) => {
         initialRegion={coords}
         region={coords}>
         {(allLocations || []).map((e, i) => (
-          <MapView.Marker
+          <CustomMapMarker
             coordinate={{
               latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
               longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
-            animation
-            onPress={() => onMarker(e)}>
-            <CustomMapMarker
-              selected={selectedLocationId === e.bookerLocationId}
-              item={e}
-              navigation={navigation}
-              currentLocation={currentLocation}
-              onClose={() => setSelectedLocation(-1)}
-              onPress={() => onMarker(e)}
-            />
-          </MapView.Marker>
+            selected={selectedLocationId === e.bookerLocationId}
+            item={e}
+            navigation={navigation}
+            currentLocation={currentLocation}
+            onClose={() => setSelectedLocation(-1)}
+            onPress={() => onMarker(e)}
+          />
         ))}
       </MapView>
 
