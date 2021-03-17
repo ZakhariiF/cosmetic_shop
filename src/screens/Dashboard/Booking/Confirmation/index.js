@@ -70,7 +70,7 @@ const Confirmation = () => {
         )}, ${get(selectedLocation, 'contact.state')}`,
         Services: totalGuests.map((s) => get(s, 'services.Name')).join(','),
         AddOns: totalGuests
-          .map((s) => s.addons.map((a) => a.ServiceName).join(','))
+          .map((s) => (s.addons || []).map((a) => a.ServiceName).join(','))
           .join(','),
         'Is Rebook': false,
       },
