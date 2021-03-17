@@ -7100,6 +7100,11 @@ react-native-add-calendar-event@^4.0.0:
   resolved "https://registry.yarnpkg.com/react-native-add-calendar-event/-/react-native-add-calendar-event-4.0.0.tgz#83959cc1953f255ae38ece84214f232fa6552c9c"
   integrity sha512-gkqidtFquTKR46QWdV12iu86OQJGNTnsT1C58EBPFy1MyCFJZar6y6wRBLaWNfvnhgeGzJeA0ODb8KmD+HU8GQ==
 
+react-native-appboy-sdk@^1.26.0:
+  version "1.27.0"
+  resolved "https://registry.yarnpkg.com/react-native-appboy-sdk/-/react-native-appboy-sdk-1.27.0.tgz#84e555f9073dfd9f4f06e41023f276e1373c3c2c"
+  integrity sha512-pmawVWCO8C1Luqjtks4jKZ5t3zhbER5Vh6JHh43aWXS9yTpi9hFuyR3GC2IVu2/AyXuH3YAWYz1dOxPVBM+v7w==
+
 react-native-calendars@^1.1249.0:
   version "1.1252.0"
   resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1252.0.tgz#04c10c050e28f138e658a96141d9b15b49cb04d4"

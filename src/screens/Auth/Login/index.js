@@ -39,28 +39,28 @@ const Login = ({navigation}) => {
       'Source Page': 'Login',
     });
 
-    if (Platform.OS === 'ios') {
-      setLoading(true);
-      signIn({username: email, password})
-        .then((token) => {
-          console.log('Token:', token);
-          dispatch(_onlogin(token, email, password));
-          setLoading(false);
-        })
-        .catch((e) => {
-          MParticle.logEvent('User fails to Login', MParticle.EventType.Other, {
-            'Source Page': 'Login',
-            'Error Details': JSON.stringify(e),
-            Email: email,
-          });
-          console.log(e);
-          setLoading(false);
-          Alert.alert('Login Error', e.detail.message);
+    // if (Platform.OS === 'ios') {
+    setLoading(true);
+    signIn({username: email, password})
+      .then((token) => {
+        console.log('Token:', token);
+        dispatch(_onlogin(token, email, password));
+        setLoading(false);
+      })
+      .catch((e) => {
+        MParticle.logEvent('User fails to Login', MParticle.EventType.Other, {
+          'Source Page': 'Login',
+          'Error Details': JSON.stringify(e),
+          Email: email,
         });
-    } else {
-      console.log('start logging in********************');
-      dispatch(onlogin(email, password));
-    }
+        console.log(e);
+        setLoading(false);
+        Alert.alert('Login Error', e.detail.message);
+      });
+    // } else {
+    //   console.log('start logging in********************');
+    //   dispatch(onlogin(email, password));
+    // }
   };
 
   return (

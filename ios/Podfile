@@ -21,6 +21,8 @@ target 'Drybar' do
 
   pod 'react-native-add-calendar-event', :path => '../node_modules/react-native-add-calendar-event'
 
+  pod 'react-native-mparticle', :path => '../node_modules/react-native-mparticle'
+
   target 'DrybarTests' do
     inherit! :complete
     # Pods for testing

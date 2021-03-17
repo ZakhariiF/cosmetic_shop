@@ -4,6 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.mparticle.MParticle;
+import com.mparticle.MParticleOptions;
+
+import com.appboy.reactbridge.AppboyReactPackage;
 import com.vonovak.AddCalendarEventPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import net.rhogan.rnsecurerandom.RNSecureRandomPackage;
@@ -11,6 +15,8 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+import io.radar.sdk.Radar;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -28,7 +34,6 @@ public class MainApplication extends Application implements ReactApplication {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
           return packages;
         }
 
@@ -47,6 +52,14 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    Radar.initialize(this, "prj_test_pk_5cd967ae3386d2ef739928d63e434350ef07e822");
+
+    MParticleOptions options = MParticleOptions.builder(this)
+      .credentials("us1-eefc1854d6fb724391f9a229050a9b73", "jsgsFr4favRfc1TMgibD-o3isAxros6xnbmE1nuFUPOWmMiQyOlwRGK3qx24bDv1")
+      .build();
+
+    MParticle.start(options);
+
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 

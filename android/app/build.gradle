@@ -191,6 +191,12 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
+    implementation "com.appboy:android-sdk-ui:13.0.+"
+
+    implementation 'io.radar:sdk:3.1.+'
+
+    implementation 'com.mparticle:android-core:5.+'
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }

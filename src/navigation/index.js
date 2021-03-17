@@ -22,17 +22,15 @@ const AppContainer = () => {
   const [token, setToken] = useState(null);
 
   const configApp = useCallback(async () => {
-    if (Platform.OS === 'ios') {
-      await createConfig({
-        // issuer: configFile.issuer,
-        clientId: configFile.clientId,
-        redirectUri: configFile.redirectUri,
-        endSessionRedirectUri: configFile.endSessionRedirectUri,
-        discoveryUri: configFile.discoveryUri,
-        scopes: configFile.scopes,
-        requireHardwareBackedKeyStore: false,
-      });
-    }
+    await createConfig({
+      // issuer: configFile.issuer,
+      clientId: configFile.clientId,
+      redirectUri: configFile.redirectUri,
+      endSessionRedirectUri: configFile.endSessionRedirectUri,
+      discoveryUri: configFile.discoveryUri,
+      scopes: configFile.scopes,
+      requireHardwareBackedKeyStore: false,
+    });
   }, []);
 
   Radar.on('clientLocation', (result) => {
