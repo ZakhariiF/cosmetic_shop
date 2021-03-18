@@ -37,12 +37,13 @@ export const getRadarPermission = () => {
 
 export const hasRadarPermission = async (customerId) => {
   setUser(customerId);
-  let status = await Radar.requestPermissions(true);
+  await Radar.requestPermissions(false);
+  let status = await Radar.getPermissionsStatus();
   if (status === 'GRANTED_FOREGROUND') {
-    status = await Radar.requestPermissions(true);
+    await Radar.requestPermissions(true);
+    status = await Radar.getPermissionsStatus();
   }
   Radar.startTrackingResponsive();
-
   return status;
 };
 const setUser = (userId) => {

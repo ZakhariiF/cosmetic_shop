@@ -1,19 +1,16 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Text, TextInput} from 'react-native';
 import Button from 'components/Button';
-import Header from 'components/Header/Header';
+
 import {Colors, Fonts} from 'constant';
 import rootStyle from 'rootStyle';
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
-import {setmemberCount} from '../thunks';
-import {useSelector, useDispatch} from 'react-redux';
-import MParticle from "react-native-mparticle";
-import BookingHeader from "components/BookingHeader";
+
+import MParticle from 'react-native-mparticle';
+import BookingHeader from 'components/BookingHeader';
 
 const Notes = ({navigation, route}) => {
-  const dispatch = useDispatch();
-  const totalGuests = useSelector((state) => state.booking.totalGuests);
   const [notes, setNotes] = useState();
   return (
     <View style={rootStyle.container}>
@@ -22,7 +19,9 @@ const Notes = ({navigation, route}) => {
       <BookingHeader title="HAVE ANY REQUESTS?" safeBackColor={Colors.bg} />
       <View style={rootStyle.innerContainer}>
         <Text style={styles.heading}>
-          Is it your first time? Anything special we should know about? Would you like to request a favorite stylist? While we can’t guarantee it, we’ll do our very best to make it happen!
+          Is it your first time? Anything special we should know about? Would
+          you like to request a favorite stylist? While we can’t guarantee it,
+          we’ll do our very best to make it happen!
         </Text>
 
         <View style={styles.seprator} />
@@ -39,12 +38,9 @@ const Notes = ({navigation, route}) => {
           name="Next"
           containerStyle={{marginTop: 30}}
           onButtonPress={() => {
-            // let tempArr = [...totalGuests];
-            // tempArr.push({Notes: notes});
-            // dispatch(setmemberCount(tempArr));
             MParticle.logEvent('Add Requests', MParticle.EventType.Other, {
               'Source Page': 'Notes',
-              'Request': notes,
+              Request: notes,
             });
             navigation.navigate('ApptHold', {
               Notes: notes,

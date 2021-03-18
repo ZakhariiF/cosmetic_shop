@@ -53,6 +53,7 @@ const EventDetail = ({
   description,
   dividerIcon,
   action,
+  setHeight,
 }) => {
   const onSubmit = (values, {resetForm}) => {
     console.log('Values:', values);
@@ -110,10 +111,12 @@ const EventDetail = ({
       .catch((error) => console.log('Error:', error));
   };
 
-  console.log('occasions:', occasions);
-
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      onLayout={({nativeEvent}) => {
+        setHeight(nativeEvent.layout.height);
+      }}>
       <View style={{alignItems: 'center', flexDirection: 'row'}}>
         <View style={styles.dashedLine} />
         <Image source={dividerIcon} />

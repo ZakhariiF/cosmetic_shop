@@ -268,7 +268,7 @@ const LocationModal = forwardRef((props, ref) => {
           <View style={styles.innerContainer}>
             <View style={{alignItems: 'center'}}>
               <CheckBox
-                titile={'Use Current Location'}
+                title={'Use Current Location'}
                 isChecked={useCurrentLocation}
                 onPressed={setUseCurrentLocation}
                 containerStyle={{marginVertical: 10}}

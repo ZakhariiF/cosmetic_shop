@@ -1,6 +1,7 @@
 import {Colors, Fonts} from 'constant';
 import {StyleSheet} from 'react-native';
 
+
 export default StyleSheet.create({
   topImage: {
     height: 230,
@@ -37,6 +38,19 @@ export default StyleSheet.create({
     color: Colors.light_gray,
     textAlign: 'center',
     width: '100%',
+    fontFamily: Fonts.AvenirNextRegular,
+  },
+
+  slickButton: {
+    borderWidth: 1,
+    borderColor: Colors.black,
+    padding: 20,
+    marginHorizontal: 10,
+  },
+
+  slickButtonTitle: {
+    textAlign: 'center',
+    fontSize: 18,
     fontFamily: Fonts.AvenirNextRegular,
   },
 

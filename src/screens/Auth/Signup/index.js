@@ -57,7 +57,7 @@ const Signup = ({navigation}) => {
 
           <CheckBox
             isChecked={isChecked}
-            titile="Email opt in"
+            title="Email opt in"
             onPressed={() => setChecked(!isChecked)}
           />
 

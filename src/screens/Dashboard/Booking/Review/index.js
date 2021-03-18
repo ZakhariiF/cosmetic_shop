@@ -25,10 +25,14 @@ import {
   setExtensionType,
 } from '../thunks';
 import Indicator from 'components/Indicator';
-import {getAppointments, cancelAppointment, cancelItinerary} from 'screens/Dashboard/thunks';
+import {
+  getAppointments,
+  cancelAppointment,
+  cancelItinerary,
+} from 'screens/Dashboard/thunks';
 // import {cancelItinerary, cancelAppt} from 'services';
 import MParticle from 'react-native-mparticle';
-import BookingHeader from "components/BookingHeader";
+import BookingHeader from 'components/BookingHeader';
 
 const Review = ({navigation, route}) => {
   const [isChecked, setChecked] = useState(false);
@@ -177,6 +181,7 @@ const Review = ({navigation, route}) => {
         obj,
         addons,
         get(selectedLocation, 'bookerLocationId', ''),
+        promoInfo,
       ),
     ).then((res) => {
       if (res.payload && res.payload.IsSuccess) {
@@ -243,7 +248,7 @@ const Review = ({navigation, route}) => {
       ItineraryItems: guestList(),
     };
 
-    dispatch(createGuestAppointment(obj)).then((res) => {
+    dispatch(createGuestAppointment(obj, promoInfo)).then((res) => {
       if (res.payload && res.payload.IsSuccess) {
         dispatch(getAppointments(get(userInfo, 'bookerID', '')));
         navigation.navigate('Confirmation', {
@@ -544,7 +549,7 @@ const Review = ({navigation, route}) => {
           <CheckBox
             isChecked={isChecked}
             onPressed={() => setChecked(!isChecked)}
-            titile="Yes, I understand this policy"
+            title="Yes, I understand this policy"
           />
 
           <Button

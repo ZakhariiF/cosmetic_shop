@@ -40,7 +40,7 @@ static void InitializeMParticle(UIApplication *application) {
   MParticleOptions *options = [MParticleOptions optionsWithKey:@"us1-eefc1854d6fb724391f9a229050a9b73"
                                                         secret:@"jsgsFr4favRfc1TMgibD-o3isAxros6xnbmE1nuFUPOWmMiQyOlwRGK3qx24bDv1"];
 
-  options.environment = MPEnvironmentProduction;
+  options.environment = MPEnvironmentDevelopment;
   
   [[MParticle sharedInstance] startWithOptions:options];
 

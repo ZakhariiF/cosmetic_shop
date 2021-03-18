@@ -195,6 +195,9 @@ const BarflyMembership = ({navigation}) => {
 
       <ScrollView>
         <View style={rootStyle.innerContainer}>
+          <Text style={styles.description}>
+            Select your shop below to get started! Prices vary by location.
+          </Text>
           <View>
             {customerMembershipLocation && (
               <Text>{`Selected: ${get(
@@ -404,7 +407,9 @@ const BarflyMembership = ({navigation}) => {
                   }
                   containerStyle={styles.buttonContainer}
                   onButtonPress={() =>
-                    customerMembershipLevelId === 53809 ? setMembershipAction('Upgrade') :upgradeMembership(get(membershipDataByLocation, '[1]'))
+                    customerMembershipLevelId === 53809
+                      ? setMembershipAction('Upgrade')
+                      : upgradeMembership(get(membershipDataByLocation, '[1]'))
                   }
                 />
               ) : (

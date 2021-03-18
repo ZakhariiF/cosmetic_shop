@@ -80,7 +80,7 @@ const Phone = ({navigation, route}) => {
           />
           <CheckBox
             isChecked={isChecked}
-            titile="SMS opt in"
+            title="SMS opt in"
             onPressed={() => setChecked(!isChecked)}
           />
 

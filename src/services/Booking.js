@@ -1,5 +1,6 @@
 import {client} from 'services';
 import config from 'constant/config';
+import {responsePathAsArray} from 'graphql';
 
 export const getServices = (locationId) =>
   client
@@ -119,6 +120,32 @@ export const promoCode = (locationId, code) =>
       data: {
         couponcode: code,
       },
+    })
+    .then((response) => response.data);
+
+export const applyPromoCodeToMultiple = ({orderId, specialIds}) =>
+  client
+    .post('/booker/AddSpecialToOrder', {
+      method: 'POST',
+      urlParams: {
+        orderId,
+      },
+      data: {
+        ID: orderId,
+        SpecialIDs: specialIds,
+      },
+    })
+    .then((response) => response.data);
+
+export const validatePromoCode = (promoCode) =>
+  client
+    .get(`/promo/getList?code=${promoCode}`)
+    .then((response) => response.data);
+
+export const updatePromoCode = (promoCode) =>
+  client
+    .post('/promo/updateItem', {
+      code: promoCode,
     })
     .then((response) => response.data);
 

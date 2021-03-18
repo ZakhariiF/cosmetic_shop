@@ -229,30 +229,26 @@ const FindLocation = ({navigation}) => {
         initialRegion={coords}
         region={coords}>
         {locationItems.map((e, i) => (
-          <MapView.Marker
+          <CustomMapMarker
+            selected={selectedLocationIndex === i}
+            item={e}
+            navigation={navigation}
+            currentLocation={currentLocation}
+            onClose={() => setSelectedLocation(-1)}
+            onPress={() => onMarker(e, i)}
             coordinate={{
               latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
               longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
               latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA,
             }}
-            animation
-            onPress={() => onMarker(e, i)}>
-            <CustomMapMarker
-              selected={selectedLocationIndex === i}
-              item={e}
-              navigation={navigation}
-              currentLocation={currentLocation}
-              onClose={() => setSelectedLocation(-1)}
-              onPress={() => onMarker(e, i)}
-            />
-          </MapView.Marker>
+          />
         ))}
       </MapView>
       <View style={rootStyle.innerContainer}>
         <View style={{alignItems: 'center'}}>
           <CheckBox
-            titile={'Use Current Location'}
+            title={'Use Current Location'}
             isChecked={useCurrentLocation}
             onPressed={() =>
               dispatch(setUseCurrentLocation(!useCurrentLocation))
@@ -268,7 +264,7 @@ const FindLocation = ({navigation}) => {
         <CheckBox
           isChecked={storeIdx}
           onPressed={() => setStoreIdx(1 - storeIdx)}
-          titile="Retail Locations"
+          title="Retail Locations"
         />
         <FlatList
           data={locationItems}
