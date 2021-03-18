@@ -127,7 +127,11 @@ const Events = () => {
               <View style={{marginTop: 50}}>
                 <Slick
                   showsButtons={true}
-                  containerStyle={styles.eventSlickWrapper}>
+                  containerStyle={styles.eventSlickWrapper}
+                  dotStyle={{backgroundColor: 'transparent'}}
+                  nextButton={<Image source={Images.right_arrow} style={styles.slickCtrlBtnImage} />}
+                  prevButton={<Image source={Images.right_arrow} style={[{transform: [{rotate: '180deg'}]}, styles.slickCtrlBtnImage]} />}
+                  activeDotStyle={{backgroundColor: 'transparent'}}>
                   {events.map((e, i) => {
                     return (
                       <View key={i}>
