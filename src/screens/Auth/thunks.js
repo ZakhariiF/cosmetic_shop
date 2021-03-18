@@ -2,7 +2,7 @@ import {get} from 'lodash';
 import MParticle from 'react-native-mparticle';
 import {AlertHelper} from 'utils/AlertHelper';
 import {authActions} from './ducks';
-import {getUser, signOut} from '@okta/okta-react-native';
+import {getUser} from '@okta/okta-react-native';
 import * as API from 'services';
 
 export const _onlogin = (token, email, password) => async (dispatch) => {
@@ -44,34 +44,6 @@ export const loginSuccess = (user) => async (dispatch) => {
       userInfo: user,
     }),
   );
-};
-
-export const onlogin = (email, password) => async (dispatch) => {
-  dispatch(authActions.loginRequest());
-
-  try {
-    // const data = await oktaSigin(email, password);
-    const data = await API.login(email, password);
-    if (data) {
-      const userInfo = await API.getUser(get(data, '_embedded.user.id'));
-      let userData = data;
-      userData.userInfo = userInfo;
-      return dispatch(authActions.loginSuccess(userData));
-    } else {
-      return dispatch(authActions.loginError());
-    }
-  } catch (error) {
-    // AlertHelper.showError(get(error, 'detail.message'));
-    if (error && error.response) {
-      console.log('error here', error, error.response);
-    } else {
-      console.log('error here', error);
-    }
-    AlertHelper.showError(
-      get(error, 'response.data.errorSummary', 'Server Error'),
-    );
-    return dispatch(authActions.loginError());
-  }
 };
 
 export const updateUserInfo = (obj) => async (dispatch) => {

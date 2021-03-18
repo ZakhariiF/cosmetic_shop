@@ -52,7 +52,6 @@
     "react-native-calendars": "^1.1249.0",
     "react-native-credit-card-display": "^0.3.4",
     "react-native-credit-card-input": "https://github.com/Kaurdavinder26/react-native-credit-card-input",
-    "react-native-crypto": "^2.2.0",
     "react-native-dialog": "^6.1.2",
     "react-native-dropdownalert": "^4.3.0",
     "react-native-gesture-handler": "^1.8.0",

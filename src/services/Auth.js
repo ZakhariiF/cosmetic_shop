@@ -3,51 +3,44 @@ import config from 'constant/config';
 import {client} from 'services';
 import base64url from 'base64url';
 import Url from 'url-parse';
-import '../shim';
-import crypto from 'crypto';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Platform} from 'react-native';
 import {
-  createConfig,
-  signIn,
-  signOut,
-  getAccessToken,
-  isAuthenticated,
-  getUserFromIdToken,
   refreshTokens,
-  getIdToken,
 } from '@okta/okta-react-native';
 
-export const generateRandomString = (length = 44) => {
-  var result = '';
-  var characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
+// export const generateRandomString = (length = 44) => {
+//   var result = '';
+//   var characters =
+//     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+//   var charactersLength = characters.length;
+//   for (var i = 0; i < length; i++) {
+//     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+//   }
+//   return result;
+// };
 
-export const getCodeChallange = (codeVerifier) => {
-  console.log('Code verifier', codeVerifier, codeVerifier.length);
-  const buffer = crypto.createHash('sha256').update(codeVerifier).digest();
-  return base64url.encode(buffer);
-};
+// export const getCodeChallange = (codeVerifier) => {
+//   console.log('Code verifier', codeVerifier, codeVerifier.length);
+//   const buffer = crypto.createHash('sha256').update(codeVerifier).digest();
+//   return base64url.encode(buffer);
+// };
 
-export const signin = (data) => {
-  return client
-    .post('/okta/create-user', {
-      profile: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        login: data.email,
-        mobilePhone: data.phone,
-      },
-    })
-    .then((response) => response.data);
-};
+// export const signin = (data) => {
+//   return client
+//     .post('/okta/create-user', {
+//       profile: {
+//         firstName: data.firstName,
+//         lastName: data.lastName,
+//         email: data.email,
+//         login: data.email,
+//         mobilePhone: data.phone,
+//       },
+//     })
+//     .then((response) => response.data);
+// };
+
 export const _login = async (t, email, password) => {
   const {data} = await axios.post(`${config.issuer}/api/v1/authn`, {
     username: email,
@@ -74,6 +67,7 @@ export const _login = async (t, email, password) => {
     token,
   };
 };
+
 export const login = async (email, password) => {
   const {data} = await axios.post(`${config.issuer}/api/v1/authn`, {
     username: email,

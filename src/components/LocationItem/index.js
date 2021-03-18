@@ -36,18 +36,23 @@ const LocationItem = ({
   }, [currentLocation, index]);
 
   const getDistance = useCallback(async () => {
-    const _dis = await distance(
-      {
-        latitude: Number(currentLocation.latitude),
-        longitude: Number(currentLocation.longitude),
-      },
-      {
-        latitude: Number(get(item, 'contact.coordinates[0]')),
-        longitude: Number(get(item, 'contact.coordinates[1]')),
-      },
-    );
-    setDis(_dis);
-  }, [currentLocation]);
+    try {
+      console.log('Distance:', currentLocation, item);
+      const _dis = await distance(
+        {
+          latitude: Number(currentLocation.latitude),
+          longitude: Number(currentLocation.longitude),
+        },
+        {
+          latitude: Number(get(item, 'contact.coordinates[0]')),
+          longitude: Number(get(item, 'contact.coordinates[1]')),
+        },
+      );
+      setDis(_dis);
+    } catch (e) {
+      console.log('Get Distance Issue:', e);
+    }
+  }, [currentLocation, item]);
   const window = Dimensions.get('window');
   const {width, height} = window;
   const ASPECT_RATIO = width / height;

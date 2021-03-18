@@ -66,15 +66,13 @@ export const distance = (origin, destination) => {
     Radar.getDistance({
       origin,
       destination,
-      mode: ['car'],
+      mode: 'car',
       units: 'imperial',
     })
       .then((result) => {
-        console.log(result);
         resolve(result);
       })
       .catch((err) => {
-        console.log(err);
         reject(err);
       });
   });

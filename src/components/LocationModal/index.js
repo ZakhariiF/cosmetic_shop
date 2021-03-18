@@ -70,6 +70,7 @@ const LocationModal = forwardRef((props, ref) => {
   const currentLocation = useSelector((state) => state.home.currentLocation);
 
   const radarPermission = useSelector((state) => state.home.radarPermission);
+
   useEffect(() => {
     if (!currentLocation) {
       getUserLocation();

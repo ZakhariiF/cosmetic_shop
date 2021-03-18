@@ -85,6 +85,8 @@ const Location = ({navigation}) => {
   const getUserLocation = async () => {
     try {
       const position = await requestUserLocationLocation();
+
+      console.log('Position from Radar:', position);
       const latitude = get(position, 'latitude');
       const longitude = get(position, 'longitude');
 
