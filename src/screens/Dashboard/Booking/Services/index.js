@@ -13,17 +13,20 @@ import Header from 'components/Header/Header';
 import rootStyle from 'rootStyle';
 import CheckBox from 'components/Checkbox';
 import {Colors, Fonts} from 'constant';
-import {productInformationCollection, productionInformationByReference} from 'constant/query';
+import {
+  productInformationCollection,
+  productionInformationByReference,
+} from 'constant/query';
 import GuestTab from 'components/GuestTab';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
-import { getServices, setActiveGuestTab, setmemberCount } from "../thunks";
+import {getServices, setActiveGuestTab, setmemberCount} from '../thunks';
 import {get} from 'lodash';
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
 import Indicator from 'components/Indicator';
 import ServiceInfoModal from 'components/ServiceInfoModal';
-import BookingHeader from "components/BookingHeader";
+import BookingHeader from 'components/BookingHeader';
 
 const Services = ({navigation}) => {
   const dispatch = useDispatch();
@@ -81,7 +84,12 @@ const Services = ({navigation}) => {
       dispatch(setActiveGuestTab(0));
       navigation.navigate('Addons');
     } else {
-      Alert.alert('Warning', 'Please make selection for all guests.');
+      Alert.alert(
+        '',
+        totalGuests.length > 1
+          ? 'Please make selection for all guests.'
+          : 'Please select a service before continuing. ',
+      );
     }
   }, [totalGuests]);
 
