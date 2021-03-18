@@ -8,6 +8,11 @@ export default StyleSheet.create({
     backgroundColor: Colors.dim_gray,
     padding: 5,
   },
+  description: {
+    fontFamily: Fonts.AvenirNextRegular,
+    fontSize: 16,
+    marginVertical: 10,
+  },
   dottBorderContainer: {
     borderStyle: 'dotted',
     borderWidth: 1,

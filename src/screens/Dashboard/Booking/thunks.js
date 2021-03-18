@@ -115,7 +115,7 @@ export const getTimeSlots = (obj) => async (dispatch) => {
   }
 };
 
-export const createAppointment = (obj, addons, locationId) => async (
+export const createAppointment = (obj, addons, locationId, promoInfo) => async (
   dispatch,
 ) => {
   dispatch(bookingActions.bookingRequest());
@@ -151,6 +151,10 @@ export const createAppointment = (obj, addons, locationId) => async (
       });
     }
     if (data.IsSuccess) {
+      if (promoInfo && promoInfo.promoCode) {
+        await API.updatePromoCode(promoInfo.promoCode);
+      }
+
       return dispatch(
         bookingActions.bookingSuccess({
           Appointment: appointment,
@@ -172,14 +176,29 @@ export const createAppointment = (obj, addons, locationId) => async (
   }
 };
 
-export const createGuestAppointment = (obj) => async (dispatch) => {
+export const createGuestAppointment = (obj, promoInfo) => async (dispatch) => {
   dispatch(bookingActions.guestBookingRequest());
   try {
     const data = await API.createItinerary(obj);
     if (data.IsSuccess) {
       const res = await API.bookItinerary(data.ID, obj.GroupName);
 
-      console.log('CreateItinerary:', obj);
+      if (promoInfo && promoInfo.ID) {
+        const res2 = await API.applyPromoCodeToMultiple({
+          orderId: data.OrderID,
+          specialIds: [promoInfo.ID],
+        });
+
+        if (!res2.IsSuccess) {
+          AlertHelper.showError(get(res2, 'ErrorMessage', 'Server Error'));
+          return dispatch(bookingActions.guestBookingError());
+        }
+      }
+
+      if (promoInfo && promoInfo.promoCode) {
+        await API.updatePromoCode(promoInfo.promoCode);
+      }
+
       if (res.IsSuccess) {
         return dispatch(bookingActions.guestBookingSuccess(data));
       } else {
@@ -262,11 +281,32 @@ export const setExtensionAddon = (extension) => async (dispatch) => {
 export const applyPromoCode = (locId, code) => async (dispatch) => {
   dispatch(bookingActions.promoCodeRequest());
   try {
-    const data = await API.promoCode(locId, code);
+    let promoCode = code;
+    let validateData = null;
+    const isRequiredValidation = code && code.startsWith('HUS-');
+    if (isRequiredValidation) {
+      validateData = await API.validatePromoCode(promoCode);
+
+      if (validateData.error) {
+        AlertHelper.showError(get(validateData, 'error', 'Server Error'));
+        return dispatch(bookingActions.promoCodeError());
+      } else if (!validateData.code) {
+        AlertHelper.showError('Server Issue');
+        return dispatch(bookingActions.promoCodeError());
+      }
+      promoCode = validateData.code;
+    }
+
+    const data = await API.promoCode(locId, promoCode);
 
     if (data.IsSuccess) {
       AlertHelper.showSuccess('Coupon applied successfully');
-      return dispatch(bookingActions.promoCodeSuccess(data));
+      return dispatch(
+        bookingActions.promoCodeSuccess({
+          ...data,
+          promoCode: isRequiredValidation ? code : undefined,
+        }),
+      );
     } else {
       AlertHelper.showError(get(data, 'ErrorMessage', 'Server Error'));
       return dispatch(bookingActions.promoCodeError());

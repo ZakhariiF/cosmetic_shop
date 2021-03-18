@@ -113,7 +113,6 @@ const CustomMapMarker = ({
                       source={Images.phone}
                       style={{tintColor: Colors.header_title}}
                     />
-
                     {'  '}
                     {phoneNumber}
                   </Text>

@@ -181,6 +181,7 @@ const Review = ({navigation, route}) => {
         obj,
         addons,
         get(selectedLocation, 'bookerLocationId', ''),
+        promoInfo,
       ),
     ).then((res) => {
       if (res.payload && res.payload.IsSuccess) {
@@ -247,7 +248,7 @@ const Review = ({navigation, route}) => {
       ItineraryItems: guestList(),
     };
 
-    dispatch(createGuestAppointment(obj)).then((res) => {
+    dispatch(createGuestAppointment(obj, promoInfo)).then((res) => {
       if (res.payload && res.payload.IsSuccess) {
         dispatch(getAppointments(get(userInfo, 'bookerID', '')));
         navigation.navigate('Confirmation', {
