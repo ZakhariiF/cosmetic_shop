@@ -35,6 +35,7 @@ const Confirmation = () => {
   );
 
   const totalGuests = useSelector((state) => state.booking.totalGuests);
+  const promoInfo = useSelector((state) => state.booking.promoData);
 
   const extensionAddon = useSelector((state) => state.booking.extensionAddon);
   const selectedLocation = useSelector(
@@ -73,6 +74,9 @@ const Confirmation = () => {
           .map((s) => (s.addons || []).map((a) => a.ServiceName).join(','))
           .join(','),
         'Is Rebook': false,
+        'Promo Code': promoInfo
+          ? promoInfo.promoCode || promoInfo.CouponCode
+          : '',
       },
     );
   }, []);
