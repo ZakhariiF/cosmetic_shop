@@ -400,8 +400,9 @@ const styles = StyleSheet.create({
 
 const DescriptionStyle = StyleSheet.create({
   p: {
-    fontSize: 20,
-    lineHeight: 45,
+    fontSize: 15,
+    lineHeight: 30,
     color: Colors.input_text,
+    fontFamily: Fonts.AvenirNextRegular,
   },
 });
