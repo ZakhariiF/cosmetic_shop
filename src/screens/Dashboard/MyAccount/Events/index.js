@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import Header from 'components/Header/Header';
 import {Images} from 'constant';
 
@@ -6,9 +6,9 @@ import {
   View,
   Image,
   Text,
-  TextInput,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import HtmlView from 'react-native-htmlview';
 
@@ -18,17 +18,18 @@ import {gqlLoadEvents} from 'constant/contentfulEventActions';
 import styles from './styles';
 import {get} from 'lodash';
 import Slick from 'react-native-slick';
-import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
 
 import EventDetail from 'components/EventDetail';
 import {Colors, Fonts} from 'constant';
 import {getFieldValues} from 'services';
 import Indicator from 'components/Indicator';
-
 const dividerImages = [Images.devider1, Images.devider2, Images.devider3];
 
 const Events = () => {
   const [eventData, setEventData] = useState(null);
+
+  const [heights, setHeights] = useState([]);
+  const [staticHeight, setStaticHeight] = useState(0);
 
   const [preferredShopChoices, setPreferredShopChoices] = useState([]);
   const [preferredDateChoices, setPreferredDateChoices] = useState([]);
@@ -37,6 +38,17 @@ const Events = () => {
   );
   const [partySizeChoices, setPpartySizeChoices] = useState([]);
   const [occasions, setOccasions] = useState([]);
+
+  const scrollView = useRef();
+
+  const onChangeHeight = useCallback(
+    (height, idx) => {
+      const tempHeights = [...heights];
+      tempHeights[idx] = height;
+      setHeights(tempHeights);
+    },
+    [heights],
+  );
 
   const getAllFields = async () => {
     const data = await getFieldValues();
@@ -75,7 +87,6 @@ const Events = () => {
 
   const getData = async () => {
     const data = await gqlLoadEvents();
-    console.log('Event Data:', data);
     setEventData(data);
   };
 
@@ -90,7 +101,7 @@ const Events = () => {
     <View style={rootStyle.container}>
       <Header title="EVENTS" isTab isBack />
       {eventData ? (
-        <ScrollView>
+        <ScrollView ref={scrollView}>
           <Image
             resizeMode="cover"
             style={styles.topImage}
@@ -101,35 +112,57 @@ const Events = () => {
             }}
           />
           <View style={rootStyle.innerContainer}>
-            <Text style={styles.topText}>{get(eventData, 'title', '').toUpperCase()}</Text>
+            <View
+              onLayout={({nativeEvent}) => {
+                setStaticHeight(nativeEvent.layout.height);
+              }}>
+              <Text style={styles.topText}>
+                {get(eventData, 'title', '').toUpperCase()}
+              </Text>
 
-            <HtmlView
-              value={`<p>${get(eventData, 'subtitle')}</p>`}
-              stylesheet={PageDescriptionStyle}
-            />
-            <View style={{marginTop: 50}}>
-              <Slick showsButtons={true} containerStyle={styles.eventSlickWrapper}>
-                {events.map((e, i) => {
-                  const desc = documentToHtmlString(get(e, 'description.json'));
-
-                  return (
-                    <View key={i}>
-                      <Image
-                        source={{uri: e.image}}
-                        style={styles.imageStyle}
-                      />
-                      <Text style={styles.swiperTextStyle}>{e.title}</Text>
-                      <View style={{paddingBottom: 30, marginTop: 22}}>
-                        <Text style={styles.slickText}>
-                          {get(e, 'subtitle')}
-                        </Text>
+              <HtmlView
+                value={`<p>${get(eventData, 'subtitle')}</p>`}
+                stylesheet={PageDescriptionStyle}
+              />
+              <View style={{marginTop: 50}}>
+                <Slick
+                  showsButtons={true}
+                  containerStyle={styles.eventSlickWrapper}>
+                  {events.map((e, i) => {
+                    return (
+                      <View key={i}>
+                        <Image
+                          source={{uri: e.image}}
+                          style={styles.imageStyle}
+                        />
+                        <Text style={styles.swiperTextStyle}>{e.title}</Text>
+                        <View style={{paddingBottom: 30, marginTop: 22}}>
+                          <Text style={styles.slickText}>
+                            {get(e, 'subtitle')}
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => {
+                            scrollView.current.scrollTo({
+                              x: 0,
+                              y:
+                                staticHeight +
+                                heights.slice(0, i).reduce((s, c) => s + c, 0),
+                              animated: true,
+                            });
+                          }}
+                          style={styles.slickButton}>
+                          <Text style={styles.slickButtonTitle}>
+                            {get(e, 'action.title')}
+                          </Text>
+                        </TouchableOpacity>
                       </View>
-
-                    </View>
-                  );
-                })}
-              </Slick>
+                    );
+                  })}
+                </Slick>
+              </View>
             </View>
+
             <View>
               {events.map((e, i) => (
                 <EventDetail
@@ -140,6 +173,7 @@ const Events = () => {
                   preferredStartTimeChoices={preferredStartTimeChoices}
                   partySizeChoices={partySizeChoices}
                   occasions={occasions}
+                  setHeight={(height) => onChangeHeight(height, i)}
                 />
               ))}
             </View>
