@@ -10,7 +10,9 @@ import {get} from 'lodash';
 import {Colors, Fonts} from 'constant';
 
 const PromoInput = ({onApply, promoInfo}) => {
-  const [promo, setPromo] = useState(get(promoInfo, 'CouponCode', ''));
+  const [promo, setPromo] = useState(
+    get(promoInfo, 'promoCode') || get(promoInfo, 'CouponCode', ''),
+  );
   return (
     <View style={styles.container}>
       <View style={{width: '75%'}}>
