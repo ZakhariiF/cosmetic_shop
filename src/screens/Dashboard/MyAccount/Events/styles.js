@@ -48,6 +48,11 @@ export default StyleSheet.create({
     marginHorizontal: 10,
   },
 
+  slickCtrlBtnImage: {
+    height: 25,
+    width: 15,
+  },
+
   slickButtonTitle: {
     textAlign: 'center',
     fontSize: 18,
