@@ -34,8 +34,6 @@ const TermsOfServices = () => {
     );
   }, [loading, error, data]);
 
-  console.log('data', data, policies);
-
   const checkToggle = (index) => {
     let isToggle = false;
 

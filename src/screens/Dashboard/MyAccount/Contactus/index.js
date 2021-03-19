@@ -47,8 +47,6 @@ const Contactus = () => {
 
   const {data, error, loading} = useQuery(CONTACT_US_QUERY);
 
-  console.log('Contentful Data:', data, error, loading);
-
   const onSubmit = async (values) => {
     try {
       const res = await submitContact(values);

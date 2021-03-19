@@ -4,7 +4,7 @@ import {AuthNavigator, TabStack} from './routes';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Platform} from 'react-native';
 import {navigationRef} from './RootNavigation';
-import {createConfig, getAccessToken} from '@okta/okta-react-native';
+import {createConfig, getAccessToken, getUserFromIdToken, refreshTokens} from '@okta/okta-react-native';
 import configFile from 'constant/config';
 import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
@@ -12,6 +12,7 @@ import Radar from 'react-native-radar';
 import {hasRadarPermission, trackOnce} from 'utils/RadarHelper';
 import Welcome from 'screens/Welcome';
 import {setCurrentLocation, setRadarPermission} from 'screens/Dashboard/thunks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Root = createStackNavigator();
 
@@ -21,7 +22,7 @@ const AppContainer = () => {
   const dispatch = useDispatch();
   const [token, setToken] = useState(null);
 
-  const configApp = useCallback(async () => {
+  const configApp = async () => {
     await createConfig({
       // issuer: configFile.issuer,
       clientId: configFile.clientId,
@@ -31,7 +32,7 @@ const AppContainer = () => {
       scopes: configFile.scopes,
       requireHardwareBackedKeyStore: false,
     });
-  }, []);
+  };
 
   Radar.on('clientLocation', (result) => {
     dispatch(
@@ -51,6 +52,10 @@ const AppContainer = () => {
   }, []);
 
   useEffect(() => {
+    setAuth();
+  }, [userInfo]);
+
+  const setAuth = useCallback(async () => {
     if (userInfo) {
       const customerId = get(userInfo, 'bookerID');
       if (!customerId) {
@@ -58,7 +63,12 @@ const AppContainer = () => {
       }
 
       try {
-        const t = getAccessToken();
+        const t = await refreshTokens();
+        await AsyncStorage.setItem('tokens', JSON.stringify(t));
+
+        const u = await getUserFromIdToken();
+        await AsyncStorage.setItem('userClams', JSON.stringify(u));
+
         setToken(t);
       } catch (e) {
         console.log('Get Access Token Error:', e);

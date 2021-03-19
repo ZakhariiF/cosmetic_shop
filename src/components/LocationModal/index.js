@@ -199,14 +199,14 @@ const LocationModal = forwardRef((props, ref) => {
       MParticle.EventType.Other,
       {
         'Source Page': route.name,
-        'Location Id': item.bookerLocationId,
+        'Location Id': `${item.bookerLocationId}`,
         'Location Address': `${get(item, 'contact.street1')} ${get(
           item,
           'contact.city',
         )}, ${get(item, 'contact.state')} ${get(item, 'contact.postalCode')}`,
         'Selection Mode': 'List',
         'User Location': '',
-        Distance: 0,
+        Distance: '0',
       },
     );
     dispatch(setLocation(item));
@@ -425,6 +425,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     marginTop: 20,
     marginBottom: 20,
+    width: '100%',
   },
 
   minContainer: {

@@ -1,4 +1,6 @@
 rootProject.name = 'Drybar'
+include ':@okta_okta-react-native'
+project(':@okta_okta-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/@okta/okta-react-native/android')
 include ':react-native-mparticle'
 project(':react-native-mparticle').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-mparticle/android')
 include ':react-native-appboy-sdk'

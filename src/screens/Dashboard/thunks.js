@@ -13,9 +13,11 @@ export const getAppointments = (
   pageSize = 20,
   startDate = null,
 ) => async (dispatch) => {
+  
   dispatch(homeActions.getApptRequest());
   try {
     const data = await API.getAppts(userId, pageSize, startDate);
+
     if (data.IsSuccess) {
       const groups = data.Appointments.reduce((obj, cur) => {
         if (cur.GroupID) {

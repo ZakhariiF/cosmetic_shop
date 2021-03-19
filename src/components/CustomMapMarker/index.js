@@ -64,6 +64,10 @@ const CustomMapMarker = ({
     ? Images.fav_marker
     : Images.yellow_pin;
 
+  const onCalloutPress = ({nativeEvent}) => {
+    console.log('Point: ', nativeEvent);
+  }
+
   return (
     <MapView.Marker
       coordinate={coordinate}
@@ -77,11 +81,12 @@ const CustomMapMarker = ({
         setOpen(false);
         onClose();
       }}>
-      <MapView.Callout>
+      <MapView.Callout onPress={onCalloutPress}>
         <View style={styles.innerContainer}>
           <View style={styles.nameContainer}>
             <Text style={styles.locName}>{get(item, 'title')}</Text>
             <View
+              style={{height: 20,}}
               onTouchStart={() =>
                 openMaps(
                   get(item, 'title'),
@@ -89,7 +94,7 @@ const CustomMapMarker = ({
                   get(item, 'contact.coordinates[1]', 34.1434376),
                 )
               }>
-              <Image source={Images.loc} />
+              <Text style={{lineHeight: 20,}}><Image source={Images.loc} style={{width: 20, height: 20}} resizeMethod="cover" /></Text>
             </View>
           </View>
 
@@ -142,10 +147,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 8,
-    // position: 'absolute',
-    // left: -10,
-    // bottom: 40,
-    // zIndex: 102,
   },
   miles: {
     fontSize: 13,
@@ -173,27 +174,9 @@ const styles = StyleSheet.create({
     ...rootStyle.commonText,
     marginVertical: 8,
   },
-  // triangle: {
-  //   transform: [{rotateZ: '45deg'}],
-  //   width: 15,
-  //   height: 15,
-  //   backgroundColor: Colors.white,
-  //   marginTop: -8,
-  //   marginLeft: '5%',
-  //   borderBottomWidth: 1,
-  //   borderRightWidth: 1,
-  //   borderBottomColor: Colors.dimGray,
-  //   borderRightColor: Colors.dimGray,
-  // },
+
   innerContainer: {
-    // width: width * 0.85,
-    // backgroundColor: Colors.white,
-    // flex: 1,
     padding: 20,
-    // borderRadius: 4,
-    // borderWidth: 1,
-    // borderColor: Colors.dimGray,
-    // ...rootStyle.shadow,
   },
   contactNo: {
     marginTop: 8,
@@ -203,7 +186,6 @@ const styles = StyleSheet.create({
   },
   nameContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
   },
 });

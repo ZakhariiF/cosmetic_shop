@@ -13,15 +13,14 @@ target 'Drybar' do
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
-  pod 'react-native-appboy-sdk', :path => '../node_modules/react-native-appboy-sdk'
 
   pod 'mParticle-Apple-SDK', '~> 8'
 
   use_react_native!(:path => config["reactNativePath"])
 
-  pod 'react-native-add-calendar-event', :path => '../node_modules/react-native-add-calendar-event'
 
-  pod 'react-native-mparticle', :path => '../node_modules/react-native-mparticle'
+
+  pod 'OktaSdkBridgeReactNative', :path => '../node_modules/@okta/okta-react-native'
 
   target 'DrybarTests' do
     inherit! :complete

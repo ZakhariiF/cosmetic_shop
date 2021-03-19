@@ -2,14 +2,21 @@ import {get} from 'lodash';
 import MParticle from 'react-native-mparticle';
 import {AlertHelper} from 'utils/AlertHelper';
 import {authActions} from './ducks';
-import {getUser} from '@okta/okta-react-native';
+import {getUser, refreshTokens, getUserFromIdToken} from '@okta/okta-react-native';
 import * as API from 'services';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const _onlogin = (token, email, password) => async (dispatch) => {
   dispatch(authActions.loginRequest());
 
   try {
     const userInfo = await getUser();
+
+    const tokens = await refreshTokens();
+    await AsyncStorage.setItem('tokens', JSON.stringify(tokens));
+
+    const userClams = await getUserFromIdToken();
+    await AsyncStorage.setItem('userClams', JSON.stringify(userClams));
 
     const request = new MParticle.IdentityRequest();
     request.email = email;
@@ -80,7 +87,6 @@ export const getCustomerInfo = (id) => async (dispatch) => {
 
   try {
     const data = await API.getCustomer(id);
-    console.log('customer info data data>>>', data);
     if (data.IsSuccess) {
       return dispatch(authActions.getCustomerSuccess(get(data, 'Customer')));
     } else {

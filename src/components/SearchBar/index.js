@@ -32,7 +32,7 @@ const SearchBar = React.forwardRef((props, ref) => {
         <TextInput
           ref={ref}
           value={value}
-          style={styles.inputContainer}
+          style={styles.input}
           placeholder={placeholder}
           onSubmitEditing={onSubmitEditing}
           onChangeText={onChangeText}
@@ -58,7 +58,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'space-between',
   },
+
   inputContainer: {
+    display: 'flex',
+  },
+
+  input: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.input_color,
     paddingBottom: 5,
@@ -69,7 +74,7 @@ const styles = StyleSheet.create({
   },
   search: {
     position: 'absolute',
-    top: -5,
+    bottom: 8,
   },
   button: {
     justifyContent: 'center',

@@ -131,8 +131,8 @@ const Location = ({navigation}) => {
       if (newData.length) {
         setCoords({
           ...coords,
-          latitude: newData[0].contact.coordinates[0],
-          longitude: newData[0].contact.coordinates[1],
+          latitude: Number(newData[0].contact.coordinates[0]),
+          longitude: Number(newData[0].contact.coordinates[1]),
         });
       }
     },
@@ -182,17 +182,19 @@ const Location = ({navigation}) => {
   return (
     <>
       <BookingTab />
-      <MapView
+      {coords && <MapView
         showsUserLocation
-        provider={null}
         ref={mapRef}
-        style={{
-          flex: collapsed ? 1 : 0.5,
-        }}
         initialRegion={coords}
-        region={coords}>
+        region={coords}
+        style={{
+          width,
+          height: collapsed ? height / 2: height, 
+          flex: 1,
+        }}>
         {(allLocations || []).map((e, i) => (
           <CustomMapMarker
+            key={i}
             coordinate={{
               latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
               longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
@@ -207,7 +209,7 @@ const Location = ({navigation}) => {
             onPress={() => onMarker(e)}
           />
         ))}
-      </MapView>
+      </MapView>}
 
       {get(data, 'storeCollection') ? (
         <LocationModal

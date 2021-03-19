@@ -43,7 +43,7 @@ const Coming = ({navigation}) => {
     MParticle.logEvent('Select How Many', MParticle.EventType.Other, {
       'Source Page': 'Book How Many',
       'User Option': 'Me + Guest',
-      'Guest Count': val,
+      'Guest Count': val.toString(),
     });
     dispatch(setmemberCount(tempArr));
     navigation.navigate('Services');

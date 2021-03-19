@@ -127,14 +127,14 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
                 MParticle.EventType.Other,
                 {
                   'Source Page': 'Home',
-                  'Location ID': locationId,
+                  'Location ID': `${locationId}`,
                   AppointmentStartTime: startTime.format(
                     'YYYY-MM-DDTHH:mm:ssZ',
                   ),
-                  BookingNumber: get(item, 'appointment.BookingNumber'),
+                  BookingNumber: `${get(item, 'appointment.BookingNumber')}`,
                   Service: '', // Multiple,
                   DiscountCode: '',
-                  Guests: services.length,
+                  Guests: `${services.length}`,
                   Status: get(item, 'appointment.Status.Name'),
                 },
               );

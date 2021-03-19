@@ -63,7 +63,7 @@ const Confirmation = () => {
         Date: starttime.clone().format('YYYY-MM-DD'),
         Time: starttime.clone().format('HH:mm:ssZ'),
         'Time of Day': timeOfDay,
-        'Location ID': get(selectedLocation, 'bookerLocationId'),
+        'Location ID': `${get(selectedLocation, 'bookerLocationId')}`,
         'Location Name': get(selectedLocation, 'title'),
         'Location Address': `${get(selectedLocation, 'contact.street1')} ${get(
           selectedLocation,
@@ -73,7 +73,7 @@ const Confirmation = () => {
         AddOns: totalGuests
           .map((s) => (s.addons || []).map((a) => a.ServiceName).join(','))
           .join(','),
-        'Is Rebook': false,
+        'Is Rebook': 'false',
         'Promo Code': promoInfo
           ? promoInfo.promoCode || promoInfo.CouponCode
           : '',

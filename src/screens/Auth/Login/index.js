@@ -38,8 +38,6 @@ const Login = ({navigation}) => {
     MParticle.logEvent('User Attempts to Login', MParticle.EventType.Other, {
       'Source Page': 'Login',
     });
-
-    // if (Platform.OS === 'ios') {
     setLoading(true);
     signIn({username: email, password})
       .then((token) => {
@@ -57,10 +55,6 @@ const Login = ({navigation}) => {
         setLoading(false);
         Alert.alert('Login Error', e.detail.message);
       });
-    // } else {
-    //   console.log('start logging in********************');
-    //   dispatch(onlogin(email, password));
-    // }
   };
 
   return (

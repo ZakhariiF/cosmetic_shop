@@ -5,6 +5,9 @@ import {
   getUserFromIdToken,
   getIdToken,
 } from '@okta/okta-react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const checkStatus = (status) => status >= 200 && status < 300;
 
 const client = axios.create({
@@ -22,26 +25,25 @@ client.interceptors.request.use(async (requestConfig) => {
     requestConfig.url.includes('/okta/update-user')
   ) {
     let retries = 0;
+    try {
+      const tokenStr = await AsyncStorage.getItem('tokens');
+      const tokens = JSON.parse(tokenStr);
 
-    while (retries < 3) {
-      try {
-        const tokens = await refreshTokens();
-        const userClams = await getUserFromIdToken();
+      const userClamStr = await AsyncStorage.getItem('userClams');
+      const userClams = JSON.parse(userClamStr);
 
-        requestConfig.headers = {
-          ...requestConfig.headers,
-          Authorization: `Bearer ${tokens.id_token}`,
-          clientId: config.clientId,
-        };
+      requestConfig.headers = {
+        ...requestConfig.headers,
+        Authorization: `Bearer ${tokens.id_token}`,
+        clientId: config.clientId,
+      };
 
-        if (userClams.nonce) {
-          requestConfig.headers.nonce = userClams.nonce;
-        }
-        break;
-      } catch (e) {
-        retries += 1;
-        console.log('Adding Header Issue:', e);
+      if (userClams.nonce) {
+        requestConfig.headers.nonce = userClams.nonce;
       }
+    } catch (e) {
+      retries += 1;
+      console.log('Adding Header Issue:', e);
     }
   }
 
@@ -55,7 +57,6 @@ client.interceptors.response.use(
   },
   (error) => {
     console.log('erro>>>>>', error, error.response);
-
     return Promise.reject(error);
   },
 );

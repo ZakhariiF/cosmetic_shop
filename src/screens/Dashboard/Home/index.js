@@ -47,7 +47,7 @@ const Home = ({navigation}) => {
 
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
-  const customerId = get(userInfo, 'bookerID');
+  
   const [deleteItem, setDeleteItem] = useState(null);
 
   const globalConfig = useSelector((state) => state.home.config);
@@ -75,6 +75,7 @@ const Home = ({navigation}) => {
   }, [loading, error, data]);
 
   useEffect(() => {
+    const customerId = get(userInfo, 'bookerID');
     if (customerId) {
       getAppts();
       getCustomerDetails();
@@ -82,17 +83,17 @@ const Home = ({navigation}) => {
     } else {
       getUserInfo();
     }
-  }, []);
+  }, [userInfo]);
 
   const getUserInfo = async () => {
     const user = await getUser();
     dispatch(loginSuccess(user));
   };
 
-  const getCustomerDetails = () => dispatch(getCustomerInfo(customerId));
+  const getCustomerDetails = () => dispatch(getCustomerInfo(get(userInfo, 'bookerID')));
 
   const getAppts = () =>
-    dispatch(getAppointments(customerId, 20, moment().format('YYYY-MM-DD')));
+    dispatch(getAppointments(get(userInfo, 'bookerID'), 5, moment().format('YYYY-MM-DD')));
 
   const getHomeData = async () => {
     try {
