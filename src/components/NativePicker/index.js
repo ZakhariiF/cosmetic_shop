@@ -12,26 +12,35 @@ const NativePicker = ({
   nonParent,
   disabled,
   pickerContainer,
-}) => (
-  <>
+}) => {
+
+  let styleObj = {
+    viewContainer: [styles.pickerContainer, pickerContainer],
+    placeholder: {
+      color: Colors.light_gray,
+      fontFamily: Fonts.AvenirNextRegular,
+      fontSize: 16,
+    },
+  };
+
+  if (Platform.OS === 'android') {
+    styleObj = {
+      ...styleObj,
+      inputAndroid: styles.pickerinput,
+      inputAndroidContainer: {justifyContent: 'center'},
+    }
+  } else {
+    styleObj = {
+      ...styleObj,
+      inputIOS: styles.pickerinput,
+      inputIOSContainer: {justifyContent: 'center'},
+    }
+  }
+
+  return (
     <RNPickerSelect
-      disabled={disabled}
-      style={{
-        viewContainer: [styles.pickerContainer, pickerContainer],
-        placeholder: {
-          color: Colors.light_gray,
-          fontFamily: Fonts.AvenirNextRegular,
-          fontSize: 16,
-        },
-        inputIOS: styles.pickerinput,
-        inputAndroid: styles.pickerinput,
-        inputIOSContainer: {justifyContent: 'center'},
-        inputAndroidContainer: {justifyContent: 'center'},
-        iconContainer: {marginRight: Platform.OS === 'android' ? 10 : 0},
-      }}
-      placeholder={{label: placeholder, value: nonParent ? 0 : null}}
-      onValueChange={(value) => onValueChange(value)}
-      value={selectedValue}
+      // disabled={!!disabled}
+      style={styleObj}
       Icon={() => (
         <Image
           resizeMode="contain"
@@ -39,10 +48,12 @@ const NativePicker = ({
           style={styles.arrowIcon}
         />
       )}
+      onValueChange={(value) => onValueChange(value)}
+      value={selectedValue}
       items={items}
     />
-  </>
-);
+  );
+};
 
 export default NativePicker;
 

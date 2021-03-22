@@ -178,6 +178,7 @@ const Events = () => {
                   partySizeChoices={partySizeChoices}
                   occasions={occasions}
                   setHeight={(height) => onChangeHeight(height, i)}
+                  key={i}
                 />
               ))}
             </View>

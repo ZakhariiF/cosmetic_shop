@@ -5,8 +5,8 @@ import {
   StyleSheet,
   View,
   Text,
-  Dimensions,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import {get} from 'lodash';
 import rootStyle from 'rootStyle';
@@ -15,8 +15,6 @@ import {setLocation} from 'screens/Dashboard/Booking/thunks';
 import {openMaps, call} from 'utils';
 import {distance} from 'utils/RadarHelper';
 import MapView from 'react-native-maps';
-
-const {width} = Dimensions.get('window');
 
 const CustomMapMarker = ({
   selected,
@@ -64,8 +62,8 @@ const CustomMapMarker = ({
     ? Images.fav_marker
     : Images.yellow_pin;
 
-  const onCalloutPress = ({nativeEvent}) => {
-    console.log('Point: ', nativeEvent);
+  const onCalloutPress = (e) => {
+    console.log('onCalloutPress:', e.currentTarget);
   }
 
   return (
@@ -94,7 +92,9 @@ const CustomMapMarker = ({
                   get(item, 'contact.coordinates[1]', 34.1434376),
                 )
               }>
-              <Text style={{lineHeight: 20,}}><Image source={Images.loc} style={{width: 20, height: 20}} resizeMethod="cover" /></Text>
+                <Text>
+                  <Image source={Images.loc} />
+                </Text>
             </View>
           </View>
 
@@ -137,7 +137,7 @@ const CustomMapMarker = ({
           </View>
         </View>
       </MapView.Callout>
-    </MapView.Marker>
+    </MapView.Marker>    
   );
 };
 

@@ -17,6 +17,7 @@ import {
   FlatList,
   Keyboard,
   LayoutAnimation,
+  Dimensions,
 } from 'react-native';
 import rootStyle from 'rootStyle';
 import LocationItem from 'components/LocationItem';
@@ -47,6 +48,13 @@ import { requestUserLocationLocation } from "utils";
 import { setCurrentLocation } from "screens/Dashboard/thunks";
 
 // import Location from 'screens/Dashboard/Booking/Location';
+
+const window = Dimensions.get('window');
+const {width, height} = window;
+
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.05;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const LocationModal = forwardRef((props, ref) => {
   const {

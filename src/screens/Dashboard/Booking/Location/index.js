@@ -14,12 +14,13 @@ import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {requestUserLocationLocation, findStoresFromPointWithTitle} from 'utils';
 import {geolocateSearchLocation} from 'services/Google';
-import {Dimensions} from 'react-native';
+import {Dimensions, Platform} from 'react-native';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 import {StyleSheet} from 'react-native';
 import {Colors, Fonts} from 'constant';
 import {hasRadarPermission} from 'utils/RadarHelper';
+import AndroidMapMarker from 'components/AndroidMapMarker';
 // import { getDistance, getPreciseDistance } from 'geolib'
 const window = Dimensions.get('window');
 const {width, height} = window;
@@ -153,8 +154,8 @@ const Location = ({navigation}) => {
     return data;
   }, [loading, error, data]);
 
-  const onMarker = (item, event) => {
-    console.log('Event:', event);
+  const onMarker = (item) => {
+    console.log('Item:', item);
     setCoords({
       latitude: Number(get(item, 'contact.coordinates[0]', 34.1434376)),
       longitude: Number(get(item, 'contact.coordinates[1]', -118.2580306)),
@@ -182,7 +183,37 @@ const Location = ({navigation}) => {
   return (
     <>
       <BookingTab />
-      {coords && <MapView
+      {/* {Platform.OS === 'android' ? (
+        <MapView
+          showsUserLocation
+          ref={mapRef}
+          initialRegion={coords}
+          region={coords}
+          style={{
+            width,
+            height: collapsed ? height / 2: height, 
+            flex: 1,
+          }}>
+          {(allLocations || []).map((e, i) => (
+            <AndroidMapMarker
+              key={i}
+              coordinate={{
+                latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
+                longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+              }}
+              selected={selectedLocationId === e.bookerLocationId}
+              item={e}
+              navigation={navigation}
+              currentLocation={currentLocation}
+              onClose={() => setSelectedLocation(-1)}
+              onPress={() => onMarker(e)}
+            />
+          ))}
+        </MapView>
+      ) : ( */}
+      <MapView
         showsUserLocation
         ref={mapRef}
         initialRegion={coords}
@@ -209,7 +240,8 @@ const Location = ({navigation}) => {
             onPress={() => onMarker(e)}
           />
         ))}
-      </MapView>}
+      </MapView>
+      {/* )} */}
 
       {get(data, 'storeCollection') ? (
         <LocationModal
