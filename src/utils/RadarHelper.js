@@ -67,7 +67,7 @@ export const distance = (origin, destination) => {
     Radar.getDistance({
       origin,
       destination,
-      mode: 'car',
+      modes: ['car'],
       units: 'imperial',
     })
       .then((result) => {

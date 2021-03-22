@@ -37,7 +37,6 @@ const LocationItem = ({
 
   const getDistance = useCallback(async () => {
     try {
-      console.log('Distance:', currentLocation, item);
       const _dis = await distance(
         {
           latitude: Number(currentLocation.latitude),

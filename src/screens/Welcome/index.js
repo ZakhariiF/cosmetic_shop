@@ -11,7 +11,6 @@ const WelcomeImages = [
   Images.welcomescreen_book,
   Images.welcomescreen_appts,
   Images.welcomescreen_myacct,
-  Images.welcomescreen_book,
 ];
 
 const {height, width} = Dimensions.get('window');
@@ -21,12 +20,8 @@ const Welcome = () => {
   const dispatch = useDispatch();
 
   const onTouchEnd = useCallback(
-    (_e, s) => {
-      if (s.index !== currentSlide) {
-        setCurrentSlide(s.index);
-      } else {
-        setCurrentSlide(currentSlide + 1);
-      }
+    (_e) => {
+      setCurrentSlide(currentSlide + 1);
     },
     [currentSlide],
   );
@@ -37,27 +32,18 @@ const Welcome = () => {
     }
   }, [currentSlide]);
 
-  return (
-    <View style={{flex: 1}}>
-      <Slick
-        loop={false}
-        onTouchEnd={onTouchEnd}
-        index={currentSlide}
-        dotStyle={{backgroundColor: 'transparent'}}
-        activeDotStyle={{backgroundColor: 'transparent'}}>
-        {WelcomeImages.map((img, i) => (
-          <ImageBackground
-            source={img}
-            key={i}
-            style={{
-              width,
-              height,
-            }}
-            resizeMode="stretch"
-          />
+  const img = WelcomeImages[currentSlide];
 
-        ))}
-      </Slick>
+  return (
+    <View style={{flex: 1}} onTouchEnd={onTouchEnd} onTouchMove={() => dispatch(increaseLoggedInCount())}>
+      <ImageBackground
+        source={img}
+        style={{
+          width,
+          height,
+        }}
+        resizeMode="stretch"
+      />
     </View>
   );
 };
