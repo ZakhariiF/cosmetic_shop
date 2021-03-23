@@ -78,8 +78,9 @@ const AccountStyle = ({navigation}) => {
             >
               <Slick
                 loop={true}
-                // style={{width: 100, height: 100}}
-                showsButtons={true}>
+                showsButtons={true}
+                nextButton={<Image source={Images.right_arrow} style={styles.slickCtrlBtnImage} />}
+                prevButton={<Image source={Images.right_arrow} style={[{transform: [{rotate: '180deg'}]}, styles.slickCtrlBtnImage]} />}>
                 {images.map((e, i) => (
                   <View key={i} style={{width: 400, height: 400}}>
                     <Image
@@ -118,7 +119,10 @@ const AccountStyle = ({navigation}) => {
         </View>
 
         <View style={{paddingHorizontal: 20}}>
-          <Slick showsButtons={true} containerStyle={styles.swiperContainer}>
+          <Slick showsButtons={true}
+            containerStyle={styles.swiperContainer}
+            nextButton={<Image source={Images.right_arrow} style={styles.slickCtrlBtnImage} />}
+            prevButton={<Image source={Images.right_arrow} style={[{transform: [{rotate: '180deg'}]}, styles.slickCtrlBtnImage]} />}>
             {/* {[1, 2, 3, 4].map((e, i) => ( */}
             {get(data, 'styles', []).map((e, i) => {
               return (

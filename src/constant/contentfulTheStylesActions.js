@@ -85,8 +85,6 @@ const parseGallery = (data) => {
     images: [],
   };
 
-  console.log('ParseGallery:', data);
-
   try {
     if (data && data.styleGallery) {
       galleryData.title = data.styleGallery?.title;

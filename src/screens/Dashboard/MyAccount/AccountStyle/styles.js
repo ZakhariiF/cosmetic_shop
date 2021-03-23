@@ -65,4 +65,8 @@ export default StyleSheet.create({
     top: '40%',
     position: 'absolute',
   },
+  slickCtrlBtnImage: {
+    height: 25,
+    width: 15,
+  },
 });
