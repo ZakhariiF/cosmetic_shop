@@ -63,7 +63,12 @@ const CustomMapMarker = ({
     : Images.yellow_pin;
 
   const onCalloutPress = (e) => {
-    console.log('onCalloutPress:', e.currentTarget);
+    if (Platform.OS === 'android') {
+      navigation.navigate('Book', {
+        screen: 'ShopDetail',
+        params: {item},
+      })
+    }
   }
 
   return (
