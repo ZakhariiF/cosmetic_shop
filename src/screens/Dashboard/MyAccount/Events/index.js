@@ -147,7 +147,6 @@ const Events = () => {
                   activeDotStyle={{backgroundColor: 'transparent'}}
                   buttonWrapperStyle={{
                     alignItems: 'flex-start',
-                    flex: 'auto',
                     top: 370,
                   }}>
                   {events.map((e, i) => {
