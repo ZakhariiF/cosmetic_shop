@@ -60,27 +60,39 @@ const AccountStyle = ({navigation}) => {
         onRequestClose={() => {
           setModalVisible(false);
         }}>
-        <TouchableOpacity onPressOut={() => setModalVisible(false)} style={{flex: 1}}>
+        <TouchableOpacity
+          onPressOut={() => setModalVisible(false)}
+          style={{flex: 1}}>
           <View
             style={{
               flex: 1,
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: Colors.bg,
-            }}
-          >
+            }}>
             <View
               style={{
                 width: 400,
                 height: 500,
                 padding: 15,
-              }}
-            >
+              }}>
               <Slick
-                loop={true}
                 showsButtons={true}
-                nextButton={<Image source={Images.right_arrow} style={styles.slickCtrlBtnImage} />}
-                prevButton={<Image source={Images.right_arrow} style={[{transform: [{rotate: '180deg'}]}, styles.slickCtrlBtnImage]} />}>
+                nextButton={
+                  <Image
+                    source={Images.right_arrow}
+                    style={styles.slickCtrlBtnImage}
+                  />
+                }
+                prevButton={
+                  <Image
+                    source={Images.right_arrow}
+                    style={[
+                      {transform: [{rotate: '180deg'}]},
+                      styles.slickCtrlBtnImage,
+                    ]}
+                  />
+                }>
                 {images.map((e, i) => (
                   <View key={i} style={{width: 400, height: 400}}>
                     <Image
@@ -99,8 +111,6 @@ const AccountStyle = ({navigation}) => {
             </View>
           </View>
         </TouchableOpacity>
-
-
       </Modal>
 
       <ScrollView>
@@ -114,20 +124,41 @@ const AccountStyle = ({navigation}) => {
           {/* <Text style={styles.topText}>
             CHOOSE A LOOK{'\n'} FOR THE NEXT TIME YOU BOOK
           </Text> */}
-          <Text style={styles.topText}>{get(data, 'title', '').toUpperCase()}</Text>
+          <Text style={styles.topText}>
+            {get(data, 'title', '').toUpperCase()}
+          </Text>
           {/* <Text style={styles.desc}>{get(data, 'description')}</Text> */}
         </View>
 
         <View style={{paddingHorizontal: 20}}>
-          <Slick showsButtons={true}
+          <Slick
+            showsButtons={true}
             containerStyle={styles.swiperContainer}
-            nextButton={<Image source={Images.right_arrow} style={styles.slickCtrlBtnImage} />}
-            prevButton={<Image source={Images.right_arrow} style={[{transform: [{rotate: '180deg'}]}, styles.slickCtrlBtnImage]} />}>
+            dotStyle={{backgroundColor: 'transparent'}}
+            activeDotStyle={{backgroundColor: 'transparent'}}
+            nextButton={
+              <Image
+                source={Images.right_arrow}
+                style={styles.slickCtrlBtnImage}
+              />
+            }
+            prevButton={
+              <Image
+                source={Images.right_arrow}
+                style={[
+                  {transform: [{rotate: '180deg'}]},
+                  styles.slickCtrlBtnImage,
+                ]}
+              />
+            }>
             {/* {[1, 2, 3, 4].map((e, i) => ( */}
             {get(data, 'styles', []).map((e, i) => {
               return (
                 <View>
-                  <Image source={{uri: e.featuredImage}} style={styles.imageStyle} />
+                  <Image
+                    source={{uri: e.featuredImage}}
+                    style={styles.imageStyle}
+                  />
                   <Text style={styles.swiperTextStyle}>{e.title}</Text>
                 </View>
               );
@@ -152,7 +183,8 @@ const AccountStyle = ({navigation}) => {
                   <>
                     <DottedView number={200} />
 
-                    <TouchableWithoutFeedback onPress={() => playVideo(e.featuredVideo)}>
+                    <TouchableWithoutFeedback
+                      onPress={() => playVideo(e.featuredVideo)}>
                       <View style={styles.playerContainer}>
                         <Image
                           source={{uri: e.featuredImage}}

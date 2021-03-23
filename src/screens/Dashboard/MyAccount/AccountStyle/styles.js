@@ -26,13 +26,13 @@ export default StyleSheet.create({
   swiperTextStyle: {
     fontSize: 30,
     fontFamily: Fonts.DCondensed,
-    padding: 10,
+    padding: 20,
     color: '#42413D',
     textAlign: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
   swiperContainer: {
-    height: 420,
+    height: 450,
     width: '100%',
     marginTop: 30,
   },

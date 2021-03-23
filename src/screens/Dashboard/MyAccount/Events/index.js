@@ -129,6 +129,7 @@ const Events = () => {
                   showsButtons={true}
                   containerStyle={styles.eventSlickWrapper}
                   dotStyle={{backgroundColor: 'transparent'}}
+                  activeDotStyle={{backgroundColor: 'transparent'}}
                   nextButton={
                     <Image
                       source={Images.right_arrow}
@@ -144,7 +145,6 @@ const Events = () => {
                       ]}
                     />
                   }
-                  activeDotStyle={{backgroundColor: 'transparent'}}
                   buttonWrapperStyle={{
                     alignItems: 'flex-start',
                     top: 370,
