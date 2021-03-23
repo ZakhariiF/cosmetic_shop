@@ -32,7 +32,7 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
   swiperContainer: {
-    height: 420,
+    height: 430,
     width: '100%',
     marginTop: 30,
   },
