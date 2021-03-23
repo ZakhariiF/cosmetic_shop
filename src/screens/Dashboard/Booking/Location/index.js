@@ -235,7 +235,6 @@ const Location = ({navigation}) => {
             selected={selectedLocationId === e.bookerLocationId}
             item={e}
             navigation={navigation}
-            currentLocation={currentLocation}
             onClose={() => setSelectedLocation(-1)}
             onPress={() => onMarker(e)}
           />

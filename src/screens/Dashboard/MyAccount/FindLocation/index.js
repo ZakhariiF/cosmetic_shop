@@ -23,8 +23,11 @@ import {types} from 'screens/Dashboard/Booking/ducks';
 import CustomMapMarker from 'components/CustomMapMarker';
 import {geolocateSearchLocation} from 'services/Google';
 import CheckBox from 'components/Checkbox';
-import { setCurrentLocation, setUseCurrentLocation } from "screens/Dashboard/thunks";
-import { current } from "@reduxjs/toolkit";
+import {
+  setCurrentLocation,
+  setUseCurrentLocation,
+} from 'screens/Dashboard/thunks';
+import {current} from '@reduxjs/toolkit';
 
 const window = Dimensions.get('window');
 const {width, height} = window;
@@ -233,7 +236,6 @@ const FindLocation = ({navigation}) => {
             selected={selectedLocationIndex === i}
             item={e}
             navigation={navigation}
-            currentLocation={currentLocation}
             onClose={() => setSelectedLocation(-1)}
             onPress={() => onMarker(e, i)}
             coordinate={{

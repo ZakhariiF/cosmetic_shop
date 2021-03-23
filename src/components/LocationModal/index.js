@@ -33,19 +33,14 @@ import {
   setLocation,
   setmemberCount,
 } from 'screens/Dashboard/Booking/thunks';
-import {updateCustomer} from 'services';
-import {
-  getCustomerInfo,
-  setFavoriteStore,
-  updateCustomerInfo,
-} from 'screens/Auth/thunks';
+import {setFavoriteStore} from 'screens/Auth/thunks';
 import EmptyContainer from 'components/EmptyContainer';
 import ReviewPopup from 'components/ReviewPopup';
 import {types} from 'screens/Dashboard/Booking/ducks';
 import MParticle from 'react-native-mparticle';
 import CheckBox from 'components/Checkbox';
-import { requestUserLocationLocation } from "utils";
-import { setCurrentLocation } from "screens/Dashboard/thunks";
+import {requestUserLocationLocation} from 'utils';
+import {setCurrentLocation} from 'screens/Dashboard/thunks';
 
 // import Location from 'screens/Dashboard/Booking/Location';
 
@@ -187,7 +182,7 @@ const LocationModal = forwardRef((props, ref) => {
       let addonPrice = 0;
       if (get(e, 'addons')) {
         addonPrice = e.addons.reduce(
-          (val, item) => (get(item, 'PriceInfo.Amount', 0))+ val,
+          (val, item) => get(item, 'PriceInfo.Amount', 0) + val,
           0,
         );
       }
@@ -328,7 +323,6 @@ const LocationModal = forwardRef((props, ref) => {
                   onFavIcon={onFav}
                   isFav={get(e, 'item.bookerLocationId') == favItem}
                   onSelect={onSelect}
-                  currentLocation={currentLocation}
                 />
               )}
               keyExtractor={(_, index) => index.toString()}

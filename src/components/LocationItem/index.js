@@ -14,6 +14,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import {get} from 'lodash';
 import {openMaps} from 'utils';
 import {distance} from 'utils/RadarHelper';
+import {useSelector} from 'react-redux';
 
 const LocationItem = ({
   navigation,
@@ -26,17 +27,22 @@ const LocationItem = ({
   isViewMode,
   fromFindLoc = false,
   onSelect,
-  currentLocation,
 }) => {
   const [dis, setDis] = useState(null);
+  const currentLocation = useSelector((state) => state.home.currentLocation);
+
   useEffect(() => {
     if (currentLocation && index < 10) {
       getDistance();
     }
-  }, [currentLocation, index]);
+  }, [currentLocation, index, item]);
 
   const getDistance = useCallback(async () => {
     try {
+      console.log('currentLocation:', currentLocation, {
+        latitude: Number(get(item, 'contact.coordinates[0]')),
+        longitude: Number(get(item, 'contact.coordinates[1]')),
+      });
       const _dis = await distance(
         {
           latitude: Number(currentLocation.latitude),
@@ -47,6 +53,7 @@ const LocationItem = ({
           longitude: Number(get(item, 'contact.coordinates[1]')),
         },
       );
+
       setDis(_dis);
     } catch (e) {
       console.log('Get Distance Issue:', e);

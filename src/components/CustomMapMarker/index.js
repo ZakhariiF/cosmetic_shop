@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {get} from 'lodash';
 import rootStyle from 'rootStyle';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setLocation} from 'screens/Dashboard/Booking/thunks';
 import {openMaps, call} from 'utils';
 import {distance} from 'utils/RadarHelper';
@@ -20,7 +20,6 @@ const CustomMapMarker = ({
   selected,
   item,
   navigation,
-  currentLocation,
   onClose,
   onPress,
   coordinate,
@@ -28,6 +27,8 @@ const CustomMapMarker = ({
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [dis, setDis] = useState(null);
+  const currentLocation = useSelector((state) => state.home.currentLocation);
+
   useEffect(() => {
     if (currentLocation && selected) {
       getDistance();
@@ -35,6 +36,10 @@ const CustomMapMarker = ({
   }, [currentLocation, selected]);
   const getDistance = async () => {
     try {
+      console.log('currentLocation: ', currentLocation, {
+        latitude: Number(get(item, 'contact.coordinates[0]')),
+        longitude: Number(get(item, 'contact.coordinates[1]')),
+      });
       const _dis = await distance(
         {
           latitude: Number(currentLocation.latitude),
@@ -67,9 +72,9 @@ const CustomMapMarker = ({
       navigation.navigate('Book', {
         screen: 'ShopDetail',
         params: {item},
-      })
+      });
     }
-  }
+  };
 
   return (
     <MapView.Marker
@@ -96,9 +101,9 @@ const CustomMapMarker = ({
                   get(item, 'contact.coordinates[1]', 34.1434376),
                 )
               }>
-                <Text>
-                  <Image source={Images.loc} />
-                </Text>
+              <Text>
+                <Image source={Images.loc} />
+              </Text>
             </View>
           </View>
 
@@ -141,7 +146,7 @@ const CustomMapMarker = ({
           </View>
         </View>
       </MapView.Callout>
-    </MapView.Marker>    
+    </MapView.Marker>
   );
 };
 
