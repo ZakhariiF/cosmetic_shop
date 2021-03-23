@@ -55,9 +55,33 @@ client.interceptors.response.use(
     console.log(55, response);
     return response;
   },
-  (error) => {
-    console.log('erro>>>>>', error, error.response);
-    return Promise.reject(error);
+  async (error) => {
+    if (error.response.status === 401 && error.config.url.includes('/booker/')) {
+      const tokens = await refreshTokens();
+      await AsyncStorage.setItem('tokens', JSON.stringify(tokens));
+  
+      console.log('refreshTokens:', tokens);
+
+      const userClams = await getUserFromIdToken();
+      await AsyncStorage.setItem('userClams', JSON.stringify(userClams));
+
+      error.config.headers = {
+        ...error.config.headers,
+        Authorization: `Bearer ${tokens.id_token}`,
+        clientId: config.clientId,
+      };
+
+      if (userClams.nonce) {
+        error.config.headers.nonce = userClams.nonce;
+      }
+
+      console.log('Error Config:', error.config);
+
+      return axios.request(error.config);
+    } else {
+      console.log('erro>>>>>', error, error.response);
+      return Promise.reject(error);
+    }
   },
 );
 
