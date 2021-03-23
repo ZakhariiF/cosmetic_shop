@@ -32,14 +32,13 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
   swiperContainer: {
-    height: 450,
+    height: 420,
     width: '100%',
     marginTop: 30,
   },
   imageStyle: {
     height: 350,
     width: '100%',
-    marginBottom: 30,
     position: 'relative',
   },
   buttonStyle: {
