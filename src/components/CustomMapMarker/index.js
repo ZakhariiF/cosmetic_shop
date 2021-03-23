@@ -84,7 +84,6 @@ const CustomMapMarker = ({
           <View style={styles.nameContainer}>
             <Text style={styles.locName}>{get(item, 'title')}</Text>
             <View
-              style={{height: 20,}}
               onTouchStart={() =>
                 openMaps(
                   get(item, 'title'),
@@ -147,6 +146,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 8,
+    // position: 'absolute',
+    // left: -10,
+    // bottom: 40,
+    // zIndex: 102,
   },
   miles: {
     fontSize: 13,

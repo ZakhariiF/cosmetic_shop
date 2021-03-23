@@ -3,7 +3,6 @@ import config from 'constant/config';
 import {client} from 'services';
 import base64url from 'base64url';
 import Url from 'url-parse';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Platform} from 'react-native';
 import {
@@ -67,7 +66,6 @@ export const _login = async (t, email, password) => {
     token,
   };
 };
-
 export const login = async (email, password) => {
   const {data} = await axios.post(`${config.issuer}/api/v1/authn`, {
     username: email,

@@ -129,9 +129,27 @@ const Events = () => {
                   showsButtons={true}
                   containerStyle={styles.eventSlickWrapper}
                   dotStyle={{backgroundColor: 'transparent'}}
-                  nextButton={<Image source={Images.right_arrow} style={styles.slickCtrlBtnImage} />}
-                  prevButton={<Image source={Images.right_arrow} style={[{transform: [{rotate: '180deg'}]}, styles.slickCtrlBtnImage]} />}
-                  activeDotStyle={{backgroundColor: 'transparent'}}>
+                  nextButton={
+                    <Image
+                      source={Images.right_arrow}
+                      style={styles.slickCtrlBtnImage}
+                    />
+                  }
+                  prevButton={
+                    <Image
+                      source={Images.right_arrow}
+                      style={[
+                        {transform: [{rotate: '180deg'}]},
+                        styles.slickCtrlBtnImage,
+                      ]}
+                    />
+                  }
+                  activeDotStyle={{backgroundColor: 'transparent'}}
+                  buttonWrapperStyle={{
+                    alignItems: 'flex-start',
+                    flex: 'auto',
+                    top: 370,
+                  }}>
                   {events.map((e, i) => {
                     return (
                       <View key={i}>

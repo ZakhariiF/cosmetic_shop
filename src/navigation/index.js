@@ -21,7 +21,6 @@ const AppContainer = () => {
   const firstLoggedIn = useSelector((state) => state.auth.loggedInCount === 0);
   // const firstLoggedIn = true;
 
-  console.log('First LoggedIN:', firstLoggedIn);
   const dispatch = useDispatch();
   const [token, setToken] = useState(null);
 
