@@ -78,10 +78,10 @@ const BarflyConfirm = ({navigation, route}) => {
     });
   }, []);
 
-  const getCardExpirationDate = () => moment(new Date(card.Year, card.Month - 1, 1)).format(
+  const getCardExpirationDate = () =>
+    moment(new Date(card.Year, card.Month - 1, 1)).format(
       'YYYY-MM-DDT00:00:00+00:00',
-  );
-
+    );
 
   const addCreditCard = async () => {
     console.log('addCreditCard:', card);
@@ -136,7 +136,10 @@ const BarflyConfirm = ({navigation, route}) => {
         }
 
         try {
-          const order = await API.createOrder(customer.ID);
+          const order = await API.createOrder(
+            customer.ID,
+            customerLocation.bookerLocationId,
+          );
           if (order && order.IsSuccess) {
             const addMemershipToOrder = await API.addMembershipToOrder({
               orderId: order.Order.ID,
@@ -229,9 +232,7 @@ const BarflyConfirm = ({navigation, route}) => {
           <View>
             <Text>{confirmationData}</Text>
 
-            <View style={styles.checkboxContainer}>
-
-            </View>
+            <View style={styles.checkboxContainer} />
 
             <CheckBox
               isChecked={firstChecked}
@@ -258,7 +259,9 @@ const BarflyConfirm = ({navigation, route}) => {
               {get(thankMessage, 'json.content[0].content[0].value')}
             </Dialog.Title>
             <Dialog.Description>
-              <HtmlView value={parsedJSON2Html(parseJSONFormat(thankMessage))} />
+              <HtmlView
+                value={parsedJSON2Html(parseJSONFormat(thankMessage))}
+              />
             </Dialog.Description>
             <Dialog.Button
               color="black"

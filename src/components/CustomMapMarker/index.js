@@ -108,7 +108,7 @@ const CustomMapMarker = ({
           </View>
 
           <Text style={styles.location}>
-            {get(item, 'contact.street1')}
+            {get(item, 'contact.street1')} {' '}
             {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
             {get(item, 'contact.postalCode')}
           </Text>

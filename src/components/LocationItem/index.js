@@ -145,12 +145,15 @@ const LocationItem = ({
         <View style={[styles.flexContainer, {marginTop: 10}]}>
           <View style={styles.rowContainer}>
             <EvilIcons name="location" size={26} />
-            <Text style={styles.location}>
-              {/* 21016 Pacific Coast Hwy Suite D104 Huntington Beach, CA 92648 */}
-              {get(item, 'contact.street1')}
-              {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
-              {get(item, 'contact.postalCode')}
-            </Text>
+            <View>
+              <Text style={styles.location}>
+                {/* 21016 Pacific Coast Hwy Suite D104 Huntington Beach, CA 92648 */}
+                {get(item, 'contact.street1')}, {get(item, 'contact.city')}
+              </Text>
+              <Text style={styles.location}>
+                {get(item, 'contact.state')} {get(item, 'contact.postalCode')}
+              </Text>
+            </View>
           </View>
           {get(item, 'bookerLocationId') && (
             <TouchableOpacity
