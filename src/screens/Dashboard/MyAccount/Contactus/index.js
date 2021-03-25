@@ -169,7 +169,10 @@ const Contactus = () => {
                     Linking.openURL(
                       get(data, 'screenContactCollection.items[0].instagramUrl'),
                     )
-                  }>
+                  }
+                  accessible
+                  accessibilityLabel="Check Instagram"
+                  accessibilityRole="link">
                   <AntDesign name="instagram" size={30} />
                   <Text style={styles.instaName}>
                     {get(data, 'screenContactCollection.items[0].instagram')}
@@ -183,7 +186,10 @@ const Contactus = () => {
                     Linking.openURL(
                       get(data, 'screenContactCollection.items[0].facebookUrl'),
                     )
-                  }>
+                  }
+                  accessible
+                  accessibilityLabel="Check Facebook"
+                  accessibilityRole="link">
                   <EvilIcons name="sc-facebook" size={30} />
                   <Text style={styles.instaName}>
                     {get(data, 'screenContactCollection.items[0].facebook')}
@@ -198,7 +204,10 @@ const Contactus = () => {
               <TouchableOpacity
                 onPress={() =>
                   call(get(data, 'screenContactCollection.items[0].phone1'))
-                }>
+                }
+                accessible
+                accessibilityLabel="Contact us"
+                accessibilityRole="button">
                 <View style={styles.serviceInnerCont}>
                   <Text style={styles.number}>
                     {get(data, 'screenContactCollection.items[0].phone1')}
@@ -217,7 +226,10 @@ const Contactus = () => {
               <TouchableOpacity
                 onPress={() =>
                   call(get(data, 'screenContactCollection.items[0].phone1'))
-                }>
+                }
+                accessible
+                accessibilityLabel="Contact us"
+                accessibilityRole="button">
                 <View style={styles.serviceInnerCont}>
                   <Text style={styles.number}>
                     {get(data, 'screenContactCollection.items[0].phone2')}

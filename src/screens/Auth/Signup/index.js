@@ -71,7 +71,10 @@ const Signup = ({navigation}) => {
             Already have an account?{' '}
             <Text
               style={styles.login}
-              onPress={() => navigation.navigate('Login')}>
+              onPress={() => navigation.navigate('Login')}
+              accessible
+              accessibilityLabel="Log in"
+              accessibilityRole="link">
               Log in
             </Text>
           </Text>

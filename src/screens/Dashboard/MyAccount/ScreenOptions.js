@@ -27,7 +27,10 @@ const ScreenOptions = ({navigation}) => {
         <TouchableOpacity
           onPress={() => onTabPress(i)}
           key={i}
-          style={styles.box}>
+          style={styles.box}
+          accessible
+          accessibilityLabel={e.name}
+          accessibilityRole="link">
           <View
             style={[
               styles.circle,

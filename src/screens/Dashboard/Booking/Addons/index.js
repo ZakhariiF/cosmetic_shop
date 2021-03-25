@@ -158,7 +158,10 @@ const Addons = ({navigation}) => {
         <View style={rootStyle.innerContainer}>
           <TouchableOpacity
             style={styles.skipContainer}
-            onPress={onSkip}>
+            onPress={onSkip}
+            accessible
+            accessibilityLabel="Skip Add-ons"
+            accessibilityRole="button">
             <Text style={styles.skip}>Skip Add-ons</Text>
           </TouchableOpacity>
           {totalGuests.length > 1 ? (
@@ -235,6 +238,9 @@ const AddonItem = ({
             onInfoPress(item);
           }
         }}
+        accessible={!!onInfoPress}
+        accessibilityLabel={`View Detail`}
+        accessibilityRole="button"
         hitSlop={{
           top: 10,
           bottom: 10,
@@ -249,7 +255,10 @@ const AddonItem = ({
 
       <TouchableOpacity
         style={[styles.listButton, rootStyle.shadow]}
-        onPress={() => onAddon(item, index)}>
+        onPress={() => onAddon(item, index)}
+        accessible
+        accessibilityLabel={`Toggle ${item.ServiceName} Add-on`}
+        accessibilityRole="button">
         <View style={{flex: 1, paddingRight: 15}}>
           <Text style={styles.itemName}>{item.ServiceName}</Text>
           <Text style={styles.itemDesc}>{item.Description}</Text>

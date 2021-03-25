@@ -36,7 +36,10 @@ const StyleSwiper = ({
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.topContainer}
-        onPress={() => setVisible(!visible)}>
+        onPress={() => setVisible(!visible)}
+        accessible
+        accessibilityLabel={`Toggle ${title}`}
+        accessibilityRole="button">
         <Text style={styles.headingText}>{title}</Text>
         <Image
           resizeMode="contain"
@@ -88,7 +91,14 @@ const StyleSwiper = ({
             })}
           </View>
 
-          <Text onPress={onBrowse} style={styles.browse}>
+          <Text
+            onPress={onBrowse}
+            style={styles.browse}
+            accessible
+            accessibilityLabel={action
+              ? get(action, 'title', 'Browse ALL Styles')
+              : get(data, 'action.title', 'Browse All Styles')}
+            accessibilityRole="button">
             {action
               ? get(action, 'title', 'Browse ALL Styles')
               : get(data, 'action.title', 'Browse All Styles')}

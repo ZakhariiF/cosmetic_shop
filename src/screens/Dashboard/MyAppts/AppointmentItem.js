@@ -53,13 +53,19 @@ const AppointmentItem = ({
           <View style={styles.rightContainer}>
             <TouchableOpacity
               style={styles.editContainer}
-              onPress={() => onEdit(item, location, past)}>
+              onPress={() => onEdit(item, location, past)}
+              accessible
+              accessibilityLabel={past ? 'Rebook' : 'Edit'}
+              accessibilityRole="button">
               <Text style={styles.editText}>{past ? 'Rebook' : 'Edit'}</Text>
             </TouchableOpacity>
             {!past && (
               <TouchableOpacity
                 style={styles.cancelContainer}
-                onPress={() => onCancel(item, location)}>
+                onPress={() => onCancel(item, location)}
+                accessible
+                accessibilityLabel="Cancel"
+                accessibilityRole="button">
                 <Text style={[styles.editText, {color: Colors.header_title}]}>
                   Cancel
                 </Text>
@@ -89,6 +95,9 @@ const AppointmentItem = ({
               onPress={() =>
                 navigation.navigate('ApptDetails', {past, item, location})
               }
+              accessible
+              accessibilityLabel="Appointment Details"
+              accessibilityRole="button"
               style={[styles.details, {textDecorationLine: 'underline'}]}>
               View Details
             </Text>

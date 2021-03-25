@@ -20,6 +20,9 @@ const WeekDays = ({currentWeek, selectDate, onDateChange}) => {
               <Text style={styles.weekDay}>{e.day}</Text>
               <TouchableOpacity
                 disabled={e.disable}
+                accessible
+                accessibilityLabel={`Select ${e.date}`}
+                accessibilityRole="button"
                 onPress={() => onDateChange(e.fulldate)}
                 style={[
                   styles.weekContainer,

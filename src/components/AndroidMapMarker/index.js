@@ -97,8 +97,10 @@ const AndroidMapMarker = ({
                     get(item, 'contact.coordinates[0]', 34.1434376),
                     get(item, 'contact.coordinates[1]', 34.1434376),
                   )
-                }
-                }>
+                }}
+                accessible
+                accessibilityLabel={get(item, 'title')}
+                accessibilityRole="link">
                 <Image source={Images.loc} />
               </View>
             </View>

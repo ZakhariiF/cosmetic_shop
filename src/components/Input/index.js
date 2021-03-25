@@ -51,6 +51,9 @@ const Input = ({
             name={inputName || name}
           />
           <Text
+            accessible
+            accessibilityLabel="Edit"
+            accessibilityRole="button"
             onPress={() => {
               input.current.focus();
               onEdit && onEdit();
@@ -83,6 +86,9 @@ const Input = ({
           />
           <TouchableOpacity
             style={styles.eyeIcon}
+            accessible
+            accessibilityLabel="Hide"
+            accessibilityRole="button"
             onPress={() => setHide(!hide)}>
             <Entypo
               name={!hide ? 'eye' : 'eye-with-line'}

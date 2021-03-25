@@ -212,7 +212,10 @@ const ServiceItem = ({
           rootStyle.shadow,
           isExist(item) && styles.activeListTab,
         ]}
-        onPress={() => onService(item)}>
+        onPress={() => onService(item)}
+        accessible
+        accessibilityLabel={`Toggle ${item.name} Service`}
+        accessibilityRole="button">
         <Text style={[styles.itemName, isExist(item) && styles.activeName]}>
           {item.Name}
         </Text>

@@ -42,6 +42,9 @@ const Header = ({
           <MaterialIcons
             name="arrow-back-ios"
             size={25}
+            accessible
+            accessibilityLabel="Back"
+            accessibilityRole="button"
             onPress={
               onBackPress
                 ? onBackPress
@@ -66,12 +69,22 @@ const Header = ({
           {title}
         </Text>
         {isNext ? (
-          <TouchableOpacity style={styles.rightContainer} onPress={onNext}>
+          <TouchableOpacity
+            style={styles.rightContainer}
+            onPress={onNext}
+            accessible
+            accessibilityLabel="Next"
+            accessibilityRole="button">
             <Text style={styles.next}>NEXT</Text>
             <Image source={Images.right_arrow} />
           </TouchableOpacity>
         ) : isSave ? (
-          <TouchableOpacity style={styles.rightContainer} onPress={onSave}>
+          <TouchableOpacity
+            style={styles.rightContainer}
+            onPress={onSave}
+            accessible
+            accessibilityLabel="Save"
+            accessibilityRole="button">
             <Text style={styles.next}>SAVE</Text>
           </TouchableOpacity>
         ) : (

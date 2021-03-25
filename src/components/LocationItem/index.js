@@ -100,13 +100,19 @@ const LocationItem = ({
         if (onSelect) {
           onSelect(item);
         }
-      }}>
+      }}
+      accessible={!!onSelect}
+      accessibilityLabel="Next"
+      accessibilityRole="button">
       <View style={styles.container}>
         {/*  */}
         <View style={styles.flexContainer}>
           <View style={styles.rowContainer}>
             {isBookable && (
               <TouchableOpacity
+                accessible
+                accessibilityLabel="Shop Detail"
+                accessibilityRole="link"
                 onPress={() =>
                   navigation.navigate('ShopDetail', {item, fromFindLoc})
                 }
@@ -119,6 +125,9 @@ const LocationItem = ({
           {isBookable && (
             <TouchableOpacity
               style={styles.buttonContainer}
+              accessible
+              accessibilityLabel={isViewMode ? 'Shop Detail' : 'Book'}
+              accessibilityRole="link"
               onPress={() => {
                 if (isViewMode) {
                   navigation.navigate('ShopDetail', {item, fromFindLoc});
@@ -146,6 +155,9 @@ const LocationItem = ({
           {get(item, 'bookerLocationId') && (
             <TouchableOpacity
               onPress={() => onFavIcon(item)}
+              accessible
+              accessibilityLabel="Favorite Shop"
+              accessibilityRole="button"
               style={styles.favIcon}>
               <Image
                 resizeMode="contain"
@@ -164,6 +176,9 @@ const LocationItem = ({
           )}
 
           <TouchableOpacity
+            accessible
+            accessibilityLabel="View Map"
+            accessibilityRole="link"
             onPress={() =>
               openMaps(
                 get(item, 'title'),

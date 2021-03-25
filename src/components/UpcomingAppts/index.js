@@ -105,6 +105,9 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
         <View style={styles.bottomContainer}>
           <TouchableOpacity
             style={styles.editButton}
+            accessible
+            accessibilityLabel="Edit"
+            accessibilityRole="button"
             onPress={() => {
               MParticle.logEvent(
                 'Home - Appointment Edit',
@@ -121,6 +124,9 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.editButton]}
+            accessible
+            accessibilityLabel="Cancel"
+            accessibilityRole="button"
             onPress={() => {
               MParticle.logEvent(
                 'Home - Appointment Check IN',
@@ -144,6 +150,9 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.editButton}
+            accessible
+            accessibilityLabel="Open Map"
+            accessibilityRole="link"
             onPress={() => {
               MParticle.logEvent(
                 'Home - Get Direction',
@@ -280,6 +289,9 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
         <Button
           name="Book an Appointment"
           containerStyle={{marginTop: 30}}
+          accessible
+          accessibilityLabel="Book"
+          accessibilityRole="link"
           onButtonPress={() => navigation.navigate('Book')}
         />
       ) : null}

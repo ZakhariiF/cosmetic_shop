@@ -162,6 +162,9 @@ const ApptDetails = ({route, navigation}) => {
                 get(location, 'contact.coordinates[1]'),
               )
             }
+            accessible
+            accessibilityLabel="Open Map"
+            accessibilityRole="link"
             style={styles.locContainer}>
             <View style={styles.flexContainer}>
               <Text style={styles.headerText}>Location</Text>

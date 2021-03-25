@@ -110,7 +110,10 @@ const AccessibilityPolicy = () => {
               <View key={i} style={styles.toggleContainer}>
                 <TouchableOpacity
                   onPress={() => onToggle(i)}
-                  style={styles.flexContainer}>
+                  style={styles.flexContainer}
+                  accessible
+                  accessibilityLabel="Toggle to show the answer"
+                  accessibilityRole="button">
                   <Text style={styles.headerText}>{get(e, 'question')}</Text>
                   <Image
                     style={[

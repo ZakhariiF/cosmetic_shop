@@ -95,6 +95,9 @@ const CaliforniaResidents = () => {
               <View key={i} style={styles.toggleContainer}>
                 <TouchableOpacity
                   onPress={() => onToggle(i)}
+                  accessible
+                  accessibilityLabel="Toggle to show the answer"
+                  accessibilityRole="button"
                   style={styles.flexContainer}>
                   <Text style={styles.headerText}>{get(e, 'question')}</Text>
                   <Image

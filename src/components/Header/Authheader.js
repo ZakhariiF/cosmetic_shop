@@ -19,6 +19,9 @@ const Authheader = ({isCall}) => {
       {isCall ? (
         <TouchableOpacity
           onPress={() => call(get(config, 'settings.phoneNumbers.drybarServices'))}
+          accessible
+          accessibilityLabel="Call Us"
+          accessibilityRole="link"
           style={styles.rightContainer}>
           <Image source={Images.call} />
           <Text style={styles.call}>Call Us</Text>

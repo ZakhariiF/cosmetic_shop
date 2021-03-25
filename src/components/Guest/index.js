@@ -12,12 +12,12 @@ const Guest = ({count, onDecrement, onIncrement, onNext, navigation}) => {
         <Text style={styles.notice}>You may book up to 4 guests.</Text>
 
         <View style={styles.countContainer}>
-          <TouchableOpacity style={styles.circle} onPress={onDecrement}>
+          <TouchableOpacity style={styles.circle} onPress={onDecrement} accessible accessibilityLabel="Me" accessibilityRole="button">
             <Entypo name="minus" color={Colors.primary} size={14} />
           </TouchableOpacity>
 
           <Text style={styles.count}>{count}</Text>
-          <TouchableOpacity style={styles.circle} onPress={onIncrement}>
+          <TouchableOpacity style={styles.circle} onPress={onIncrement} accessible accessibilityLabel="Me And Guests" accessibilityRole="button">
             <Entypo name="plus" color={Colors.primary} size={16} />
           </TouchableOpacity>
         </View>
@@ -26,6 +26,9 @@ const Guest = ({count, onDecrement, onIncrement, onNext, navigation}) => {
 
       <Text
         onPress={() => navigation.navigate('BookingForm')}
+        accessible
+        accessibilityLabel="More than 4 Guests"
+        accessibilityRole="link"
         style={styles.bottomText}>
         I want to book more than 4
       </Text>

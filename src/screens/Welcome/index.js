@@ -27,7 +27,7 @@ const Welcome = () => {
   );
 
   useEffect(() => {
-    if (currentSlide >= 3) {
+    if (currentSlide >= 2) {
       dispatch(increaseLoggedInCount());
     }
   }, [currentSlide]);

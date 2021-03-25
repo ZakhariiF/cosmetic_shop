@@ -65,6 +65,9 @@ const ReviewPopup = ({}) => {
             <Text style={styles.titleText}>{selectedLocation.title}</Text>
             <TouchableOpacity
               style={styles.editContainer}
+              accessible
+              accessibilityLabel="Back"
+              accessibilityRole="button"
               onPress={() => navigation.popToTop()}>
               <Image source={Images.edit} />
             </TouchableOpacity>
@@ -96,6 +99,9 @@ const ReviewPopup = ({}) => {
 
               <TouchableOpacity
                 style={styles.editContainer}
+                accessible
+                accessibilityLabel="Edit Services"
+                accessibilityRole="button"
                 onPress={() => navigation.navigate('Services')}>
                 <Image source={Images.edit} />
               </TouchableOpacity>
@@ -138,6 +144,9 @@ const ReviewPopup = ({}) => {
 
               <TouchableOpacity
                 style={styles.editContainer}
+                accessible
+                accessibilityLabel="Edit Add-ons"
+                accessibilityRole="button"
                 onPress={() => navigation.navigate('Addons')}>
                 <Image source={Images.edit} />
               </TouchableOpacity>
@@ -177,6 +186,9 @@ const ReviewPopup = ({}) => {
 
               <TouchableOpacity
                 style={styles.editContainer}
+                accessible
+                accessibilityLabel="Edit Extensions"
+                accessibilityRole="button"
                 onPress={() => {
                   dispatch(setExtensionType(true));
                   navigation.navigate('Addons');
@@ -219,6 +231,9 @@ const ReviewPopup = ({}) => {
               )}
               <TouchableOpacity
                 style={styles.editContainer}
+                accessible
+                accessibilityLabel="Edit Date / Time."
+                accessibilityRole="button"
                 onPress={() => navigation.navigate('DateTime')}>
                 <Image source={Images.edit} />
               </TouchableOpacity>

@@ -236,7 +236,10 @@ const Home = ({navigation}) => {
 
           <Text
             onPress={() => navigation.navigate('My Appts')}
-            style={styles.historyText}>
+            style={styles.historyText}
+            accessible
+            accessibilityLabel="Show My Appointments"
+            accessibilityRole="link">
             View Appointment History
           </Text>
 
@@ -337,6 +340,9 @@ const Home = ({navigation}) => {
                 return (
                   <TouchableOpacity
                     onPress={() => onBrowser(action)}
+                    accessible
+                    accessibilityLabel="Action"
+                    accessibilityRole="link"
                     key={index}>
                     {img}
                   </TouchableOpacity>

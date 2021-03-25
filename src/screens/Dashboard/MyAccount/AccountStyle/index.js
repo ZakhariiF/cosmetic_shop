@@ -184,7 +184,10 @@ const AccountStyle = ({navigation}) => {
                     <DottedView number={200} />
 
                     <TouchableWithoutFeedback
-                      onPress={() => playVideo(e.featuredVideo)}>
+                      onPress={() => playVideo(e.featuredVideo)}
+                      accessible
+                      accessibilityLabel="Show Video"
+                      accessibilityRole="button">
                       <View style={styles.playerContainer}>
                         <Image
                           source={{uri: e.featuredImage}}

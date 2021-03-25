@@ -232,7 +232,11 @@ const LocationModal = forwardRef((props, ref) => {
 
   return (
     <View style={[styles.container, {height: updatedHeight}]}>
-      <TouchableOpacity onPress={onMin}>
+      <TouchableOpacity
+        onPress={onMin}
+        accessible
+        accessibilityLabel="Toggle Detail"
+        accessibilityRole="button">
         <Image
           source={Images.down_arrow}
           style={[styles.downIcon, min && {transform: [{rotate: '180deg'}]}]}
@@ -338,7 +342,10 @@ const LocationModal = forwardRef((props, ref) => {
                         style={[
                           styles.listContainer,
                           activeTab == i && styles.activeTab,
-                        ]}>
+                        ]}
+                        accessible
+                        accessibilityLabel={e}
+                        accessibilityRole="tab">
                         <Text
                           style={[
                             styles.listText,

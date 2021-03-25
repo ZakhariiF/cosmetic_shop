@@ -308,7 +308,10 @@ const Review = ({navigation, route}) => {
             <Text style={styles.titleText}>{selectedLocation.title}</Text>
             <TouchableOpacity
               style={styles.editContainer}
-              onPress={() => navigation.popToTop()}>
+              onPress={() => navigation.popToTop()}
+              accessible
+              accessibilityLabel="Back"
+              accessibilityRole="button">
               <Image source={Images.edit} />
             </TouchableOpacity>
           </View>
@@ -338,6 +341,9 @@ const Review = ({navigation, route}) => {
 
             <TouchableOpacity
               style={styles.editContainer}
+              accessible
+              accessibilityLabel="Edit Services"
+              accessibilityRole="button"
               onPress={() => {
                 onEdit();
                 navigation.navigate('Services');
@@ -380,6 +386,9 @@ const Review = ({navigation, route}) => {
 
             <TouchableOpacity
               style={styles.editContainer}
+              accessible
+              accessibilityLabel="Edit Add-ons"
+              accessibilityRole="button"
               onPress={() => {
                 onEdit();
                 navigation.navigate('Addons');
@@ -421,6 +430,9 @@ const Review = ({navigation, route}) => {
 
               <TouchableOpacity
                 style={styles.editContainer}
+                accessible
+                accessibilityLabel="Edit Extensions"
+                accessibilityRole="button"
                 onPress={() => {
                   dispatch(setExtensionType(true));
                   navigation.navigate('Addons');
@@ -472,7 +484,10 @@ const Review = ({navigation, route}) => {
               onPress={() => {
                 onEdit();
                 navigation.navigate('DateTime');
-              }}>
+              }}
+              accessible
+              accessibilityLabel="Edit Date / Time"
+              accessibilityRole="button">
               <Image source={Images.edit} />
             </TouchableOpacity>
           </View>
@@ -514,7 +529,11 @@ const Review = ({navigation, route}) => {
             </>
           )}
 
-          <TouchableOpacity onPress={onToggleCancel}>
+          <TouchableOpacity
+            onPress={onToggleCancel}
+            accessible
+            accessibilityLabel="Toggle to view the Cancel Policy."
+            accessibilityRole="button">
             <View style={styles.cancelContainer}>
               {showCancel ? (
                 <Entypo

@@ -96,7 +96,10 @@ const GuestTab = ({routeName}) => {
               style={[
                 styles.listContainer,
                 activeTab == i && styles.activeTab,
-              ]}>
+              ]}
+              accessible
+              accessibilityLabel={`${e.userType} ${renderData(i)}`}
+              accessibilityRole="tab">
               <Text
                 style={[styles.listText, activeTab == i && styles.activeText]}>
                 {e.userType} {renderData(i)}

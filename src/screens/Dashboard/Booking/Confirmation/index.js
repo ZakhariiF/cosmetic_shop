@@ -136,7 +136,10 @@ const Confirmation = () => {
                     get(selectedLocation, 'contact.coordinates[0]'),
                     get(selectedLocation, 'contact.coordinates[1]'),
                   )
-                }>
+                }
+                accessible
+                accessibilityLabel="View Map"
+                accessibilityRole="link">
                 <View style={styles.locContainer}>
                   <Text style={styles.loc}>
                     {get(selectedLocation, 'title', '')}
@@ -151,7 +154,11 @@ const Confirmation = () => {
           ListFooterComponent={() => (
             <>
               <View style={styles.saveButtonContainer}>
-                <TouchableOpacity onPress={openCalendarApp}>
+                <TouchableOpacity
+                  onPress={openCalendarApp}
+                  accessible
+                  accessibilityLabel="Save to Calendar"
+                  accessibilityRole="button">
                   <Text style={styles.saveButton}>Save to Calendar</Text>
                 </TouchableOpacity>
               </View>

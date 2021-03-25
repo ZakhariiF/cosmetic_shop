@@ -48,6 +48,9 @@ const Extensions = ({onSkip}) => {
     return (
       <TouchableOpacity
         onPress={() => onExtension(item)}
+        accessible
+        accessibilityLabel={item.name}
+        accessibilityRole="button"
         style={[styles.listContainer, isExist(item) && styles.activeListTab]}>
         <Text style={[styles.itemName, isExist(item) && styles.activeName]}>
           {item.name}
@@ -94,6 +97,9 @@ const Extensions = ({onSkip}) => {
         <Text style={styles.noticeText}>
           Learn about our extension policy{' '}
           <TouchableOpacity
+            accessible
+            accessibilityLabel="Extension Policy"
+            accessibilityRole="link"
             onPress={() =>
               navigation.navigate('Account', {
                 screen: 'ExtensionPolicy',
@@ -110,7 +116,12 @@ const Extensions = ({onSkip}) => {
             Adds approximately 20 mins to your service.
           </Text>
 
-          <TouchableOpacity style={styles.skipContainer} onPress={onSkip}>
+          <TouchableOpacity
+            style={styles.skipContainer}
+            onPress={onSkip}
+            accessible
+            accessibilityLabel="No extensions in our party"
+            accessibilityRole="button">
             <Text style={styles.skip}>No extensions in our party</Text>
           </TouchableOpacity>
 

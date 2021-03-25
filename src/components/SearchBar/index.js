@@ -41,7 +41,12 @@ const SearchBar = React.forwardRef((props, ref) => {
         />
       </View>
       {isButton ? (
-        <TouchableOpacity style={styles.button} onPress={onSearch}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={onSearch}
+          accessible
+          accessibilityLabel="Search"
+          accessibilityRole="button">
           <Text style={styles.searchText}>Search</Text>
         </TouchableOpacity>
       ) : null}

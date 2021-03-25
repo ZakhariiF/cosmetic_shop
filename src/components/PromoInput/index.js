@@ -26,7 +26,10 @@ const PromoInput = ({onApply, promoInfo}) => {
       <TouchableOpacity
         onPress={() => onApply(promo)}
         style={[styles.button, {opacity: promo.length ? 1 : 0.8}]}
-        disabled={!promo.length}>
+        disabled={!promo.length}
+        accessible={promo.length > 0}
+        accessibilityLabel="Apply Coupon Code"
+        accessibilityRole="button">
         <Text style={styles.searchText}>Apply</Text>
       </TouchableOpacity>
     </View>

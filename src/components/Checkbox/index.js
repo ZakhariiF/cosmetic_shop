@@ -11,17 +11,20 @@ const CheckBox = ({
 }) => {
   return onLabelClicked ? (
     <View style={[styles.container, containerStyle || {}]}>
-      <TouchableOpacity style={styles.checkBox} onPress={onPressed}>
+      <TouchableOpacity style={styles.checkBox} onPress={onPressed} accessible accessibilityRole="checkbox" accessibilityLabel="title">
         {isChecked ? <View style={styles.box} /> : null}
       </TouchableOpacity>
-      <TouchableOpacity onPress={onLabelClicked}>
+      <TouchableOpacity onPress={onLabelClicked}  accessible accessibilityRole="link" accessibilityLabel={title}>
         <Text style={styles.title}>{title}</Text>
       </TouchableOpacity>
     </View>
   ) : (
     <TouchableOpacity
       style={[styles.container, containerStyle || {}]}
-      onPress={onPressed}>
+      onPress={onPressed}
+      accessible
+      accessibilityRole="checkbox"
+      accessibilityLabel={title}>
       <View style={styles.checkBox}>
         {isChecked ? <View style={styles.box} /> : null}
       </View>

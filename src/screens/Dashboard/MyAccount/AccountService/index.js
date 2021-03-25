@@ -62,7 +62,10 @@ const LocationItem = ({item, onSelect}) => {
               get(item, 'contact.coordinates[0]'),
               get(item, 'contact.coordinates[1]'),
             );
-          }}>
+          }}
+          accessible
+          accessibilityLabel="Open Map"
+          accessibilityRole="link">
           <Text>Get Direction</Text>
         </TouchableOpacity>
       </View>
@@ -223,7 +226,11 @@ const AccountService = ({navigation}) => {
 
           <DottedView number={250} />
 
-          <TouchableOpacity onPress={() => navigation.navigate('Book')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Book')}
+            accessible
+            accessibilityLabel="Book"
+            accessibilityRole="link">
             <View style={styles.bottomImg}>
               <Image
                 style={styles.bottomIcon}

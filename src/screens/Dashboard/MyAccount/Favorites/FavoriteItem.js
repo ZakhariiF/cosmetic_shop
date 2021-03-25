@@ -46,7 +46,10 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
         {showHeart ? (
           <TouchableOpacity
             onPress={() => onFavIcon(item)}
-            style={styles.favIcon}>
+            style={styles.favIcon}
+            accessible
+            accessibilityLabel="Favorite Shop"
+            accessibilityRole="button">
             <Image
               resizeMode="contain"
               source={isFav ? Images.fav : Images.fav_trans}
@@ -56,6 +59,9 @@ const FavoriteItem = ({item, showHeart, onFavIcon, isFav, currentLocation}) => {
         ) : (
           <TouchableOpacity
             style={styles.shopButton}
+            accessible
+            accessibilityLabel="Book"
+            accessibilityRole="button"
             onPress={() =>
               navigation.navigate('Book', {
                 screen: 'ShopDetail',

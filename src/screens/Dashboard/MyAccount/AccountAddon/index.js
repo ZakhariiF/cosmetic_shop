@@ -76,7 +76,11 @@ const AccountAddon = ({navigation}) => {
           </View>
 
           <DottedView number={250} />
-          <TouchableOpacity onPress={() => navigation.navigate('Book')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Book')}
+            accessible
+            accessibilityLabel="Book"
+            accessibilityRole="link">
             <View style={styles.bottomImg}>
               <Image
                 source={{

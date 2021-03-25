@@ -33,7 +33,12 @@ const MyAccount = ({navigation}) => {
           keyExtractor={(_, index) => index.toString()}
           ListFooterComponent={() => (
             <View style={styles.logoutContainer}>
-              <TouchableOpacity onPress={onLogout} style={styles.logoutBox}>
+              <TouchableOpacity
+                onPress={onLogout}
+                style={styles.logoutBox}
+                accessible
+                accessibilityLabel="Sign Out"
+                accessibilityRole="button">
                 <Text style={styles.signOutText}>Sign Out</Text>
               </TouchableOpacity>
               <Text style={styles.appVersion}>App Version 1.12 10/2020</Text>
@@ -51,6 +56,9 @@ export default MyAccount;
 const Item = ({title, navigation}) => (
   <TouchableOpacity
     style={styles.itemContainer}
+    accessible={title.route}
+    accessibilityLabel={title.name}
+    accessibilityRole="link"
     onPress={() => {
       title.route ? navigation.navigate(title.route) : null;
     }}>

@@ -90,7 +90,10 @@ const Login = ({navigation}) => {
 
           <Text
             style={styles.recover}
-            onPress={() => navigation.navigate('RecoverPassword')}>
+            onPress={() => navigation.navigate('RecoverPassword')}
+            accessible
+            accessibilityLabel="Recover Password"
+            accessibilityRole="link">
             Recover Password
           </Text>
 

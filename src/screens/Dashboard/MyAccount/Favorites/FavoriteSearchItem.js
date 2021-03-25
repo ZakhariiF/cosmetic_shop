@@ -37,7 +37,10 @@ const FavoriteSearchItem = ({item, onFavIcon, isFav, currentLocation}) => {
 
           <TouchableOpacity
             onPress={() => onFavIcon(item)}
-            style={styles.favIcon}>
+            style={styles.favIcon}
+            accessible
+            accessibilityLabel="Favorite Shop"
+            accessibilityRole="button">
             <Image
               resizeMode="contain"
               source={isFav ? Images.fav : Images.fav_trans}

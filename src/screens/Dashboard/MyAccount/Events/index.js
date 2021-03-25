@@ -172,7 +172,10 @@ const Events = () => {
                               animated: true,
                             });
                           }}
-                          style={styles.slickButton}>
+                          style={styles.slickButton}
+                          accessible
+                          accessibilityLabel={get(e, 'action.title')}
+                          accessibilityRole="button">
                           <Text style={styles.slickButtonTitle}>
                             {get(e, 'action.title')}
                           </Text>

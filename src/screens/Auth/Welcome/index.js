@@ -24,10 +24,16 @@ const Welcome = ({navigation}) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={() => navigation.navigate('Login')}
+          accessible
+          accessibilityLabel="Log in"
+          accessibilityRole="link"
           style={[styles.loginContainer, {backgroundColor: Colors.yellow}]}>
           <Text style={[styles.buttonText, {color: Colors.header_title}]}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          accessible
+          accessibilityLabel="Sign Up"
+          accessibilityRole="link"
           onPress={() => navigation.navigate('Signup')}
           style={[
             styles.loginContainer,

@@ -51,7 +51,10 @@ const BookingTab = ({}) => {
                     navigation.navigate('Book', {
                       screen: e,
                     });
-                  }}>
+                  }}
+                  accessible
+                  accessibilityLabel="Book"
+                  accessibilityRole="link">
                   <Text key={i} style={styles.routeName}>
                     {updateRouteName(e)}
                   </Text>

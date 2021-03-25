@@ -139,6 +139,9 @@ const BarflyMembership = ({navigation}) => {
               setShowLocationModal(false);
               navigation.navigate('ShopDetail', {item});
             }}
+            accessible
+            accessibilityLabel="Shop Detail"
+            accessibilityRole="link"
             style={styles.favIcon}>
             <Image source={Images.notice} />
           </TouchableOpacity>
@@ -169,7 +172,10 @@ const BarflyMembership = ({navigation}) => {
               get(item, 'contact.coordinates[0]'),
               get(item, 'contact.contact.coordinates[1]'),
             )
-          }>
+          }
+          accessible
+          accessibilityLabel="Open Map"
+          accessibilityRole="link">
           <Text style={styles.storeDirection}>Get Directions</Text>
         </TouchableOpacity>
       </View>
@@ -427,7 +433,11 @@ const BarflyMembership = ({navigation}) => {
           {/*  onButtonPress={upgradeMembership}*/}
           {/*/>*/}
           {customerMembershipLevelId && (
-            <TouchableOpacity onPress={() => setMembershipAction('Cancel')}>
+            <TouchableOpacity
+              onPress={() => setMembershipAction('Cancel')}
+              accessible
+              accessibilityLabel="Cancel Membership"
+              accessibilityRole="button">
               <Text style={styles.cancelMembership}>Cancel Membership</Text>
             </TouchableOpacity>
           )}

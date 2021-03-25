@@ -16,6 +16,9 @@ const Button = ({
     <TouchableOpacity
       disabled={disabled}
       onPress={onButtonPress}
+      accessible
+      accessibilityLabel={name}
+      accessibilityRole="button"
       style={[
         styles.container,
         {

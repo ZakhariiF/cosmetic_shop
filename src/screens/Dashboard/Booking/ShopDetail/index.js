@@ -104,7 +104,10 @@ const ShopDetail = ({navigation, route}) => {
                     get(item, 'contact.coordinates[0]', 34.1434376),
                     get(item, 'contact.coordinates[1]', 34.1434376),
                   )
-                }>
+                }
+                accessible
+                accessibilityLabel="Open Map"
+                accessibilityRole="link">
                 <Image source={Images.loc} />
               </TouchableOpacity>
             </View>
@@ -123,6 +126,9 @@ const ShopDetail = ({navigation, route}) => {
 
           <View style={styles.phoneContainer}>
             <TouchableOpacity
+              accessible
+              accessibilityLabel="Contact us"
+              accessibilityRole="button"
               onPress={() => {
                 call(get(item, 'contact.phoneNumber'));
               }}>
@@ -134,6 +140,9 @@ const ShopDetail = ({navigation, route}) => {
           </View>
           {(socialData || '') !== '' && (
             <TouchableOpacity
+              accessible
+              accessibilityLabel="Check instagram"
+              accessibilityRole="link"
               onPress={() => {
                 Linking.openURL(
                   `https://www.instagram.com/${socialData.replace(/@/gi, '')}`,

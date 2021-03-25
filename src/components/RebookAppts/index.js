@@ -26,7 +26,10 @@ const RebookAppts = ({item, onRebook, locationData}) => {
         <Text style={styles.messsage}>with scalp massage</Text>
         <TouchableOpacity
           onPress={openMaps}
-          style={[styles.bottomContainer, {marginTop: 40}]}>
+          style={[styles.bottomContainer, {marginTop: 40}]}
+          accessible
+          accessibilityLabel="Open Map"
+          accessibilityRole="link">
           <Text style={styles.location}>
             {get(location, 'title')}
           </Text>

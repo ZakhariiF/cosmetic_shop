@@ -325,7 +325,10 @@ const DateTime = ({navigation}) => {
     return (
       <TouchableOpacity
         style={[styles.timeListContainer, active && rootStyle.activeButton]}
-        onPress={() => onSlot(item)}>
+        onPress={() => onSlot(item)}
+        accessible
+        accessibilityLabel={moment(item.startDateTime).utcOffset(item.timezone).format('h:mm a')}
+        accessibilityRole="button">
         <Text style={[styles.time, active && rootStyle.activeButtonText]}>
           {/* {moment(item.open).format('h:mm a')} */}
           {moment(item.startDateTime).utcOffset(item.timezone).format('h:mm a')}
@@ -371,6 +374,9 @@ const DateTime = ({navigation}) => {
 
           <TouchableOpacity
             style={{flexDirection: 'row'}}
+            accessible
+            accessibilityLabel="Show Calendar"
+            accessibilityRole="button"
             onPress={() => setDatePickerVisibility(true)}>
             <Text style={styles.calendarText}>Show Calendar</Text>
             <Image source={Images.calendar} />
