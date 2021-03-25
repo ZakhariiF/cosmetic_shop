@@ -89,13 +89,14 @@ export const addCreditCardForCustomer = (
     .then((res) => res.data);
 };
 
-export const createOrder = (customerId) => {
+export const createOrder = (customerId, locationId) => {
   return client
     .post('/booker/CreateOrder', {
       method: 'POST',
       urlParams: {},
       data: {
         CustomerID: customerId,
+        LocationID: locationId,
       },
     })
     .then((res) => res.data);
