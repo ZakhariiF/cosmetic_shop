@@ -26,9 +26,9 @@ const StyleSwiper = ({
 
   const onScrollEnd = (e) => {
     let contentOffset = e.nativeEvent.contentOffset;
-    let viewSize = 220;
+    let viewSize = 240;
 
-    let pageNum = Math.floor(contentOffset.x / viewSize);
+    let pageNum = Math.round(contentOffset.x / viewSize);
     setActiveScreen(pageNum);
   };
 
@@ -54,7 +54,7 @@ const StyleSwiper = ({
         <View style={{marginTop: 15}}>
           <ScrollView
             decelerationRate={0}
-            snapToInterval={250}
+            snapToInterval={240}
             snapToAlignment={'start'}
             horizontal
             onMomentumScrollEnd={onScrollEnd}>
@@ -90,19 +90,21 @@ const StyleSwiper = ({
               );
             })}
           </View>
-
-          <Text
-            onPress={onBrowse}
-            style={styles.browse}
-            accessible
-            accessibilityLabel={action
-              ? get(action, 'title', 'Browse ALL Styles')
-              : get(data, 'action.title', 'Browse All Styles')}
-            accessibilityRole="button">
-            {action
-              ? get(action, 'title', 'Browse ALL Styles')
-              : get(data, 'action.title', 'Browse All Styles')}
-          </Text>
+          {action && (
+            <Text
+              onPress={onBrowse}
+              style={styles.browse}
+              accessible
+              accessibilityLabel={
+                action
+                  ? get(action, 'title', 'Browse ALL Styles')
+                  : get(data, 'action.title', 'Browse All Styles')}
+              accessibilityRole="button">
+              {action
+                ? get(action, 'title', 'Browse ALL Styles')
+                : get(data, 'action.title', 'Browse All Styles')}
+            </Text>
+          )}
         </View>
       ) : null}
     </View>
@@ -157,6 +159,7 @@ const styles = StyleSheet.create({
     color: Colors.header_title,
     fontFamily: Fonts.AvenirNextBold,
     lineHeight: 17,
+    textDecorationLine: 'underline',
   },
   imageContainer: {
     height: '100%',

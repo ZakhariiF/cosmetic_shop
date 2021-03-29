@@ -301,7 +301,7 @@ const BarflyMembership = ({navigation}) => {
             <View style={styles.headerContainer}>
               <View style={styles.dottBorderContainer}>
                 <Text style={styles.headingText}>
-                  {get(membershipData, '[0].title', '')}
+                  {get(membershipData, '[0].title', '').toUpperCase()}
                 </Text>
               </View>
             </View>
@@ -367,7 +367,7 @@ const BarflyMembership = ({navigation}) => {
               ]}>
               <View style={styles.dottBorderContainer}>
                 <Text style={[styles.headingText, {color: Colors.white}]}>
-                  {get(membershipData, '[1].title', '')}
+                  {get(membershipData, '[1].title', '').toUpperCase()}
                 </Text>
               </View>
             </View>
@@ -378,7 +378,7 @@ const BarflyMembership = ({navigation}) => {
                 source={Images.tip_img}
                 style={styles.tipImg}>
                 <Text style={styles.blowText}>
-                  {get(membershipData, '[1].subtitle', '')}H
+                  {get(membershipData, '[1].subtitle', '')}
                 </Text>
               </ImageBackground>
 

@@ -14,7 +14,7 @@ export default StyleSheet.create({
     marginVertical: 10,
   },
   dottBorderContainer: {
-    borderStyle: 'dotted',
+    borderStyle: 'solid',
     borderWidth: 1,
     height: '100%',
     justifyContent: 'center',
@@ -158,7 +158,7 @@ export default StyleSheet.create({
   blowText: {
     fontSize: 15,
     color: Colors.header_title,
-    fontFamily: Fonts.Evan,
+    fontFamily: Fonts.AvenirNextBold,
     lineHeight: 22,
     marginTop: 5,
   },

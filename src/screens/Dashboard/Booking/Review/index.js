@@ -224,7 +224,7 @@ const Review = ({navigation, route}) => {
         EmployeeID: totalGuests[i]?.employees,
         RoomID: totalGuests[i]?.rooms,
         StartDateTimeOffset: startTime,
-        // EndDateTimeOffset: endTime,
+        EndDateTimeOffset: endTime,
         TreatmentID: totalGuests[i]?.services.ID,
         TotalDuration: totalDuration,
         Guest: {

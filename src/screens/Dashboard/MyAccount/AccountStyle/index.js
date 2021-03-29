@@ -43,12 +43,10 @@ const AccountStyle = ({navigation}) => {
     }
   };
 
-  const showModal = (item) => {
-    setModalVisible(true);
+  const showModal = (item, parent) => {
+    setModalVisible(get(parent, 'title'));
     setImages(item.images);
   };
-  useEffect(() => {}, [modalVisible]);
-
   return (
     <View style={rootStyle.container}>
       <Header title="STYLES" isBack isTab />
@@ -56,7 +54,7 @@ const AccountStyle = ({navigation}) => {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={!!modalVisible}
         onRequestClose={() => {
           setModalVisible(false);
         }}>
@@ -76,6 +74,9 @@ const AccountStyle = ({navigation}) => {
                 height: 500,
                 padding: 15,
               }}>
+              <View>
+                <Text>{modalVisible}</Text>
+              </View>
               <Slick
                 showsButtons={true}
                 nextButton={
@@ -92,7 +93,9 @@ const AccountStyle = ({navigation}) => {
                       styles.slickCtrlBtnImage,
                     ]}
                   />
-                }>
+                }
+                activeDotStyle={{backgroundColor: 'transparent'}}
+                dotStyle={{backgroundColor: 'transparent'}}>
                 {images.map((e, i) => (
                   <View key={i} style={{width: 400, height: 400}}>
                     <Image
@@ -209,7 +212,7 @@ const AccountStyle = ({navigation}) => {
                   // item={e}
                   item={get(e, 'gallery', [])}
                   navigation={navigation}
-                  showModal={showModal}
+                  showModal={(item) => showModal(item, e)}
                 />
               </View>
             );

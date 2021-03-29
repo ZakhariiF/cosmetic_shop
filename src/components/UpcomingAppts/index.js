@@ -310,13 +310,13 @@ const styles = StyleSheet.create({
     ...rootStyle.commonText,
     fontFamily: Fonts.Evan,
     lineHeight: 20,
+    textAlign: 'center',
+    letterSpacing: 1.8,
   },
   infoContainer: {
     minHeight: 100,
     maxHeight: 700,
     backgroundColor: Colors.white,
-    borderTopWidth: 1,
-    borderTopColor: Colors.seprator,
   },
   title: {
     ...rootStyle.commonText,

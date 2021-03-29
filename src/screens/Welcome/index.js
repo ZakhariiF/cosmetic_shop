@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {ImageBackground, View} from 'react-native';
-import Slick from 'react-native-slick';
-import {Dimensions} from 'react-native';
+import {Image, View} from 'react-native';
+
 import {Images} from 'constant';
 import {useDispatch} from 'react-redux';
 
@@ -12,8 +11,6 @@ const WelcomeImages = [
   Images.welcomescreen_appts,
   Images.welcomescreen_myacct,
 ];
-
-const {height, width} = Dimensions.get('window');
 
 const Welcome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -27,7 +24,7 @@ const Welcome = () => {
   );
 
   useEffect(() => {
-    if (currentSlide >= 3) {
+    if (currentSlide >= 2) {
       dispatch(increaseLoggedInCount());
     }
   }, [currentSlide]);
@@ -36,13 +33,13 @@ const Welcome = () => {
 
   return (
     <View style={{flex: 1}} onTouchEnd={onTouchEnd} onTouchMove={() => dispatch(increaseLoggedInCount())}>
-      <ImageBackground
+      <Image
         source={img}
         style={{
-          width,
-          height,
+          height: '100%',
+          width: 'auto',
         }}
-        resizeMode="stretch"
+        resizeMode="contain"
       />
     </View>
   );

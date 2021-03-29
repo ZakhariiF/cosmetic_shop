@@ -34,6 +34,7 @@ const SlideShow = ({item, navigation, showModal}) => {
             />
             <Button
               onButtonPress={() => {
+                console.log('ButtonPress:', item);
                 showModal(e);
               }}
               name="Show This Model"
