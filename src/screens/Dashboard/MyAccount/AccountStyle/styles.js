@@ -8,7 +8,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   topText: {
-    ...rootStyle.commonText,
+    ...rootStyle.commonHeader,
     alignSelf: 'center',
     textAlign: 'center',
     padding: '10%',
@@ -32,7 +32,6 @@ export default StyleSheet.create({
   swiperContainer: {
     height: 430,
     width: '100%',
-    marginTop: 30,
   },
   imageStyle: {
     height: 350,
@@ -67,10 +66,8 @@ export default StyleSheet.create({
     width: 15,
   },
   modalHeaderText: {
-    ...rootStyle.commonText,
-    fontFamily: Fonts.AvenirNextBold,
-    fontSize: 25,
-    marginBottom: 10,
+    ...rootStyle.commonHeader,
+    paddingVertical: 10,
   },
   modalHeader: {
     display: 'flex',

@@ -73,7 +73,6 @@ const AccountStyle = ({navigation}) => {
               style={{
                 width: 400,
                 height: 500,
-                padding: 15,
               }}>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalHeaderText}>{(modalVisible || '').toUpperCase()}</Text>
@@ -134,15 +133,18 @@ const AccountStyle = ({navigation}) => {
           <Text style={styles.topText}>
             {get(data, 'title', '').toUpperCase()}
           </Text>
-          {/* <Text style={styles.desc}>{get(data, 'description')}</Text> */}
         </View>
 
-        <View style={{paddingHorizontal: 20}}>
+        <View>
           <Slick
             showsButtons={true}
             containerStyle={styles.swiperContainer}
             dotStyle={{backgroundColor: 'transparent'}}
             activeDotStyle={{backgroundColor: 'transparent'}}
+            buttonWrapperStyle={{
+              alignItems: 'flex-start',
+              top: 175,
+            }}
             nextButton={
               <Image
                 source={Images.right_arrow}
@@ -158,7 +160,6 @@ const AccountStyle = ({navigation}) => {
                 ]}
               />
             }>
-            {/* {[1, 2, 3, 4].map((e, i) => ( */}
             {get(data, 'styles', []).map((e, i) => {
               return (
                 <View>
