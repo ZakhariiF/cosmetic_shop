@@ -7,9 +7,11 @@ import {useDispatch} from 'react-redux';
 import {increaseLoggedInCount} from '../Auth/thunks';
 
 const WelcomeImages = [
-  Images.welcomescreen_book,
-  Images.welcomescreen_appts,
-  Images.welcomescreen_myacct,
+  Images.welcomescreen_1,
+  Images.welcomescreen_2,
+  Images.welcomescreen_3,
+  Images.welcomescreen_4,
+  Images.welcomescreen_5,
 ];
 
 const Welcome = () => {
@@ -18,16 +20,14 @@ const Welcome = () => {
 
   const onTouchEnd = useCallback(
     (_e) => {
-      setCurrentSlide(currentSlide + 1);
+      if (currentSlide < WelcomeImages.length - 1) {
+        setCurrentSlide(currentSlide + 1);
+      } else {
+        dispatch(increaseLoggedInCount());
+      }
     },
     [currentSlide],
   );
-
-  useEffect(() => {
-    if (currentSlide >= 2) {
-      dispatch(increaseLoggedInCount());
-    }
-  }, [currentSlide]);
 
   const img = WelcomeImages[currentSlide];
 
