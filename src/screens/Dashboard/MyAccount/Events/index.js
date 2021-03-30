@@ -215,10 +215,10 @@ export default Events;
 
 const PageDescriptionStyle = StyleSheet.create({
   b: {
-    ...rootStyle.commonText,
+    ...rootStyle.commonHeader,
     textAlign: 'center',
     marginBottom: 0,
-    fontFamily: Fonts.AvenirNextBold,
+    textTransform: 'uppercase',
   },
   p: {
     fontSize: 15,

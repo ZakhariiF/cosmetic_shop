@@ -25,6 +25,15 @@ const rootStyle = StyleSheet.create({
     color: Colors.header_title,
     fontFamily: Fonts.AvenirNextRegular,
   },
+  commonHeader: {
+    fontSize: 25,
+    lineHeight: 30,
+    color: Colors.header_title,
+    fontFamily: Fonts.DCondensed,
+    paddingVertical: '10%',
+    paddingHorizontal: 15,
+    textTransform: 'uppercase',
+  },
   activeButton: {
     backgroundColor: Colors.yellow,
   },
