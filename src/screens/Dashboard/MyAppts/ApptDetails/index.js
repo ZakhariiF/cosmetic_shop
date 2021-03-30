@@ -197,7 +197,7 @@ const ApptDetails = ({route, navigation}) => {
 
           {addons.length ? (
             <View style={styles.boxContainer}>
-              <Text style={styles.headerText}>Add-ons</Text>
+              <Text style={styles.headerText}>Add-Ons</Text>
               {addons.map((a, i) => (
                 <Text style={styles.titleText}>
                   {a.Name}{' '}
@@ -211,7 +211,7 @@ const ApptDetails = ({route, navigation}) => {
 
           {serviceAddons.length > 0 ? (
             <View style={styles.boxContainer}>
-              <Text style={styles.headerText}>Add-ons</Text>
+              <Text style={styles.headerText}>Add-Ons</Text>
               {services.map((s, i) => {
                 if (serviceAddons[i].length === 0) {
                   return null;

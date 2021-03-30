@@ -29,7 +29,8 @@ export default StyleSheet.create({
     overflow: 'hidden',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginVertical: 30,
+    marginTop: 30,
+    marginBottom: 10,
   },
   bottomIcon: {
     width: '97%',

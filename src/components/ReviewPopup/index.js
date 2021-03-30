@@ -110,7 +110,7 @@ const ReviewPopup = ({}) => {
 
           {totalGuests.length && get(totalGuests, '[0].addons') ? (
             <View style={styles.boxContainer}>
-              <Text style={styles.headerText}>Add-ons</Text>
+              <Text style={styles.headerText}>Add-Ons</Text>
 
               {!isAddon ? (
                 <Text style={styles.titleText}>None </Text>
@@ -145,7 +145,7 @@ const ReviewPopup = ({}) => {
               <TouchableOpacity
                 style={styles.editContainer}
                 accessible
-                accessibilityLabel="Edit Add-ons"
+                accessibilityLabel="Edit Add-Ons"
                 accessibilityRole="button"
                 onPress={() => navigation.navigate('Addons')}>
                 <Image source={Images.edit} />

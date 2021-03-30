@@ -79,7 +79,7 @@ const Contactus = () => {
           </Text>
         ) : (
           <View style={rootStyle.innerContainer}>
-            <Text style={styles.writeMsg}>Write us a message.</Text>
+            <Text style={styles.writeMsg}>Send us a message.</Text>
             <Formik
               initialValues={{}}
               enableReinitialize
@@ -175,7 +175,7 @@ const Contactus = () => {
                   accessibilityRole="link">
                   <AntDesign name="instagram" size={30} />
                   <Text style={styles.instaName}>
-                    {get(data, 'screenContactCollection.items[0].instagram')}
+                  {get(data, 'screenContactCollection.items[0].instagram')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -198,7 +198,7 @@ const Contactus = () => {
               </View>
             </View>
 
-            <Text style={styles.writeMsg}>Need another help? Call Us.</Text>
+            <Text style={styles.writeMsg}>Need help? Call us.</Text>
             <View style={styles.serviceContainer}>
               <Text style={styles.serviceHeader}>Drybar Services</Text>
               <TouchableOpacity

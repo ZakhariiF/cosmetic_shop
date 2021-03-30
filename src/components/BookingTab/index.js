@@ -12,6 +12,7 @@ import {Colors, Fonts, Images} from 'constant';
 import {useNavigation, useNavigationState} from '@react-navigation/native';
 import rootStyle from 'rootStyle';
 import {updateRouteName} from 'utils';
+import colors from 'constant/colors';
 
 const hiddenTabs = ['ShopDetail', 'BookingForm', 'Stylists'];
 
@@ -81,7 +82,7 @@ const BookingTab = ({}) => {
                 return;
               } else {
                 return (
-                  <Text key={i} style={styles.routeName}>
+                  <Text key={i} style={[styles.routeName, {color: colors.light_gray}]}>
                     {updateRouteName(e)}
                   </Text>
                 );

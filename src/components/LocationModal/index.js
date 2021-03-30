@@ -145,7 +145,7 @@ const LocationModal = forwardRef((props, ref) => {
   }, [favStore]);
 
   const _keyboardDidShow = () => {
-    if (currentRoute === 'Notes') {
+    if (currentRoute !== 'Location') {
       return;
     }
     collapse();

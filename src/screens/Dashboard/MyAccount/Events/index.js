@@ -111,14 +111,14 @@ const Events = () => {
                 get(eventData, 'heroImage.desktop'),
             }}
           />
-          <View style={rootStyle.innerContainer}>
+          <View style={[rootStyle.innerContainer, {marginTop: 30}]}>
             <View
               onLayout={({nativeEvent}) => {
                 setStaticHeight(nativeEvent.layout.height);
               }}>
-              <Text style={styles.topText}>
+              {/* <Text style={styles.topText}>
                 {get(eventData, 'title', '').toUpperCase()}
-              </Text>
+              </Text> */}
 
               <HtmlView
                 value={`<p>${get(eventData, 'subtitle')}</p>`}
@@ -215,9 +215,7 @@ export default Events;
 
 const PageDescriptionStyle = StyleSheet.create({
   b: {
-    fontSize: 18,
-    lineHeight: 21,
-    color: Colors.input_text,
+    ...rootStyle.commonText,
     textAlign: 'center',
     marginBottom: 0,
     fontFamily: Fonts.AvenirNextBold,

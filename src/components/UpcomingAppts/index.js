@@ -94,7 +94,7 @@ const UpcomingAppts = ({data, navigation, locationData, onEdit, onCancel}) => {
                     {get(service, 'TreatmentName', 'Blowout')}
                   </Text>
                   <Text style={styles.bottomText}>
-                    {get(item, 'appointment.AddOnItems', []).length} add ons
+                    {get(item, 'appointment.AddOnItems', []).length} add-ons
                   </Text>
                 </View>
               </View>

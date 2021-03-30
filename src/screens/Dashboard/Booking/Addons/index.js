@@ -160,16 +160,16 @@ const Addons = ({navigation}) => {
             style={styles.skipContainer}
             onPress={onSkip}
             accessible
-            accessibilityLabel="Skip Add-ons"
+            accessibilityLabel="Skip Add-Ons"
             accessibilityRole="button">
-            <Text style={styles.skip}>Skip Add-ons</Text>
+            <Text style={styles.skip}>Skip Add-Ons</Text>
           </TouchableOpacity>
           {totalGuests.length > 1 ? (
             <Text style={styles.selectedaddOns}>Add one or add many</Text>
           ) : totalAddon ? (
             <Text style={styles.selectedaddOns}>
               You selected <Text style={styles.selectedText}>{totalAddon}</Text>{' '}
-              add ons for a total of ${totalPrice}
+              add-ons for a total of ${totalPrice}
             </Text>
           ) : null}
 

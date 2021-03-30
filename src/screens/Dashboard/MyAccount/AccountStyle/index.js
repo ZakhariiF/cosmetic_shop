@@ -19,6 +19,7 @@ import styles from './styles';
 import {get} from 'lodash';
 import {playVideo} from 'utils';
 import Indicator from 'components/Indicator';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Slick from 'react-native-slick';
 
@@ -74,8 +75,14 @@ const AccountStyle = ({navigation}) => {
                 height: 500,
                 padding: 15,
               }}>
-              <View>
-                <Text>{modalVisible}</Text>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalHeaderText}>{(modalVisible || '').toUpperCase()}</Text>
+                <MaterialCommunityIcons
+                  name="close"
+                  size={25}
+                  color={Colors.header_title}
+                  onPress={() => setModalVisible(false)}
+                />
               </View>
               <Slick
                 showsButtons={true}
@@ -124,9 +131,6 @@ const AccountStyle = ({navigation}) => {
         />
 
         <View style={rootStyle.innerContainer}>
-          {/* <Text style={styles.topText}>
-            CHOOSE A LOOK{'\n'} FOR THE NEXT TIME YOU BOOK
-          </Text> */}
           <Text style={styles.topText}>
             {get(data, 'title', '').toUpperCase()}
           </Text>

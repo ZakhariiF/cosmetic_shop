@@ -1,5 +1,6 @@
 import {Colors, Fonts} from 'constant';
 import {StyleSheet} from 'react-native';
+import rootStyle from 'rootStyle';
 
 export default StyleSheet.create({
   topImage: {
@@ -7,13 +8,10 @@ export default StyleSheet.create({
     width: '100%',
   },
   topText: {
+    ...rootStyle.commonText,
     alignSelf: 'center',
-    marginTop: 20,
-    fontSize: 50,
     textAlign: 'center',
-    fontFamily: Fonts.DCondensed,
-    lineHeight: 64,
-    color: Colors.input_text,
+    padding: '10%',
   },
   desc: {
     textAlign: 'center',
@@ -68,4 +66,16 @@ export default StyleSheet.create({
     height: 25,
     width: 15,
   },
+  modalHeaderText: {
+    ...rootStyle.commonText,
+    fontFamily: Fonts.AvenirNextBold,
+    fontSize: 25,
+    marginBottom: 10,
+  },
+  modalHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+  } 
 });

@@ -50,10 +50,10 @@ export default StyleSheet.create({
     ...rootStyle.shadow,
   },
   selectLocationHeader: {
-    fontSize: 25,
-    paddingTop: 40,
-    paddingBottom: 20,
+    ...rootStyle.commonText,
+    alignSelf: 'center',
     textAlign: 'center',
+    paddingTop: '10%',
   },
   selectedStore: {
     fontSize: 18,

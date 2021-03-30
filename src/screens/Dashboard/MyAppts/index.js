@@ -150,14 +150,14 @@ const MyAppts = ({navigation}) => {
 
           {!data.length && !pastAppt.length ? (
             <View style={styles.emptyContainer}>
-              <EmptyContainer emptyText="You do not have any upcoming appointments" />
-              <EmptyContainer emptyText="Book on from here or easily rebook from one of your previous visits" />
+              <EmptyContainer emptyText="You do not have any upcoming appointments." />
+              <EmptyContainer emptyText="Book on from here or easily rebook from one of your parst visits." />
               <Button
                 onButtonPress={() => navigation.navigate('Book')}
                 name={'Book an Appointment'}
               />
             </View>
-          ) : null}
+           ) : null}
 
           <Dialog.Container visible={cancelItem}>
             <Dialog.Title>Cancel Appointment</Dialog.Title>

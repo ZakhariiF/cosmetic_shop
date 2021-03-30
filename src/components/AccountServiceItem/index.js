@@ -15,10 +15,9 @@ const AccountServiceItem = ({item, navigation, isService}) => {
         source={{uri: get(item, 'imagesCollection.items[0].desktopMedia.url')}}
       />
       <View style={styles.bottomContainer}>
-        <View style={styles.nameContainer}>
-          <Text style={styles.name}>{get(item, 'title')}</Text>
-          <Text style={styles.price}>${get(item, 'price')}</Text>
-        </View>
+        <Text style={styles.name}>{get(item, 'title')}</Text>
+        <Text style={styles.price}>${get(item, 'price')}</Text>
+
 
         <Text style={styles.desc}>
           {get(item, 'description.json.content[0].content[0].value')}
@@ -52,9 +51,7 @@ const styles = StyleSheet.create({
     marginTop: -10,
   },
   nameContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     marginTop: 10,
     marginBottom: 10
   },
@@ -64,7 +61,6 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   name: {
-    flex: 1,
     fontFamily: Fonts.DCondensed,
     fontSize: 25,
     color: Colors.header_title,

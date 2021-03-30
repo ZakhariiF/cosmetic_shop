@@ -300,7 +300,7 @@ const Review = ({navigation, route}) => {
       <View style={rootStyle.innerContainer}>
         <ScrollView>
           <Text>
-            Please confirm your details and book your Appointment below
+            Please confirm your details and book your appointment below period.
           </Text>
           <View style={styles.locContainer}>
             <Text style={styles.headerText}>Location</Text>
@@ -353,7 +353,7 @@ const Review = ({navigation, route}) => {
           </View>
 
           <View style={styles.boxContainer}>
-            <Text style={styles.headerText}>Add-ons</Text>
+            <Text style={styles.headerText}>Add-Ons</Text>
 
             {!isAddon ? (
               <Text style={styles.titleText}>None</Text>
@@ -387,7 +387,7 @@ const Review = ({navigation, route}) => {
             <TouchableOpacity
               style={styles.editContainer}
               accessible
-              accessibilityLabel="Edit Add-ons"
+              accessibilityLabel="Edit Add-Ons"
               accessibilityRole="button"
               onPress={() => {
                 onEdit();

@@ -21,7 +21,7 @@ export const AccounData = [
       {name: 'Find a Location', route: 'FindLocation'},
       {name: 'Services', route: 'AccountService'},
       {name: 'The Styles', route: 'AccountStyle'},
-      {name: 'Add-ons', route: 'AccountAddon'},
+      {name: 'Add-Ons', route: 'AccountAddon'},
       {name: 'Contact Us', route: 'Contactus'},
       {name: 'Events', route: 'Events'},
     ],
@@ -29,7 +29,7 @@ export const AccounData = [
   },
   {
     title: 'Settings',
-    data: [{name: 'Favorite', route: 'Favorites'}],
+    data: [{name: 'Favorite Shop', route: 'Favorites'}],
     icon: Images.setting,
   },
   {

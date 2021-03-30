@@ -4,12 +4,12 @@ import rootStyle from 'rootStyle';
 
 export default StyleSheet.create({
   topImg: {
-    height: 140,
+    height: 230,
     width: '100%',
     backgroundColor: Colors.white,
   },
   topImage: {
-    height: 140,
+    height: 230,
     width: '100%',
   },
   writeMsg: {
