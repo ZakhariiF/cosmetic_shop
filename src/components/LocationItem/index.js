@@ -33,6 +33,7 @@ const LocationItem = ({
 
   useEffect(() => {
     if (currentLocation && index < 10) {
+      setDis(null);
       getDistance();
     }
   }, [currentLocation, index, item]);
