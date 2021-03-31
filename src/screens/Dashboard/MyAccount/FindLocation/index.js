@@ -62,7 +62,6 @@ const FindLocation = ({navigation}) => {
 
   const currentLocation = useSelector((state) => state.home.currentLocation);
 
-  const radarPermission = useSelector((state) => state.home.radarPermission);
   useEffect(() => {
     if (!currentLocation) {
       getUserLocation();
@@ -82,7 +81,7 @@ const FindLocation = ({navigation}) => {
         }),
       );
     } catch (e) {
-      console.log('Can not get the current user location');
+      console.log('Can not get the current user location:', e);
     }
   };
 
@@ -105,8 +104,6 @@ const FindLocation = ({navigation}) => {
     }
 
     arrayHolder = get(data, 'storeCollection.items', []);
-
-    setLocationItems(arrayHolder);
 
     return data;
   }, [loading, error, data]);
@@ -235,6 +232,7 @@ const FindLocation = ({navigation}) => {
           <CustomMapMarker
             selected={selectedLocationIndex === i}
             item={e}
+            key={i}
             navigation={navigation}
             onClose={() => setSelectedLocation(-1)}
             onPress={() => onMarker(e, i)}
@@ -274,6 +272,7 @@ const FindLocation = ({navigation}) => {
           renderItem={(e) => (
             <LocationItem
               {...e}
+              keyExtractor={(item, idx) => item.title + idx}
               fromFindLoc
               navigation={navigation}
               customerInfo={customerInfo}

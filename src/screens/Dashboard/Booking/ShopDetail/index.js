@@ -61,7 +61,7 @@ const ShopDetail = ({navigation, route}) => {
         longitude,
       });
     } catch (e) {
-      console.log('Can not get the current user location');
+      console.log('Can not get the current user location:', e);
     }
   };
 

@@ -29,6 +29,7 @@ const LocationItem = ({
   onSelect,
 }) => {
   const [dis, setDis] = useState(null);
+  const [requestCount, setRequestCount] = useState(0);
   const currentLocation = useSelector((state) => state.home.currentLocation);
 
   useEffect(() => {
@@ -39,10 +40,6 @@ const LocationItem = ({
 
   const getDistance = useCallback(async () => {
     try {
-      console.log('currentLocation:', currentLocation, {
-        latitude: Number(get(item, 'contact.coordinates[0]')),
-        longitude: Number(get(item, 'contact.coordinates[1]')),
-      });
       const _dis = await distance(
         {
           latitude: Number(currentLocation.latitude),
@@ -53,12 +50,12 @@ const LocationItem = ({
           longitude: Number(get(item, 'contact.coordinates[1]')),
         },
       );
-
-      setDis(_dis);
+      setDis(_dis.routes.car.distance.text);
     } catch (e) {
       console.log('Get Distance Issue:', e);
     }
   }, [currentLocation, item]);
+
   const window = Dimensions.get('window');
   const {width, height} = window;
   const ASPECT_RATIO = width / height;
@@ -174,7 +171,7 @@ const LocationItem = ({
         <View style={[styles.flexContainer, {marginTop: 10, marginLeft: 35}]}>
           {dis && (
             <Text style={styles.miles}>
-              {dis.status === 'SUCCESS' ? dis.routes.car.distance.text : ''}
+              {dis}
             </Text>
           )}
 

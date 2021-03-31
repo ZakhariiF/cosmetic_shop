@@ -39,8 +39,6 @@ import ReviewPopup from 'components/ReviewPopup';
 import {types} from 'screens/Dashboard/Booking/ducks';
 import MParticle from 'react-native-mparticle';
 import CheckBox from 'components/Checkbox';
-import {requestUserLocationLocation} from 'utils';
-import {setCurrentLocation} from 'screens/Dashboard/thunks';
 
 // import Location from 'screens/Dashboard/Booking/Location';
 
@@ -70,31 +68,6 @@ const LocationModal = forwardRef((props, ref) => {
   const navigation = useNavigation();
   const totalGuests = useSelector((state) => state.booking.totalGuests);
   const data = useSelector((state) => state.booking.locations);
-  const currentLocation = useSelector((state) => state.home.currentLocation);
-
-  const radarPermission = useSelector((state) => state.home.radarPermission);
-  useEffect(() => {
-    if (!currentLocation) {
-      getUserLocation();
-    }
-  }, [currentLocation]);
-
-  const getUserLocation = async () => {
-    try {
-      const position = await requestUserLocationLocation();
-      const latitude = get(position, 'latitude');
-      const longitude = get(position, 'longitude');
-
-      dispatch(
-        setCurrentLocation({
-          latitude,
-          longitude,
-        }),
-      );
-    } catch (e) {
-      console.log('Can not get the current user location');
-    }
-  };
 
   const route = useRoute();
   const selectedLocation = useSelector(
@@ -329,7 +302,7 @@ const LocationModal = forwardRef((props, ref) => {
                   onSelect={onSelect}
                 />
               )}
-              keyExtractor={(_, index) => index.toString()}
+              keyExtractor={(item, index) => item.title + index}
               ListHeaderComponent={() => (
                 <ScrollView
                   horizontal

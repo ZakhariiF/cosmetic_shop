@@ -75,8 +75,6 @@ const Location = ({navigation}) => {
     }
   }, [useCurrentLocation, searchVal, currentLocation]);
 
-  const radarPermission = useSelector((state) => state.home.radarPermission);
-
   useEffect(() => {
     if (!currentLocation) {
       getUserLocation();
@@ -98,7 +96,7 @@ const Location = ({navigation}) => {
         }),
       );
     } catch (e) {
-      console.log('Can not get the current user location');
+      console.log('Can not get the current user location:', e);
     }
   };
 
