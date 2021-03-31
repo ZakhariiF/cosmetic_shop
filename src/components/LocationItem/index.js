@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     ...rootStyle.commonText,
     fontFamily: Fonts.AvenirNextMedium,
     marginLeft: 10,
-    flexBasis: '60%',
+    flexBasis: '55%',
   },
   buttonContainer: {
     height: 36,

@@ -36,7 +36,7 @@ const AccountAddon = ({navigation}) => {
 
   return (
     <View style={rootStyle.container}>
-      <Header title="Add-Ons" isTab isBack />
+      <Header title="ADD-ONS" isTab isBack />
       <ScrollView>
         <Image
           resizeMode="contain"
