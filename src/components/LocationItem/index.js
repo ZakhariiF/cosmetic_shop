@@ -29,7 +29,6 @@ const LocationItem = ({
   onSelect,
 }) => {
   const [dis, setDis] = useState(null);
-  const [requestCount, setRequestCount] = useState(0);
   const currentLocation = useSelector((state) => state.home.currentLocation);
 
   useEffect(() => {
