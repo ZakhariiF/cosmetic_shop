@@ -22,12 +22,14 @@ import Indicator from 'components/Indicator';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import Slick from 'react-native-slick';
+import { useNavigation } from "@react-navigation/native";
 
-const AccountStyle = ({navigation}) => {
+const AccountStyle = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [images, setImages] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     getData();
@@ -59,67 +61,66 @@ const AccountStyle = ({navigation}) => {
         onRequestClose={() => {
           setModalVisible(false);
         }}>
-        <TouchableOpacity
-          onPressOut={() => setModalVisible(false)}
-          style={{flex: 1}}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: Colors.bg,
+          }}>
           <View
             style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: Colors.bg,
+              width: 400,
+              height: 500,
             }}>
-            <View
-              style={{
-                width: 400,
-                height: 500,
-              }}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalHeaderText}>{(modalVisible || '').toUpperCase()}</Text>
-                <MaterialCommunityIcons
-                  name="close"
-                  size={25}
-                  color={Colors.header_title}
-                  onPress={() => setModalVisible(false)}
-                />
-              </View>
-              <Slick
-                showsButtons={true}
-                nextButton={
-                  <Image
-                    source={Images.right_arrow}
-                    style={styles.slickCtrlBtnImage}
-                  />
-                }
-                prevButton={
-                  <Image
-                    source={Images.right_arrow}
-                    style={[
-                      {transform: [{rotate: '180deg'}]},
-                      styles.slickCtrlBtnImage,
-                    ]}
-                  />
-                }
-                activeDotStyle={{backgroundColor: 'transparent'}}
-                dotStyle={{backgroundColor: 'transparent'}}>
-                {images.map((e, i) => (
-                  <View key={i} style={{width: 400, height: 400}}>
-                    <Image
-                      style={{width: 400, height: 400, resizeMode: 'contain'}}
-                      source={{uri: e}}
-                    />
-                  </View>
-                ))}
-              </Slick>
-              <Button
-                onButtonPress={() => {
-                  navigation.navigate('Book');
-                }}
-                name="Book this style"
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalHeaderText}>{(modalVisible || '').toUpperCase()}</Text>
+              <MaterialCommunityIcons
+                name="close"
+                size={30}
+                color={Colors.header_title}
+                onPress={() => setModalVisible(false)}
               />
             </View>
+            <Slick
+              showsButtons={true}
+              nextButton={
+                <Image
+                  source={Images.right_arrow}
+                  style={styles.slickCtrlBtnImage}
+                />
+              }
+              prevButton={
+                <Image
+                  source={Images.right_arrow}
+                  style={[
+                    {transform: [{rotate: '180deg'}]},
+                    styles.slickCtrlBtnImage,
+                  ]}
+                />
+              }
+              activeDotStyle={{backgroundColor: 'transparent'}}
+              dotStyle={{backgroundColor: 'transparent'}}>
+              {images.map((e, i) => (
+                <View key={i} style={{width: 400, height: 400}}>
+                  <Image
+                    style={{width: 400, height: 400, resizeMode: 'contain'}}
+                    source={{uri: e}}
+                  />
+                </View>
+              ))}
+            </Slick>
+            <Button
+              onButtonPress={() => {
+                navigation.navigate('Book', {
+                  screen: 'Location',
+                });
+              }}
+              name="Book this style"
+            />
           </View>
-        </TouchableOpacity>
+        </View>
+
       </Modal>
 
       <ScrollView>
@@ -135,7 +136,7 @@ const AccountStyle = ({navigation}) => {
           </Text>
         </View>
 
-        <View>
+        <View style={{paddingHorizontal: 15}}>
           <Slick
             showsButtons={true}
             containerStyle={styles.swiperContainer}
@@ -143,7 +144,7 @@ const AccountStyle = ({navigation}) => {
             activeDotStyle={{backgroundColor: 'transparent'}}
             buttonWrapperStyle={{
               alignItems: 'flex-start',
-              top: 175,
+              top: 150,
             }}
             nextButton={
               <Image

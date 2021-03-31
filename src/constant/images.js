@@ -73,6 +73,7 @@ export default {
   welcomescreen_1: require('assets/images/welcome-01.jpg'),
   welcomescreen_2: require('assets/images/welcome-02.jpg'),
   welcomescreen_3: require('assets/images/welcome-03.jpg'),
-  welcomescreen_4: require('assets/images/welcome-04.jpg'),
-  welcomescreen_5: require('assets/images/welcome-05.jpg'),
+  welcomescreen_low_1: require('assets/images/NewApp_WelcomeScreens_750x1344_1.jpg'),
+  welcomescreen_low_2: require('assets/images/NewApp_WelcomeScreens_750x1344_2.jpg'),
+  welcomescreen_low_3: require('assets/images/NewApp_WelcomeScreens_750x1344_3.jpg'),
 };

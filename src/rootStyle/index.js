@@ -26,8 +26,8 @@ const rootStyle = StyleSheet.create({
     fontFamily: Fonts.AvenirNextRegular,
   },
   commonHeader: {
-    fontSize: 25,
-    lineHeight: 30,
+    fontSize: 32,
+    lineHeight: 40,
     color: Colors.header_title,
     fontFamily: Fonts.DCondensed,
     paddingVertical: '10%',

@@ -1,18 +1,21 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {Image, View} from 'react-native';
+import React, {useState, useCallback} from 'react';
+import {Dimensions, Image, View} from 'react-native';
+
+const {height, width} = Dimensions.get('window');
 
 import {Images} from 'constant';
 import {useDispatch} from 'react-redux';
 
 import {increaseLoggedInCount} from '../Auth/thunks';
 
-const WelcomeImages = [
-  Images.welcomescreen_1,
-  Images.welcomescreen_2,
-  Images.welcomescreen_3,
-  Images.welcomescreen_4,
-  Images.welcomescreen_5,
-];
+const WelcomeImages =
+  height > 667
+    ? [Images.welcomescreen_1, Images.welcomescreen_2, Images.welcomescreen_3]
+    : [
+        Images.welcomescreen_low_1,
+        Images.welcomescreen_low_2,
+        Images.welcomescreen_low_3,
+      ];
 
 const Welcome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -32,7 +35,10 @@ const Welcome = () => {
   const img = WelcomeImages[currentSlide];
 
   return (
-    <View style={{flex: 1}} onTouchEnd={onTouchEnd} onTouchMove={() => dispatch(increaseLoggedInCount())}>
+    <View
+      style={{flex: 1}}
+      onTouchEnd={onTouchEnd}
+      onTouchMove={() => dispatch(increaseLoggedInCount())}>
       <Image
         source={img}
         style={{

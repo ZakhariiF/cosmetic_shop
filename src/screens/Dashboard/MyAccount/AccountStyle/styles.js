@@ -67,12 +67,12 @@ export default StyleSheet.create({
   },
   modalHeaderText: {
     ...rootStyle.commonHeader,
-    paddingVertical: 10,
+    paddingVertical: 0,
   },
   modalHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    alignItems: 'center',
+    paddingVertical: 10,
   } 
 });

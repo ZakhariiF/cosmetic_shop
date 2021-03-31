@@ -37,6 +37,7 @@ const AppContainer = () => {
   };
 
   Radar.on('clientLocation', (result) => {
+    console.log('clientLocation:', result);
     dispatch(
       setCurrentLocation({
         latitude: get(result, 'location.latitude'),

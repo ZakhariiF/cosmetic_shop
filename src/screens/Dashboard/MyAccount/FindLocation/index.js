@@ -280,7 +280,6 @@ const FindLocation = ({navigation}) => {
               onFavIcon={onFav}
               isFav={get(e, 'item.bookerLocationId') == favItem}
               onSelect={(item) => setCenter(item)}
-              currentLocation={currentLocation}
               onBook={(item) => {
                 dispatch(setLocation(item));
                 dispatch(setmemberCount([]));
