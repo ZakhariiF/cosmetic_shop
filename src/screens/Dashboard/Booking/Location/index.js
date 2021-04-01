@@ -178,39 +178,11 @@ const Location = ({navigation}) => {
     });
   };
 
+  console.log('Collaped:', collapsed);
+
   return (
     <>
       <BookingTab />
-      {/* {Platform.OS === 'android' ? (
-        <MapView
-          showsUserLocation
-          ref={mapRef}
-          initialRegion={coords}
-          region={coords}
-          style={{
-            width,
-            height: collapsed ? height / 2: height, 
-            flex: 1,
-          }}>
-          {(allLocations || []).map((e, i) => (
-            <AndroidMapMarker
-              key={i}
-              coordinate={{
-                latitude: Number(get(e, 'contact.coordinates[0]', 34.1434376)),
-                longitude: Number(get(e, 'contact.coordinates[1]', -118.2580306)),
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA,
-              }}
-              selected={selectedLocationId === e.bookerLocationId}
-              item={e}
-              navigation={navigation}
-              currentLocation={currentLocation}
-              onClose={() => setSelectedLocation(-1)}
-              onPress={() => onMarker(e)}
-            />
-          ))}
-        </MapView>
-      ) : ( */}
       <MapView
         showsUserLocation
         ref={mapRef}
@@ -218,8 +190,7 @@ const Location = ({navigation}) => {
         region={coords}
         style={{
           width,
-          height: collapsed ? height / 2: height, 
-          flex: 1,
+          height: collapsed ? height : height / 2,
         }}>
         {(allLocations || []).map((e, i) => (
           <CustomMapMarker
