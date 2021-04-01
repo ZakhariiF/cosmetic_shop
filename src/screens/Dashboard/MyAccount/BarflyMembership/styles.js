@@ -134,7 +134,7 @@ export default StyleSheet.create({
   selectedContainer: {
     borderWidth: 2,
     borderColor: Colors.yellow,
-    borderStyle: 'solid'
+    borderStyle: 'solid',
   },
   topContainer: {
     borderWidth: 2,
@@ -227,6 +227,10 @@ export default StyleSheet.create({
   storeSelectButtonTitle: {
     fontSize: 14,
   },
+  favIcon: {
+    marginTop: 2,
+    marginRight: 5,
+  },
   storeTitleWrapper: {
     display: 'flex',
     flexDirection: 'row',
@@ -244,19 +248,28 @@ export default StyleSheet.create({
   },
   storeTitle: {
     fontSize: 15,
-    maxWidth: '50%',
   },
   storeAddressWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    maxWidth: '50%',
   },
   storeAddress: {
     fontSize: 13,
   },
   storeDec: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+  },
+  information: {
+    borderTopWidth: 2,
+    borderTopColor: Colors.seprator,
+    borderStyle: 'solid',
+    backgroundColor: Colors.bg,
+    marginTop: 10,
+    padding: 10,
+  },
+  inforText: {
+    color: Colors.light_gray,
+    marginBottom: 10,
   },
   storeDirection: {
     textDecorationLine: 'underline',

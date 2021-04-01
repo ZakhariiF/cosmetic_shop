@@ -47,7 +47,7 @@ const Home = ({navigation}) => {
 
   const LOCATION_QUERY = storeCollectionQuery();
   const {data, error, loading} = useQuery(LOCATION_QUERY);
-  
+
   const [deleteItem, setDeleteItem] = useState(null);
 
   const globalConfig = useSelector((state) => state.home.config);
@@ -148,6 +148,7 @@ const Home = ({navigation}) => {
   };
 
   const onBrowser = (action) => {
+    console.log('Action:', action);
     if (action) {
       let link = action.linkToMobileSlug;
       if (link === 'styles') {
@@ -283,7 +284,7 @@ const Home = ({navigation}) => {
             if (item.marketingStyles) {
               let action = get(
                 item,
-                'marketingProducts.actionsCollection.items[0]',
+                'marketingStyles.actionsCollection.items[0]'
               );
               return (
                 <StyleSwiper

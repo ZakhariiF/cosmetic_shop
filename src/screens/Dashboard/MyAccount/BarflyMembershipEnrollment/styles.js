@@ -5,7 +5,7 @@ import rootStyle from 'rootStyle';
 export default StyleSheet.create({
   errorText: {
     color: Colors.red,
-    fontSize: 12
+    fontSize: 12,
   },
   inputContainer: {
     borderBottomWidth: 1,
@@ -13,24 +13,23 @@ export default StyleSheet.create({
     fontSize: 16,
     fontFamily: Fonts.AvenirNextRegular,
     color: Colors.input_text,
-    marginBottom: 10,
+    marginBottom: 25,
     paddingBottom: 4,
   },
   inputLabel: {
     marginBottom: 0,
-    paddingBottom: 0
+    paddingBottom: 0,
   },
   title: {
-    color: Colors.header_title,
-    fontSize: 18,
-    lineHeight: 45
+    ...rootStyle.commonHeader,
+    paddingVertical: 15,
   },
   birthdayWrapper: {
     display: 'flex',
     alignItems: 'flex-start',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
-  birthdayElem:{
-    width: '33%'
-  }
+  birthdayElem: {
+    width: '33%',
+  },
 });

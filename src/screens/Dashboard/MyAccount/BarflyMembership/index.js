@@ -130,57 +130,59 @@ const BarflyMembership = ({navigation}) => {
     dispatch(accountActions.setMembershipLocation(item));
   };
 
-  const LocationItem = ({item}) => (
-    <View style={styles.storeItemWrapper}>
-      <View style={styles.storeTitleWrapper}>
-        <View>
-          <TouchableOpacity
-            onPress={() => {
-              setShowLocationModal(false);
-              navigation.navigate('ShopDetail', {item});
-            }}
-            accessible
-            accessibilityLabel="Shop Detail"
-            accessibilityRole="link"
-            style={styles.favIcon}>
-            <Image source={Images.notice} />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.storeTitle}>{get(item, 'title')}</Text>
-        <Button
-          containerStyle={styles.storeSelectButtonContainer}
-          titleStyle={styles.storeSelectButtonTitle}
-          name="Select"
-          onButtonPress={() => onSelectLocation(item)}
-        />
-      </View>
-      <View style={styles.storeDec}>
-        <View style={styles.storeAddressWrapper}>
-          <EvilIcons name="location" size={26} />
-          <View>
-            <Text style={styles.storeAddress}>
-              {get(item, 'contact.city')}, {get(item, 'contact.state')},{' '}
-              {get(item, 'contact.postalCode')}
-            </Text>
-            <Text>{get(item, 'contact.street1')}</Text>
+  const LocationItem = ({item}) => {
+    const operatingMessage = get(item, 'settings.operatingMessage', '');
+    const arrivalInformation = get(item, 'arrivalInformation', '');
+    return (
+      <View style={styles.storeItemWrapper}>
+        <View style={styles.storeTitleWrapper}>
+          <View style={{flexDirection: 'row', maxWidth: '50%'}}>
+            <TouchableOpacity
+              onPress={() => {
+                setShowLocationModal(false);
+                navigation.navigate('ShopDetail', {item});
+              }}
+              accessible
+              accessibilityLabel="Shop Detail"
+              accessibilityRole="link"
+              style={styles.favIcon}>
+              <Image source={Images.notice} />
+            </TouchableOpacity>
+            <Text style={styles.storeTitle}>{get(item, 'title')}</Text>
           </View>
+          <Button
+            containerStyle={styles.storeSelectButtonContainer}
+            titleStyle={styles.storeSelectButtonTitle}
+            name="Select"
+            onButtonPress={() => onSelectLocation(item)}
+          />
         </View>
-        <TouchableOpacity
-          onPress={() =>
-            openMaps(
-              get(item, 'title'),
-              get(item, 'contact.coordinates[0]'),
-              get(item, 'contact.contact.coordinates[1]'),
-            )
-          }
-          accessible
-          accessibilityLabel="Open Map"
-          accessibilityRole="link">
-          <Text style={styles.storeDirection}>Get Directions</Text>
-        </TouchableOpacity>
+        <View style={styles.storeDec}>
+          <View style={styles.storeAddressWrapper}>
+            <EvilIcons name="location" size={26} />
+            <View>
+              <Text>{get(item, 'contact.street1')}</Text>
+              <Text style={styles.storeAddress}>
+                {get(item, 'contact.city')}, {get(item, 'contact.state')},{' '}
+                {get(item, 'contact.postalCode')}
+              </Text>
+            </View>
+          </View>
+          {((operatingMessage && operatingMessage != '') ||
+            (arrivalInformation && arrivalInformation !== '')) && (
+            <View style={styles.information}>
+              {operatingMessage !== '' && (
+                <Text style={styles.inforText}>{operatingMessage}</Text>
+              )}
+              {arrivalInformation !== '' && (
+                <Text style={styles.inforText}>{arrivalInformation}</Text>
+              )}
+            </View>
+          )}
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   const upgradeMembership = (item) => {
     if (customerMembershipLocation) {

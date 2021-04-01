@@ -13,7 +13,6 @@ const NativePicker = ({
   disabled,
   pickerContainer,
 }) => {
-
   let styleObj = {
     viewContainer: [styles.pickerContainer, pickerContainer],
     placeholder: {
@@ -28,13 +27,13 @@ const NativePicker = ({
       ...styleObj,
       inputAndroid: styles.pickerinput,
       inputAndroidContainer: {justifyContent: 'center'},
-    }
+    };
   } else {
     styleObj = {
       ...styleObj,
       inputIOS: styles.pickerinput,
       inputIOSContainer: {justifyContent: 'center'},
-    }
+    };
   }
 
   return (
@@ -51,6 +50,7 @@ const NativePicker = ({
       onValueChange={(value) => onValueChange(value)}
       value={selectedValue}
       items={items}
+      placeholder={placeholder}
     />
   );
 };

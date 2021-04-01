@@ -145,10 +145,10 @@ const LocationItem = ({
             <View>
               <Text style={styles.location}>
                 {/* 21016 Pacific Coast Hwy Suite D104 Huntington Beach, CA 92648 */}
-                {get(item, 'contact.street1')}, {get(item, 'contact.city')}
+                {get(item, 'contact.street1')}
               </Text>
               <Text style={styles.location}>
-                {get(item, 'contact.state')} {get(item, 'contact.postalCode')}
+                {get(item, 'contact.city') ? `${get(item, 'contact.city')},` : ''}{get(item, 'contact.state')} {get(item, 'contact.postalCode')}
               </Text>
             </View>
           </View>

@@ -99,7 +99,7 @@ const queryMarketingStyles = (marketingStylesId) =>
         actionsCollection {
           items {
             title
-            linkToUrl
+            linkToMobileSlug
           }
         }
         stylesCollection {

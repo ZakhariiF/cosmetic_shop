@@ -18,6 +18,7 @@ import cardTypes from 'constant/cardType';
 
 import rootStyle from 'rootStyle';
 import styles from './styles';
+import NativePicker from 'components/NativePicker';
 
 const CustomerSchema = Yup.object().shape({
   FirstName: Yup.string()
@@ -113,7 +114,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
             onChangeText={(t) => setFieldValue(fieldName, t)}
             value={field.value}
             name={fieldName}
-            style={[styles.inputContainer]}
+            style={[styles.inputContainer, {marginTop: 20}]}
           />
           {!!meta.error && meta.touched && (
             <Text style={styles.errorText}>{meta.error}</Text>
@@ -123,70 +124,54 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
     </Field>
   );
 
-  const MonthElems = () => {
+  const months = () => {
     const monthOptions = [];
 
     for (let i = 0; i < 12; i++) {
-      monthOptions.push(
-        <Picker.Item
-          style={{padding: 20}}
-          value={i}
-          key={i}
-          label={`${i + 1}`}
-        />,
-      );
+      monthOptions.push({
+        label: `${i + 1}`,
+        value: i,
+      });
     }
     return monthOptions;
   };
 
-  const DayElems = () => {
+  const days = () => {
     const dayOptions = [];
 
     for (let i = 0; i < 31; i++) {
-      dayOptions.push(
-        <Picker.Item
-          style={{padding: 20}}
-          value={i}
-          key={i}
-          label={`${i + 1}`}
-        />,
-      );
+      dayOptions.push({
+        value: i,
+        label: `${i + 1}`,
+      });
     }
     return dayOptions;
   };
 
-  const YearElems = () => {
+  const years = () => {
     const yearOptions = [];
 
     const currentYear = new Date().getFullYear();
     const firstYear = currentYear - 100;
 
     for (let i = 0; i < 100; i++) {
-      yearOptions.push(
-        <Picker.Item
-          style={{padding: 20}}
-          value={firstYear + i}
-          key={i}
-          label={`${firstYear + i + 1}`}
-        />,
-      );
+      yearOptions.push({
+        value: firstYear + i,
+        label: `${firstYear + i + 1}`,
+      });
     }
     return yearOptions;
   };
 
-  const CardYearElems = () => {
+  const cardYears = () => {
     const firstYear = new Date().getFullYear();
     const yearOptions = [];
 
     for (let i = 0; i < 10; i++) {
-      yearOptions.push(
-        <Picker.Item
-          style={{padding: 20}}
-          value={firstYear + i}
-          key={i}
-          label={`${firstYear + i}`}
-        />,
-      );
+      yearOptions.push({
+        value: firstYear + i,
+        label: `${firstYear + i}`,
+      });
     }
 
     return yearOptions;
@@ -219,31 +204,28 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                   {CustomerField('First Name', 'FirstName')}
                   {CustomerField('Last Name', 'LastName')}
                   {CustomerField('Email', 'Email')}
-                  <View style={[styles.inputContainer]}>
-                    <Text style={styles.inputLabel}>State</Text>
-                    <Field name="State">
-                      {({field, form: {setFieldValue}}) => (
-                        <Picker
-                          selectedValue={field.value}
-                          onValueChange={(itemValue) =>
-                            setFieldValue('State', itemValue)
-                          }
-                          style={styles.innerContainer}>
-                          {usStates.map((s) => (
-                            <Picker.Item
-                              value={s.name}
-                              key={s['alpha-2']}
-                              label={s.name}
-                            />
-                          ))}
-                        </Picker>
-                      )}
-                    </Field>
-                  </View>
+
                   {CustomerField('Address 1', 'Address.Street1')}
                   {CustomerField('Address 2', 'Address.Street2')}
                   {CustomerField('City', 'Address.City')}
                   {CustomerField('Postal Code', 'Address.Zip')}
+                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
+                    <Text style={styles.inputLabel}>State</Text>
+                    <Field name="State">
+                      {({field, form: {setFieldValue}}) => (
+                        <NativePicker
+                          selectedValue={field.value}
+                          onValueChange={(val) =>
+                            setFieldValue(field.name, val)
+                          }
+                          items={usStates.map((s) => ({
+                            label: s.name,
+                            value: s.name,
+                          }))}
+                        />
+                      )}
+                    </Field>
+                  </View>
                   {CustomerField('Phone Number', 'CellPhone')}
                 </View>
 
@@ -256,134 +238,122 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     'CustomField.Card.Number',
                   )}
                   {CustomerField('City', 'CustomField.Card.Address.City')}
-                  <View style={[styles.inputContainer]}>
+                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
                     <Text style={styles.inputLabel}>State</Text>
                     <Field name="CustomField.Card.Address.State">
                       {({field, form: {setFieldValue}}) => (
-                        <Picker
+                        <NativePicker
                           selectedValue={field.value}
-                          onValueChange={(itemValue) =>
-                            setFieldValue(field.name, itemValue)
-                          }>
-                          {usStates.map((s) => (
-                            <Picker.Item
-                              value={s.name}
-                              key={s['alpha-2']}
-                              label={s.name}
-                            />
-                          ))}
-                        </Picker>
+                          onValueChange={(val) =>
+                            setFieldValue(field.name, val)
+                          }
+                          items={usStates.map((s) => ({
+                            label: s.name,
+                            value: s.name,
+                          }))}
+                        />
                       )}
                     </Field>
                   </View>
-                  <View style={[styles.inputContainer]}>
+                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
                     <Text style={styles.inputLabel}>Type</Text>
                     <Field name="CustomField.Card.Type">
                       {({field, form: {setFieldValue}}) => (
-                        <Picker
+                        <NativePicker
                           selectedValue={field.value}
                           onValueChange={(itemValue) =>
                             setFieldValue(field.name, itemValue)
-                          }>
-                          {cardTypes.map((s) => (
-                            <Picker.Item
-                              value={s.id}
-                              key={s.id}
-                              label={s.label}
-                            />
-                          ))}
-                        </Picker>
+                          }
+                          items={cardTypes.map((s) => ({
+                            value: s.id,
+                            label: s.label,
+                          }))}
+                        />
                       )}
                     </Field>
                   </View>
-                  <View style={styles.birthdayWrapper}>
-                    <View style={[styles.birthdayElem, styles.inputContainer]}>
-                      <Text style={styles.inputLabel}>Month</Text>
-                      <Field name="CustomField.Card.Month">
-                        {({field, form: {setFieldValue}}) => (
-                          <Picker
-                            selectedValue={field.value}
-                            onValueChange={(itemValue) =>
-                              setFieldValue(field.name, itemValue)
-                            }>
-                            {MonthElems()}
-                          </Picker>
-                        )}
-                      </Field>
-                    </View>
-                    <View style={[styles.birthdayElem, styles.inputContainer]}>
-                      <Text style={styles.inputLabel}>Year</Text>
-                      <Field name="CustomField.Card.Year">
-                        {({field, form: {setFieldValue}}) => (
-                          <Picker
-                            selectedValue={field.value}
-                            onValueChange={(itemValue) => {
-                              setFieldValue(field.name, itemValue);
-                            }}
-                            style={styles.innerContainer}>
-                            {CardYearElems()}
-                          </Picker>
-                        )}
-                      </Field>
-                    </View>
-                    <View style={styles.birthdayElem}>
-                      {CustomerField('CVV', 'CustomField.Card.SecurityCode')}
-                    </View>
+
+                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
+                    <Text style={styles.inputLabel}>Month</Text>
+                    <Field name="CustomField.Card.Month">
+                      {({field, form: {setFieldValue}}) => (
+                        <NativePicker
+                          selectedValue={field.value}
+                          onValueChange={(itemValue) =>
+                            setFieldValue(field.name, itemValue)
+                          }
+                          items={months()}
+                        />
+                      )}
+                    </Field>
                   </View>
+                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
+                    <Text style={styles.inputLabel}>Year</Text>
+                    <Field name="CustomField.Card.Year">
+                      {({field, form: {setFieldValue}}) => (
+                        <NativePicker
+                          selectedValue={field.value}
+                          onValueChange={(itemValue) => {
+                            setFieldValue(field.name, itemValue);
+                          }}
+                          style={styles.innerContainer}
+                          items={cardYears()}
+                        />
+                      )}
+                    </Field>
+                  </View>
+                  {CustomerField('CVV', 'CustomField.Card.SecurityCode')}
                 </View>
 
                 <View>
                   <Text style={styles.title}>DATE OF BIRTH</Text>
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
 
-                  <View style={styles.birthdayWrapper}>
-                    <View style={styles.birthdayElem}>
-                      <Text style={styles.inputLabel}>Month</Text>
-                      <Field name="CustomField.Birth.Month">
-                        {({field, form: {setFieldValue}}) => (
-                          <Picker
-                            selectedValue={field.value}
-                            onValueChange={(itemValue) =>
-                              setFieldValue(field.name, itemValue)
-                            }
-                            style={styles.innerContainer}>
-                            {MonthElems()}
-                          </Picker>
-                        )}
-                      </Field>
-                    </View>
-                    <View style={styles.birthdayElem}>
-                      <Text style={styles.inputLabel}>Day</Text>
-                      <Field name="CustomField.Birth.Day">
-                        {({field, form: {setFieldValue}}) => (
-                          <Picker
-                            selectedValue={field.value}
-                            onValueChange={(itemValue) => {
-                              setFieldValue(field.name, itemValue);
-                            }}
-                            style={styles.innerContainer}>
-                            {DayElems()}
-                          </Picker>
-                        )}
-                      </Field>
-                    </View>
-                    <View style={styles.birthdayElem}>
-                      <Text style={styles.inputLabel}>Year</Text>
-                      <Field name="CustomField.Birth.Year">
-                        {({field, form: {setFieldValue}}) => (
-                          <Picker
-                            selectedValue={field.value}
-                            onValueChange={(itemValue) => {
-                              setFieldValue(field.name, itemValue);
-                            }}
-                            style={styles.innerContainer}>
-                            {YearElems()}
-                          </Picker>
-                        )}
-                      </Field>
-                    </View>
+                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
+                    <Text style={styles.inputLabel}>Month</Text>
+                    <Field name="CustomField.Birth.Month">
+                      {({field, form: {setFieldValue}}) => (
+                        <NativePicker
+                          selectedValue={field.value}
+                          onValueChange={(itemValue) =>
+                            setFieldValue(field.name, itemValue)
+                          }
+                          items={months()}
+                        />
+                      )}
+                    </Field>
+                  </View>
+                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
+                    <Text style={styles.inputLabel}>Day</Text>
+                    <Field name="CustomField.Birth.Day">
+                      {({field, form: {setFieldValue}}) => (
+                        <NativePicker
+                          selectedValue={field.value}
+                          onValueChange={(itemValue) => {
+                            setFieldValue(field.name, itemValue);
+                          }}
+                          style={styles.innerContainer}
+                          items={days()}
+                        />
+                      )}
+                    </Field>
+                  </View>
+                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
+                    <Text style={styles.inputLabel}>Year</Text>
+                    <Field name="CustomField.Birth.Year">
+                      {({field, form: {setFieldValue}}) => (
+                        <NativePicker
+                          selectedValue={field.value}
+                          onValueChange={(itemValue) => {
+                            setFieldValue(field.name, itemValue);
+                          }}
+                          items={years()}
+                        />
+                      )}
+                    </Field>
                   </View>
                 </View>
+
                 <View>
                   <Button name="Save" onButtonPress={submitForm} />
                 </View>

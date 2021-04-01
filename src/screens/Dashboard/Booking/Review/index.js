@@ -424,7 +424,22 @@ const Review = ({navigation, route}) => {
                     </View>
                   );
                 } else {
-                  return null;
+                  return (
+                    <View key={i} style={styles.flexContainer}>
+                      {totalGuests.length > 1 ? (
+                        <Text style={[styles.titleText, styles.basisContainer]}>
+                          {i === 0 ? 'Me' : `Guest ${i}`}
+                        </Text>
+                      ) : null}
+                      <Text
+                        style={[
+                          styles.titleText,
+                          {width: totalGuests.length > 1 ? '70%' : '85%'},
+                        ]}>
+                        No
+                      </Text>
+                    </View>
+                  );
                 }
               })}
 

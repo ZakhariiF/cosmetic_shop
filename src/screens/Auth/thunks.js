@@ -122,7 +122,7 @@ export const updateCustomerInfo = (id) => async (dispatch) => {
 export const onregister = (obj) => async (dispatch) => {
   dispatch(authActions.registerRequest());
   try {
-    const data = await API.signin(obj);
+    const data = await API.register(obj);
     console.log('register>>>', data);
     if (data) {
       return dispatch(authActions.registerSuccess(data));

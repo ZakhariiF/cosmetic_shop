@@ -112,6 +112,7 @@ const AccountStyle = () => {
             </Slick>
             <Button
               onButtonPress={() => {
+                setModalVisible(false);
                 navigation.navigate('Book', {
                   screen: 'Location',
                 });

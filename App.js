@@ -13,7 +13,6 @@ import {
   Text,
   TouchableOpacity,
   UIManager,
-  Linking
 } from 'react-native';
 import AppContainer from './src/navigation';
 import AppHoc from './src/hoc';
@@ -25,6 +24,7 @@ import {GraphQLClient} from 'services/GraphClinet';
 import {enableScreens} from 'react-native-screens';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Colors} from './src/constant';
 
 enableScreens();
 
@@ -42,22 +42,6 @@ const App = () => {
     handleScaling();
   }, []);
 
-  const onCallback = (event) => {
-    console.log('onCallback:', event)
-  }
-
-  // React.useEffect(() => {
-  //   // Linking.getInitialURL().then((url) => {
-  //   //   if (url) {
-  //   //     console.log('Initial url is: ' + url);
-  //   //   }
-  //   // }).catch(err => console.error('An error occurred', err));
-
-  //   Linking.addEventListener('url', onCallback)
-  //   return () => {
-  //     Linking.removeEventListener('url', onCallback)
-  //   }
-  // }, [onCallback])
 
   const handleScaling = () => {
     Text.defaultProps = Text.defaultProps || {};
@@ -79,6 +63,9 @@ const App = () => {
         <AppContainer />
         <DropdownAlert
           inactiveStatusBarStyle="light-content"
+          successColor={Colors.yellow}
+          errorColor={Colors.light_gray}
+          renderImage={() => <></>}
           ref={(ref) => AlertHelper.setDropDown(ref)}
           onClose={() => AlertHelper.invokeOnClose()}
         />
