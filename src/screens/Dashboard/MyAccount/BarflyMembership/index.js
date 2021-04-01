@@ -136,22 +136,10 @@ const BarflyMembership = ({navigation}) => {
 
   const LocationItem = ({item}) => {
     const operatingMessage = get(item, 'settings.operatingMessage', '');
-    const arrivalInformation = get(item, 'arrivalInformation', '');
     return (
       <View style={styles.storeItemWrapper}>
         <View style={styles.storeTitleWrapper}>
           <View style={{flexDirection: 'row', maxWidth: '50%'}}>
-            <TouchableOpacity
-              onPress={() => {
-                setShowLocationModal(false);
-                navigation.navigate('ShopDetail', {item});
-              }}
-              accessible
-              accessibilityLabel="Shop Detail"
-              accessibilityRole="link"
-              style={styles.favIcon}>
-              <Image source={Images.notice} />
-            </TouchableOpacity>
             <Text style={styles.storeTitle}>{get(item, 'title')}</Text>
           </View>
           <Button
@@ -172,15 +160,9 @@ const BarflyMembership = ({navigation}) => {
               </Text>
             </View>
           </View>
-          {((operatingMessage && operatingMessage != '') ||
-            (arrivalInformation && arrivalInformation !== '')) && (
+          {!!operatingMessage && operatingMessage != '' && (
             <View style={styles.information}>
-              {operatingMessage !== '' && (
-                <Text style={styles.inforText}>{operatingMessage}</Text>
-              )}
-              {arrivalInformation !== '' && (
-                <Text style={styles.inforText}>{arrivalInformation}</Text>
-              )}
+              <Text style={styles.inforText}>{operatingMessage}</Text>
             </View>
           )}
         </View>

@@ -183,7 +183,7 @@ const AccountService = ({navigation}) => {
           </Text>
           <View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={styles.selectedStoreLabel}>Store Selected:</Text>
+              <Text style={styles.selectedStoreLabel}>Shop Selected:</Text>
               {selectedStore && (
                 <Text style={styles.selectedStore}>
                   {get(selectedStore, 'title')}

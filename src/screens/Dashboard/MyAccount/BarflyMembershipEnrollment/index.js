@@ -198,7 +198,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
               <View>
                 {console.log(errors)}
                 <View>
-                  <Text style={styles.title}>GENERAL INFORMATION</Text>
+                  <Text style={styles.title}>Home Address</Text>
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
 
                   {CustomerField('First Name', 'FirstName')}
@@ -230,7 +230,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                 </View>
 
                 <View>
-                  <Text style={styles.title}>PAYMENT INFORMATION</Text>
+                  <Text style={styles.title}>BILLING INFORMATION</Text>
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
                   {CustomerField('Name on Card', 'CustomField.Card.NameOnCard')}
                   {CustomerField(

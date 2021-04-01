@@ -420,7 +420,7 @@ const Review = ({navigation, route}) => {
                           styles.titleText,
                           {width: totalGuests.length > 1 ? '70%' : '85%'},
                         ]}>
-                        Extensions
+                        Yes {' '}
                         <Text style={styles.price}>
                           (${get(extensionAddon, 'Price.Amount', '')})
                         </Text>

@@ -58,6 +58,10 @@ PODS:
   - GoogleMaps/Base (3.5.0)
   - GoogleMaps/Maps (3.5.0):
     - GoogleMaps/Base
+  - mParticle-Appboy (8.0.9):
+    - Appboy-iOS-SDK (~> 3.27)
+    - Appboy-tvOS-SDK (~> 3.27)
+    - mParticle-Apple-SDK/mParticle (~> 8.0)
   - mParticle-Apple-SDK (8.2.0):
     - mParticle-Apple-SDK/mParticle (= 8.2.0)
   - mParticle-Apple-SDK/mParticle (8.2.0)
@@ -365,6 +369,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
   - GoogleMaps
+  - mParticle-Appboy (~> 8)
   - mParticle-Apple-SDK (~> 8)
   - "OktaSdkBridgeReactNative (from `../node_modules/@okta/okta-react-native`)"
   - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
@@ -423,6 +428,7 @@ SPEC REPOS:
     - CocoaAsyncSocket
     - Google-Maps-iOS-Utils
     - GoogleMaps
+    - mParticle-Appboy
     - mParticle-Apple-SDK
     - OktaOidc
     - RadarSDK
@@ -545,6 +551,7 @@ SPEC CHECKSUMS:
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
   GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
+  mParticle-Appboy: acc873fa7bbd7755bdecc0da9bc6dd5709dcf042
   mParticle-Apple-SDK: 747ee308fe2bfc4d60497f972a9aba5363a9408a
   OktaOidc: 4519c0e6956713852ec472dfa7b54056fd466afb
   OktaSdkBridgeReactNative: 242c2d64cc6dd973827a77d5289626bea911c8b1
@@ -597,6 +604,6 @@ SPEC CHECKSUMS:
   TcpSockets: 359ca53398b6ad72727c00ac393f37caccfcc935
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
 
-PODFILE CHECKSUM: fa54066298143858d5dafe747443e597f2dc1973
+PODFILE CHECKSUM: 37ddc9d9beaa405eff8c89dc898f432a284048bf
 
 COCOAPODS: 1.10.1

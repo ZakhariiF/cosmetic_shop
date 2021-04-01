@@ -16,6 +16,7 @@ target 'Drybar' do
   pod 'react-native-appboy-sdk', :path => '../node_modules/react-native-appboy-sdk'
 
   pod 'mParticle-Apple-SDK', '~> 8'
+  pod 'mParticle-Appboy', '~> 8'
 
   use_react_native!(:path => config["reactNativePath"])
 
