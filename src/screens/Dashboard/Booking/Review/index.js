@@ -218,6 +218,10 @@ const Review = ({navigation, route}) => {
 
       if (totalGuests[i].extension && totalGuests[i].extension.name === 'Yes') {
         extraNotes = `${extraNotes} Extensions Added.`;
+        endTime = moment(endTime)
+          .add(10, 'minutes')
+          .utcOffset(timezone)
+          .format('YYYY-MM-DDTHH:mm:ssZ');
       }
 
       const guestObj = {
@@ -399,7 +403,7 @@ const Review = ({navigation, route}) => {
 
           {totalGuests.length ? (
             <View style={styles.boxContainer}>
-              <Text style={styles.headerText}>Extension</Text>
+              <Text style={styles.headerText}>Extensions</Text>
 
               {totalGuests.map((e, i) => {
                 if (e.extension && e.extension.name === 'Yes') {

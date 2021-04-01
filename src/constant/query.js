@@ -13,6 +13,7 @@ export const storeCollectionQuery = (storeType = 'Drybar Shop') => gql`
         settings
         arrivalInformation
         slug
+        block730
       }
     }
   }

@@ -48,6 +48,7 @@ const DateTime = ({navigation}) => {
   const selectedLocation = useSelector(
     (state) => state.booking.selectedLocation,
   );
+
   const isEmpLoading = useSelector((state) => state.booking.isEmpLoading);
   const [selectedDate, setSelectedDate] = useState(
     fromDate ? new Date(fromDate) : null,
@@ -327,7 +328,9 @@ const DateTime = ({navigation}) => {
         style={[styles.timeListContainer, active && rootStyle.activeButton]}
         onPress={() => onSlot(item)}
         accessible
-        accessibilityLabel={moment(item.startDateTime).utcOffset(item.timezone).format('h:mm a')}
+        accessibilityLabel={moment(item.startDateTime)
+          .utcOffset(item.timezone)
+          .format('h:mm a')}
         accessibilityRole="button">
         <Text style={[styles.time, active && rootStyle.activeButtonText]}>
           {/* {moment(item.open).format('h:mm a')} */}
@@ -351,6 +354,17 @@ const DateTime = ({navigation}) => {
       Date: moment(selectedDate).format('YYYY-MM-DD'),
     });
   }, [selectedDate]);
+
+  const blockTime = moment(selectedDate);
+
+  if (selectedDate && multiuserSlots && multiuserSlots.length) {
+    blockTime.utcOffset(multiuserSlots[0].timezone);
+    blockTime.set({
+      hour: 7,
+      minute: 30,
+      second: 0,
+    });
+  }
 
   return (
     <View style={rootStyle.container}>
@@ -414,7 +428,13 @@ const DateTime = ({navigation}) => {
 
             <FlatList
               style={{marginTop: 10, marginBottom: '20%'}}
-              data={multiuserSlots}
+              data={
+                selectedLocation.block730
+                  ? multiuserSlots.filter((slot) => {
+                      return !(moment(slot.startDateTime) < moment(blockTime));
+                    })
+                  : multiuserSlots
+              }
               renderItem={renderTime}
               keyExtractor={(_, index) => index.toString()}
               ListEmptyComponent={() => (
