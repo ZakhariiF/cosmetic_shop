@@ -244,12 +244,11 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                   <CheckBox
                     title={'Copy Address from Home Information'}
                     isChecked={sameAddress}
-                    onPressed={(checked) => {
-                      setSameAddress(checked);
-
-                      if (checked) {
+                    onPressed={() => {
+                      if (!sameAddress) {
                         setFieldValue('CustomField.Card.Address', values.Address);
                       }
+                      setSameAddress(!sameAddress);
                     }}
                   />
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
@@ -259,6 +258,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     'CustomField.Card.Number',
                   )}
                   {CustomerField('Address 1', 'CustomField.Card.Address.Street1')}
+                  {CustomerField('Address 2', 'CustomField.Card.Address.Street2')}
                   {CustomerField('City', 'CustomField.Card.Address.City')}
 
                   <Field name="CustomField.Card.Address.State">

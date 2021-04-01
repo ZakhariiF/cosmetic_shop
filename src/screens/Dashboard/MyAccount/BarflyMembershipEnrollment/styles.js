@@ -23,6 +23,7 @@ export default StyleSheet.create({
   },
   title: {
     ...rootStyle.commonHeader,
+    paddingHorizontal: 0,
     paddingVertical: 15,
   },
   birthdayWrapper: {
