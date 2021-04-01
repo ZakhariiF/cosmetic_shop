@@ -74,12 +74,13 @@ export const isEmptyString = (string) => {
   return !/\S/.test(string);
 };
 
-export const openMaps = (name, lat, lng) => {
+export const openMaps = (name, lat, lng, address=null) => {
   const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
   const latLng = `${lat || 40.7229427},${lng || -111.8588563}`;
   const label = name || 'Drybar Huntington Beach in Pacific City';
   const url = Platform.select({
-    ios: `${scheme}${label}@${latLng}`,
+    // ios: `${scheme}${label}&address=${address}@${latLng}`,
+    ios: `${scheme}${label}&address=${address}`,
     android: `${scheme}${latLng}(${label})`,
   });
 

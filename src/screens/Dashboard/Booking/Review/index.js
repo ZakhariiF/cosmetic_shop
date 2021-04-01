@@ -304,7 +304,7 @@ const Review = ({navigation, route}) => {
       <View style={rootStyle.innerContainer}>
         <ScrollView>
           <Text>
-            Please confirm your details and book your appointment below period.
+            Please confirm your details and book your appointment below.
           </Text>
           <View style={styles.locContainer}>
             <Text style={styles.headerText}>Location</Text>
@@ -420,7 +420,7 @@ const Review = ({navigation, route}) => {
                           styles.titleText,
                           {width: totalGuests.length > 1 ? '70%' : '85%'},
                         ]}>
-                        Extension
+                        Extensions
                         <Text style={styles.price}>
                           (${get(extensionAddon, 'Price.Amount', '')})
                         </Text>

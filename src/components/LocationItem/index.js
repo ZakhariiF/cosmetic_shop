@@ -148,7 +148,10 @@ const LocationItem = ({
                 {get(item, 'contact.street1')}
               </Text>
               <Text style={styles.location}>
-                {get(item, 'contact.city') ? `${get(item, 'contact.city')},` : ''}{get(item, 'contact.state')} {get(item, 'contact.postalCode')}
+                {get(item, 'contact.city')
+                  ? `${get(item, 'contact.city')},`
+                  : ''}
+                {get(item, 'contact.state')} {get(item, 'contact.postalCode')}
               </Text>
             </View>
           </View>
@@ -169,11 +172,7 @@ const LocationItem = ({
         </View>
 
         <View style={[styles.flexContainer, {marginTop: 10, marginLeft: 35}]}>
-          {dis && (
-            <Text style={styles.miles}>
-              {dis}
-            </Text>
-          )}
+          {dis && <Text style={styles.miles}>{dis}</Text>}
 
           <TouchableOpacity
             accessible
@@ -184,6 +183,13 @@ const LocationItem = ({
                 get(item, 'title'),
                 get(item, 'contact.coordinates[0]', 34.1434376),
                 get(item, 'contact.coordinates[1]', 34.1434376),
+                `${get(item, 'contact.street1')} ${get(
+                  item,
+                  'contact.city',
+                )} ${get(item, 'contact.state')} ${get(
+                  item,
+                  'contact.postalCode',
+                )}`,
               )
             }
             hitSlop={{top: 20, bottom: 20}}>

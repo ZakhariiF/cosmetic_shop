@@ -160,6 +160,13 @@ const ApptDetails = ({route, navigation}) => {
                 get(location, 'title'),
                 get(location, 'contact.coordinates[0]'),
                 get(location, 'contact.coordinates[1]'),
+                `${get(location, 'contact.street1')} ${get(
+                  location,
+                  'contact.city',
+                )} ${get(location, 'contact.state')} ${get(
+                  location,
+                  'contact.postalCode',
+                )}`,
               )
             }
             accessible

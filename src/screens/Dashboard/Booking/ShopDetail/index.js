@@ -92,17 +92,28 @@ const ShopDetail = ({navigation, route}) => {
 
           <View style={styles.addressContainer}>
             <View style={styles.rowContainer}>
-              <Text style={styles.shopLoc}>
-                {get(item, 'contact.street1')}
-                {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
-                {get(item, 'contact.postalCode')}
-              </Text>
+              <View>
+                <Text style={styles.shopLoc}>
+                  {get(item, 'contact.street1')}
+                </Text>
+                <Text style={styles.shopLoc}>
+                  {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
+                  {get(item, 'contact.postalCode')}
+                </Text>
+              </View>
               <TouchableOpacity
                 onPress={() =>
                   openMaps(
                     get(item, 'title'),
                     get(item, 'contact.coordinates[0]', 34.1434376),
                     get(item, 'contact.coordinates[1]', 34.1434376),
+                    `${get(item, 'contact.street1')} ${get(
+                      item,
+                      'contact.city',
+                    )} ${get(item, 'contact.state')} ${get(
+                      item,
+                      'contact.postalCode',
+                    )}`,
                   )
                 }
                 accessible

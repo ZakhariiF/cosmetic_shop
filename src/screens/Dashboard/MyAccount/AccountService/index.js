@@ -61,6 +61,13 @@ const LocationItem = ({item, onSelect}) => {
               get(item, 'title'),
               get(item, 'contact.coordinates[0]'),
               get(item, 'contact.coordinates[1]'),
+              `${get(item, 'contact.street1')} ${get(
+                item,
+                'contact.city',
+              )} ${get(item, 'contact.state')} ${get(
+                item,
+                'contact.postalCode',
+              )}`,
             );
           }}
           accessible
@@ -171,7 +178,7 @@ const AccountService = ({navigation}) => {
           }}
         />
         <View style={rootStyle.innerContainer}>
-          <Text style={styles.selectLocationHeader}>
+          <Text style={[styles.headingText, {marginTop: 25, marginBottom: 25}]}>
             Select your shop below! Prices vary by location.
           </Text>
           <View>

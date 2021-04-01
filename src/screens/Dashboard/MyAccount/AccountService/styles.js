@@ -55,13 +55,14 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   selectedStore: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '700',
   },
   selectedStoreLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#777',
     marginRight: 10,
+    fontWeight: '700',
   },
   locationTitleWrapper: {
     flexDirection: 'row',

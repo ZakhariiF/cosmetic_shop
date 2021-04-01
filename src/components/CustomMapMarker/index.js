@@ -99,6 +99,13 @@ const CustomMapMarker = ({
                   get(item, 'title'),
                   get(item, 'contact.coordinates[0]', 34.1434376),
                   get(item, 'contact.coordinates[1]', 34.1434376),
+                  `${get(item, 'contact.street1')} ${get(
+                    item,
+                    'contact.city',
+                  )} ${get(item, 'contact.state')} ${get(
+                    item,
+                    'contact.postalCode',
+                  )}`,
                 )
               }>
               <Text>

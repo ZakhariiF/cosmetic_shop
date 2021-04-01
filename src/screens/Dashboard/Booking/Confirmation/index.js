@@ -135,6 +135,13 @@ const Confirmation = () => {
                     get(selectedLocation, 'title', ''),
                     get(selectedLocation, 'contact.coordinates[0]'),
                     get(selectedLocation, 'contact.coordinates[1]'),
+                    `${get(selectedLocation, 'contact.street1')} ${get(
+                      selectedLocation,
+                      'contact.city',
+                    )} ${get(selectedLocation, 'contact.state')} ${get(
+                      selectedLocation,
+                      'contact.postalCode',
+                    )}`,
                   )
                 }
                 accessible
