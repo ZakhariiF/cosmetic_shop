@@ -4,8 +4,9 @@ import rootStyle from 'rootStyle';
 
 export default StyleSheet.create({
   errorText: {
-    color: Colors.red,
-    fontSize: 12,
+    color: Colors.error,
+    fontSize: 15,
+    marginBottom: 25,
   },
   inputContainer: {
     borderBottomWidth: 1,

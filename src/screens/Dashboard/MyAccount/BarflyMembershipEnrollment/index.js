@@ -5,11 +5,8 @@ import {Formik, Field} from 'formik';
 import * as Yup from 'yup';
 import {ScrollView, View, Text, TextInput} from 'react-native';
 
-import {Picker} from '@react-native-picker/picker';
-
 import Header from 'components/Header/Header';
 import Button from 'components/Button';
-import Input from 'components/Input';
 
 import Indicator from 'components/Indicator';
 import {getCustomerDetails} from '../thunks';
@@ -19,6 +16,7 @@ import cardTypes from 'constant/cardType';
 import rootStyle from 'rootStyle';
 import styles from './styles';
 import NativePicker from 'components/NativePicker';
+import CheckBox from 'components/Checkbox';
 
 const CustomerSchema = Yup.object().shape({
   FirstName: Yup.string()
@@ -33,6 +31,7 @@ const CustomerSchema = Yup.object().shape({
     Street1: Yup.string().nullable().required('This field is required'),
     City: Yup.string().nullable().required('This field is required'),
     Zip: Yup.string().nullable().required('This field is required'),
+    State: Yup.string().nullable().required('This field is required'),
   }),
   Email: Yup.string().email().required('This field is required'),
   CellPhone: Yup.string()
@@ -46,7 +45,9 @@ const CustomerSchema = Yup.object().shape({
       Type: Yup.string().nullable().required('This field is required'),
       SecurityCode: Yup.string().nullable().required('This field is required'),
       Address: Yup.object().shape({
+        Street1: Yup.string().nullable().required('This field is required'),
         City: Yup.string().nullable().required('This field is required'),
+        State: Yup.string().nullable().required('This field is required'),
       }),
       Year: Yup.number().required('This field is required'),
       Month: Yup.number().required('This field is required'),
@@ -57,7 +58,7 @@ const CustomerSchema = Yup.object().shape({
       Day: Yup.number().required('This field is required'),
     }),
   }),
-});
+}).required();
 
 const BarflyMembershipEnrollment = ({navigation, route}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -66,6 +67,8 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
     (state) => state.account.accountLoading,
   );
   const dispatch = useDispatch();
+
+  const [sameAddress, setSameAddress] = useState(false);
 
   useEffect(() => {
     if (!route.params.membership) {
@@ -114,9 +117,9 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
             onChangeText={(t) => setFieldValue(fieldName, t)}
             value={field.value}
             name={fieldName}
-            style={[styles.inputContainer, {marginTop: 20}]}
+            style={[styles.inputContainer, {marginTop: 20}, !!meta.error ? {marginBottom: 10} : {}]}
           />
-          {!!meta.error && meta.touched && (
+          {!!meta.error && (
             <Text style={styles.errorText}>{meta.error}</Text>
           )}
         </View>
@@ -194,9 +197,8 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
             enableReinitialize
             onSubmit={goToConfirmBarfly}
             validationSchema={CustomerSchema}>
-            {({submitForm, errors}) => (
+            {({submitForm, errors, values, setFieldValue}) => (
               <View>
-                {console.log(errors)}
                 <View>
                   <Text style={styles.title}>Home Address</Text>
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
@@ -209,10 +211,10 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                   {CustomerField('Address 2', 'Address.Street2')}
                   {CustomerField('City', 'Address.City')}
                   {CustomerField('Postal Code', 'Address.Zip')}
-                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
-                    <Text style={styles.inputLabel}>State</Text>
-                    <Field name="State">
-                      {({field, form: {setFieldValue}}) => (
+                  <Field name="Address.State">
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.inputLabel}>State</Text>
                         <NativePicker
                           selectedValue={field.value}
                           onValueChange={(val) =>
@@ -222,26 +224,47 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                             label: s.name,
                             value: s.name,
                           }))}
+                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          placeholder={{
+                            label: 'Select a state',
+                            value: undefined,
+                          }}
                         />
-                      )}
-                    </Field>
-                  </View>
+                        {!!meta.error && (
+                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
                   {CustomerField('Phone Number', 'CellPhone')}
                 </View>
 
                 <View>
                   <Text style={styles.title}>BILLING INFORMATION</Text>
+                  <CheckBox
+                    title={'Copy Address from Home Information'}
+                    isChecked={sameAddress}
+                    onPressed={(checked) => {
+                      setSameAddress(checked);
+
+                      if (checked) {
+                        setFieldValue('CustomField.Card.Address', values.Address);
+                      }
+                    }}
+                  />
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
                   {CustomerField('Name on Card', 'CustomField.Card.NameOnCard')}
                   {CustomerField(
                     'Credit Card Number',
                     'CustomField.Card.Number',
                   )}
+                  {CustomerField('Address 1', 'CustomField.Card.Address.Street1')}
                   {CustomerField('City', 'CustomField.Card.Address.City')}
-                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
-                    <Text style={styles.inputLabel}>State</Text>
-                    <Field name="CustomField.Card.Address.State">
-                      {({field, form: {setFieldValue}}) => (
+
+                  <Field name="CustomField.Card.Address.State">
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.inputLabel}>State</Text>
                         <NativePicker
                           selectedValue={field.value}
                           onValueChange={(val) =>
@@ -251,14 +274,23 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                             label: s.name,
                             value: s.name,
                           }))}
+                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          placeholder={{
+                            label: 'Select a state',
+                            value: undefined,
+                          }}
                         />
-                      )}
-                    </Field>
-                  </View>
-                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
-                    <Text style={styles.inputLabel}>Type</Text>
-                    <Field name="CustomField.Card.Type">
-                      {({field, form: {setFieldValue}}) => (
+                        {!!meta.error && (
+                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
+
+                  <Field name="CustomField.Card.Type">
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.inputLabel}>Type</Text>
                         <NativePicker
                           selectedValue={field.value}
                           onValueChange={(itemValue) =>
@@ -268,29 +300,46 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                             value: s.id,
                             label: s.label,
                           }))}
+                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          placeholder={{
+                            label: 'Select a card type',
+                            value: undefined,
+                          }}
                         />
-                      )}
-                    </Field>
-                  </View>
+                        {!!meta.error && (
+                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
 
-                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
-                    <Text style={styles.inputLabel}>Month</Text>
-                    <Field name="CustomField.Card.Month">
-                      {({field, form: {setFieldValue}}) => (
+                  <Field name="CustomField.Card.Month">
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.inputLabel}>Month</Text>
                         <NativePicker
                           selectedValue={field.value}
                           onValueChange={(itemValue) =>
                             setFieldValue(field.name, itemValue)
                           }
                           items={months()}
+                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          placeholder={{
+                            label: 'Select a month',
+                            value: undefined,
+                          }}
                         />
-                      )}
-                    </Field>
-                  </View>
-                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
-                    <Text style={styles.inputLabel}>Year</Text>
-                    <Field name="CustomField.Card.Year">
-                      {({field, form: {setFieldValue}}) => (
+                        {!!meta.error && (
+                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
+
+                  <Field name="CustomField.Card.Year">
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.inputLabel}>Year</Text>
                         <NativePicker
                           selectedValue={field.value}
                           onValueChange={(itemValue) => {
@@ -298,62 +347,94 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           }}
                           style={styles.innerContainer}
                           items={cardYears()}
+                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          placeholder={{
+                            label: 'Select a year',
+                            value: undefined,
+                          }}
                         />
-                      )}
-                    </Field>
-                  </View>
+                        {!!meta.error && (
+                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
                   {CustomerField('CVV', 'CustomField.Card.SecurityCode')}
                 </View>
 
                 <View>
                   <Text style={styles.title}>DATE OF BIRTH</Text>
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
-
-                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
-                    <Text style={styles.inputLabel}>Month</Text>
-                    <Field name="CustomField.Birth.Month">
-                      {({field, form: {setFieldValue}}) => (
+                  <Field name="CustomField.Birth.Month">
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.inputLabel}>Month</Text>
                         <NativePicker
                           selectedValue={field.value}
                           onValueChange={(itemValue) =>
                             setFieldValue(field.name, itemValue)
                           }
                           items={months()}
-                        />
-                      )}
-                    </Field>
-                  </View>
-                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
-                    <Text style={styles.inputLabel}>Day</Text>
-                    <Field name="CustomField.Birth.Day">
-                      {({field, form: {setFieldValue}}) => (
-                        <NativePicker
-                          selectedValue={field.value}
-                          onValueChange={(itemValue) => {
-                            setFieldValue(field.name, itemValue);
+                          placeholder={{
+                            label: 'Select a month',
+                            value: undefined,
                           }}
-                          style={styles.innerContainer}
-                          items={days()}
+                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
                         />
-                      )}
-                    </Field>
-                  </View>
-                  <View style={[styles.inputContainer, {borderBottomWidth: 0}]}>
-                    <Text style={styles.inputLabel}>Year</Text>
-                    <Field name="CustomField.Birth.Year">
-                      {({field, form: {setFieldValue}}) => (
-                        <NativePicker
-                          selectedValue={field.value}
-                          onValueChange={(itemValue) => {
-                            setFieldValue(field.name, itemValue);
-                          }}
-                          items={years()}
-                        />
-                      )}
-                    </Field>
-                  </View>
-                </View>
+                        {!!meta.error && meta && (
+                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
 
+                    <Field name="CustomField.Birth.Day">
+                      {({field, meta, form: {setFieldValue}}) => (
+                        <View>
+                          <Text style={styles.inputLabel}>Day</Text>
+                          <NativePicker
+                            selectedValue={field.value}
+                            onValueChange={(itemValue) => {
+                              setFieldValue(field.name, itemValue);
+                            }}
+                            style={styles.innerContainer}
+                            items={days()}
+                            pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                            placeholder={{
+                              label: 'Select a day',
+                              value: undefined,
+                            }}
+                          />
+                          {!!meta.error && meta && (
+                            <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                          )}
+                        </View>
+                      )}
+                    </Field>
+
+                    <Field name="CustomField.Birth.Year">
+                      {({field, meta, form: {setFieldValue}}) => (
+                        <View>
+                          <Text style={styles.inputLabel}>Year</Text>
+                          <NativePicker
+                            selectedValue={field.value}
+                            onValueChange={(itemValue) => {
+                              setFieldValue(field.name, itemValue);
+                            }}
+                            items={years()}
+                            pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                            placeholder={{
+                              label: 'Select a year',
+                              value: undefined,
+                            }}
+                          />
+                          {!!meta.error && (
+                            <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                          )}
+                        </View>
+                      )}
+                    </Field>
+                </View>
                 <View>
                   <Button name="Save" onButtonPress={submitForm} />
                 </View>
