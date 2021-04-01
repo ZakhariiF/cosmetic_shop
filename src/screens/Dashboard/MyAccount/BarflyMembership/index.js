@@ -11,7 +11,11 @@ import {
   FlatList,
   TouchableOpacity,
   Modal,
+  Dimensions,
 } from 'react-native';
+
+const {height} = Dimensions.get('window');
+
 import {useQuery} from '@apollo/client';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
@@ -220,9 +224,21 @@ const BarflyMembership = ({navigation}) => {
             />
 
             <Modal visible={showLocationModal}>
-              <View style={{backgroundColor: Colors.modal_bg}}>
+              <View
+                style={{
+                  backgroundColor: Colors.modal_bg,
+                  height,
+                  justifyContent: 'center',
+                  display: 'flex',
+                }}>
                 <View
-                  style={{margin: 40, backgroundColor: Colors.bg, padding: 10}}>
+                  style={{
+                    marginHorizontal: 40,
+                    backgroundColor: Colors.bg,
+                    padding: 10,
+                    height: 'auto',
+                    maxHeight: height - 80,
+                  }}>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -230,12 +246,13 @@ const BarflyMembership = ({navigation}) => {
                       alignItems: 'center',
                       marginBottom: 20,
                     }}>
-                    <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+                    <Text style={[rootStyle.commonHeader, {fontSize: 25, paddingVertical: 10, lineHeight: 25}]}>
                       Select Preferred Store
                     </Text>
                     <MaterialCommunityIcons
                       name="close"
                       size={25}
+                      style={{marginBottom: 8}}
                       color={Colors.header_title}
                       onPress={() => setShowLocationModal(false)}
                     />
