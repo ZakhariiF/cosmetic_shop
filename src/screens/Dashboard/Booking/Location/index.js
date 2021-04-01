@@ -178,8 +178,6 @@ const Location = ({navigation}) => {
     });
   };
 
-  console.log('Collaped:', collapsed);
-
   return (
     <>
       <BookingTab />

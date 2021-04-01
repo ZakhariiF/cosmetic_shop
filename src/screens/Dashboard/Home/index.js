@@ -244,42 +244,6 @@ const Home = ({navigation}) => {
             View Appointment History
           </Text>
 
-          {/* <View style={styles.memberBlock}>
-            <Image source={Images.barfly} />
-            <View style={{ flex: 1, paddingLeft: 20 }}>
-              <Text style={styles.saveText}>Save 10% on your rebook with</Text>
-              <Text
-                onPress={() => navigation.navigate("BarflyMembership")}
-                style={[styles.saveText, { textDecorationLine: "underline" }]}>
-                Barfly Membership
-              </Text>
-            </View>
-          </View> */}
-
-          {/*<View style={styles.mapBlock}>
-            <Image source={Images.snazzy} />
-            <View style={styles.locationBlock}>
-              <Text style={styles.locText}>
-                Looking for the nearest {"\n"} Drybar Shop?
-              </Text>
-
-              <TouchableOpacity
-                style={styles.locButton}
-                onPress={() => navigation.navigate("Book")}>
-                <Text style={styles.seeLocText}>See Locations</Text>
-              </TouchableOpacity>
-            </View>
-          </View> */}
-          {/* <View style={styles.dotContainer}>
-            <DottedView number={200} />
-            <Image
-              style={{marginTop: 40, alignSelf: 'center'}}
-              resizeMode="contain"
-              source={Images.mix}
-            />
-            <Text style={styles.shopText}>Shop Mixologist</Text>
-          </View> */}
-
           {homeData.map((item, index) => {
             if (item.marketingStyles) {
               let action = get(

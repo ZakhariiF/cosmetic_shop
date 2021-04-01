@@ -37,11 +37,10 @@ if (
 
 const App = () => {
   React.useEffect(() => {
-    AsyncStorage.clear()
+    AsyncStorage.clear();
     SplashScreen.hide();
     handleScaling();
   }, []);
-
 
   const handleScaling = () => {
     Text.defaultProps = Text.defaultProps || {};
@@ -68,6 +67,28 @@ const App = () => {
           renderImage={() => <></>}
           ref={(ref) => AlertHelper.setDropDown(ref)}
           onClose={() => AlertHelper.invokeOnClose()}
+          renderTitle={(_, data) => {
+            return (
+              <Text
+                style={[
+                  _.titleStyle,
+                  {color: data.type === 'success' ? Colors.input_text : '#fff'},
+                ]}>
+                {data.title}
+              </Text>
+            );
+          }}
+          renderMessage={(_, data) => {
+            return (
+              <Text
+                style={[
+                  _.messageStyle,
+                  {color: data.type === 'success' ? Colors.input_text : '#fff'},
+                ]}>
+                {data.message}
+              </Text>
+            );
+          }}
         />
       </AppHoc>
     </ApolloProvider>

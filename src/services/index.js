@@ -56,11 +56,13 @@ client.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error.response.status === 401 && error.config.url.includes('/booker/')) {
+    if (
+      error.response.status === 401 &&
+      (error.config.url.includes('/booker/') ||
+        error.config.url.includes('/okta/update-user'))
+    ) {
       const tokens = await refreshTokens();
       await AsyncStorage.setItem('tokens', JSON.stringify(tokens));
-  
-      console.log('refreshTokens:', tokens);
 
       const userClams = await getUserFromIdToken();
       await AsyncStorage.setItem('userClams', JSON.stringify(userClams));
