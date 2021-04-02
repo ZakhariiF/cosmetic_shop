@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   View,
   Text,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {Colors, Fonts} from 'constant';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -21,36 +23,39 @@ const SearchBar = React.forwardRef((props, ref) => {
     onSearch,
   } = props;
   return (
-    <View style={styles.container}>
-      <View style={{width: isButton ? '75%' : '100%'}}>
-        <EvilIcons
-          name="search"
-          size={28}
-          style={styles.search}
-          color={Colors.header_title}
-        />
-        <TextInput
-          ref={ref}
-          value={value}
-          style={styles.input}
-          placeholder={placeholder}
-          onSubmitEditing={onSubmitEditing}
-          onChangeText={onChangeText}
-          onFocus={onFocus}
-          onChange={onChange}
-        />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <View style={{width: isButton ? '75%' : '100%'}}>
+          <EvilIcons
+            name="search"
+            size={28}
+            style={styles.search}
+            color={Colors.header_title}
+          />
+          <TextInput
+            ref={ref}
+            value={value}
+            style={styles.input}
+            placeholder={placeholder}
+            onSubmitEditing={onSubmitEditing}
+            onChangeText={onChangeText}
+            onFocus={onFocus}
+            onChange={onChange}
+          />
+        </View>
+        {isButton ? (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={onSearch}
+            accessible
+            accessibilityLabel="Search"
+            accessibilityRole="button">
+            <Text style={styles.searchText}>Search</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
-      {isButton ? (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={onSearch}
-          accessible
-          accessibilityLabel="Search"
-          accessibilityRole="button">
-          <Text style={styles.searchText}>Search</Text>
-        </TouchableOpacity>
-      ) : null}
-    </View>
+    </TouchableWithoutFeedback>
+
   );
 });
 

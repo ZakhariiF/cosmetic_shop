@@ -18,14 +18,11 @@ const AccountServiceItem = ({item, navigation, isService}) => {
         <Text style={styles.name}>{get(item, 'title')}</Text>
         <Text style={styles.price}>${get(item, 'price')}</Text>
 
-
         <Text style={styles.desc}>
           {get(item, 'description.json.content[0].content[0].value')}
         </Text>
-
       </View>
-      {
-        isService && serviceTime && <View style={styles.serviceTime}>
+      {isService && serviceTime && <View style={styles.serviceTime}>
           <Text>Service Time: {serviceTime} mins</Text>
         </View>
       }
@@ -64,6 +61,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.DCondensed,
     fontSize: 25,
     color: Colors.header_title,
+    marginVertical: 5,
   },
   price: {
     fontSize: 16,

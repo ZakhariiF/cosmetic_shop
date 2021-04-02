@@ -18,47 +18,60 @@ import styles from './styles';
 import NativePicker from 'components/NativePicker';
 import CheckBox from 'components/Checkbox';
 
-const CustomerSchema = Yup.object().shape({
-  FirstName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('This field is required'),
-  LastName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('This field is required'),
-  Address: Yup.object().shape({
-    Street1: Yup.string().nullable().required('This field is required'),
-    City: Yup.string().nullable().required('This field is required'),
-    Zip: Yup.string().nullable().required('This field is required'),
-    State: Yup.string().nullable().required('This field is required'),
-  }),
-  Email: Yup.string().email().required('This field is required'),
-  CellPhone: Yup.string()
-    .nullable()
-    .required('This field is required')
-    .matches(/\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g, 'Invalid phone number'),
-  CustomField: Yup.object().shape({
-    Card: Yup.object().shape({
-      NameOnCard: Yup.string().nullable().required('This field is required'),
-      Number: Yup.string().nullable().required('This field is required'),
-      Type: Yup.string().nullable().required('This field is required'),
-      SecurityCode: Yup.string().nullable().required('This field is required'),
-      Address: Yup.object().shape({
-        Street1: Yup.string().nullable().required('This field is required'),
-        City: Yup.string().nullable().required('This field is required'),
-        State: Yup.string().nullable().required('This field is required'),
+const CustomerSchema = Yup.object()
+  .shape({
+    FirstName: Yup.string()
+      .min(2, 'Error: first name is Too Short!')
+      .max(50, 'Error: first name is Too Long')
+      .required('Error: first name is required'),
+    LastName: Yup.string()
+      .min(2, 'Error: last name is Too Short!')
+      .max(50, 'Error: last name is Too Long!')
+      .required('Error: last name is required'),
+    Address: Yup.object().shape({
+      Street1: Yup.string().nullable().required('Error: address1 is required'),
+      City: Yup.string().nullable().required('Error: city is required'),
+      Zip: Yup.string().nullable().required('Error: zip is required'),
+      State: Yup.string().nullable().required('Error: state is required'),
+    }),
+    Email: Yup.string().email().required('Error: email is required'),
+    CellPhone: Yup.string()
+      .nullable()
+      .required('Error: phone number is required')
+      .matches(
+        /\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g,
+        'Error: phone number is invalid',
+      ),
+    CustomField: Yup.object().shape({
+      Card: Yup.object().shape({
+        NameOnCard: Yup.string()
+          .nullable()
+          .required('Error: card name is required'),
+        Number: Yup.string()
+          .nullable()
+          .required('Error: card number is required'),
+        Type: Yup.string().nullable().required('Error: card type is required'),
+        SecurityCode: Yup.string()
+          .nullable()
+          .required('Error: card security code is required'),
+        Address: Yup.object().shape({
+          Street1: Yup.string()
+            .nullable()
+            .required('Error: address1 is required'),
+          City: Yup.string().nullable().required('Error: city is required'),
+          State: Yup.string().nullable().required('Error: state is required'),
+        }),
+        Year: Yup.number().required('Error: year is required'),
+        Month: Yup.number().required('Error: month is required'),
       }),
-      Year: Yup.number().required('This field is required'),
-      Month: Yup.number().required('This field is required'),
+      Birth: Yup.object().shape({
+        Year: Yup.number().required('Error: year is required'),
+        Month: Yup.number().required('Error: month is required'),
+        Day: Yup.number().required('Error: day is required'),
+      }),
     }),
-    Birth: Yup.object().shape({
-      Year: Yup.number().required('This field is required'),
-      Month: Yup.number().required('This field is required'),
-      Day: Yup.number().required('This field is required'),
-    }),
-  }),
-}).required();
+  })
+  .required();
 
 const BarflyMembershipEnrollment = ({navigation, route}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
@@ -117,11 +130,13 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
             onChangeText={(t) => setFieldValue(fieldName, t)}
             value={field.value}
             name={fieldName}
-            style={[styles.inputContainer, {marginTop: 20}, !!meta.error ? {marginBottom: 10} : {}]}
+            style={[
+              styles.inputContainer,
+              {marginTop: 20},
+              meta.error ? {marginBottom: 10} : {},
+            ]}
           />
-          {!!meta.error && (
-            <Text style={styles.errorText}>{meta.error}</Text>
-          )}
+          {!!meta.error && <Text style={styles.errorText}>{meta.error}</Text>}
         </View>
       )}
     </Field>
@@ -224,14 +239,19 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                             label: s.name,
                             value: s.name,
                           }))}
-                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          pickerContainer={{
+                            ...styles.inputContainer,
+                            marginBottom: meta.error ? 0 : 10,
+                          }}
                           placeholder={{
                             label: 'Select a state',
                             value: undefined,
                           }}
                         />
                         {!!meta.error && (
-                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                          <Text style={[styles.errorText, {marginTop: 10}]}>
+                            {meta.error}
+                          </Text>
                         )}
                       </View>
                     )}
@@ -246,7 +266,12 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     isChecked={sameAddress}
                     onPressed={() => {
                       if (!sameAddress) {
-                        setFieldValue('CustomField.Card.Address', values.Address);
+                        setFieldValue(
+                          'CustomField.Card.Address',
+                          values.Address,
+                        );
+                      } else {
+                        setFieldValue('CustomField.Card.Address', {});
                       }
                       setSameAddress(!sameAddress);
                     }}
@@ -257,8 +282,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     'Credit Card Number',
                     'CustomField.Card.Number',
                   )}
-                  {CustomerField('Address 1', 'CustomField.Card.Address.Street1')}
-                  {CustomerField('Address 2', 'CustomField.Card.Address.Street2')}
+                  {CustomerField(
+                    'Address 1',
+                    'CustomField.Card.Address.Street1',
+                  )}
+                  {CustomerField(
+                    'Address 2',
+                    'CustomField.Card.Address.Street2',
+                  )}
                   {CustomerField('City', 'CustomField.Card.Address.City')}
 
                   <Field name="CustomField.Card.Address.State">
@@ -274,14 +305,19 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                             label: s.name,
                             value: s.name,
                           }))}
-                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          pickerContainer={{
+                            ...styles.inputContainer,
+                            marginBottom: meta.error ? 0 : 10,
+                          }}
                           placeholder={{
                             label: 'Select a state',
                             value: undefined,
                           }}
                         />
                         {!!meta.error && (
-                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                          <Text style={[styles.errorText, {marginTop: 10}]}>
+                            {meta.error}
+                          </Text>
                         )}
                       </View>
                     )}
@@ -300,14 +336,19 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                             value: s.id,
                             label: s.label,
                           }))}
-                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          pickerContainer={{
+                            ...styles.inputContainer,
+                            marginBottom: meta.error ? 0 : 10,
+                          }}
                           placeholder={{
                             label: 'Select a card type',
                             value: undefined,
                           }}
                         />
                         {!!meta.error && (
-                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                          <Text style={[styles.errorText, {marginTop: 10}]}>
+                            {meta.error}
+                          </Text>
                         )}
                       </View>
                     )}
@@ -323,14 +364,19 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                             setFieldValue(field.name, itemValue)
                           }
                           items={months()}
-                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          pickerContainer={{
+                            ...styles.inputContainer,
+                            marginBottom: meta.error ? 0 : 10,
+                          }}
                           placeholder={{
                             label: 'Select a month',
                             value: undefined,
                           }}
                         />
                         {!!meta.error && (
-                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                          <Text style={[styles.errorText, {marginTop: 10}]}>
+                            {meta.error}
+                          </Text>
                         )}
                       </View>
                     )}
@@ -347,14 +393,19 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           }}
                           style={styles.innerContainer}
                           items={cardYears()}
-                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          pickerContainer={{
+                            ...styles.inputContainer,
+                            marginBottom: meta.error ? 0 : 10,
+                          }}
                           placeholder={{
                             label: 'Select a year',
                             value: undefined,
                           }}
                         />
                         {!!meta.error && (
-                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                          <Text style={[styles.errorText, {marginTop: 10}]}>
+                            {meta.error}
+                          </Text>
                         )}
                       </View>
                     )}
@@ -379,61 +430,76 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                             label: 'Select a month',
                             value: undefined,
                           }}
-                          pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
+                          pickerContainer={{
+                            ...styles.inputContainer,
+                            marginBottom: meta.error ? 0 : 10,
+                          }}
                         />
                         {!!meta.error && meta && (
-                          <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
+                          <Text style={[styles.errorText, {marginTop: 10}]}>
+                            {meta.error}
+                          </Text>
                         )}
                       </View>
                     )}
                   </Field>
 
-                    <Field name="CustomField.Birth.Day">
-                      {({field, meta, form: {setFieldValue}}) => (
-                        <View>
-                          <Text style={styles.inputLabel}>Day</Text>
-                          <NativePicker
-                            selectedValue={field.value}
-                            onValueChange={(itemValue) => {
-                              setFieldValue(field.name, itemValue);
-                            }}
-                            style={styles.innerContainer}
-                            items={days()}
-                            pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
-                            placeholder={{
-                              label: 'Select a day',
-                              value: undefined,
-                            }}
-                          />
-                          {!!meta.error && meta && (
-                            <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
-                          )}
-                        </View>
-                      )}
-                    </Field>
+                  <Field name="CustomField.Birth.Day">
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.inputLabel}>Day</Text>
+                        <NativePicker
+                          selectedValue={field.value}
+                          onValueChange={(itemValue) => {
+                            setFieldValue(field.name, itemValue);
+                          }}
+                          style={styles.innerContainer}
+                          items={days()}
+                          pickerContainer={{
+                            ...styles.inputContainer,
+                            marginBottom: meta.error ? 0 : 10,
+                          }}
+                          placeholder={{
+                            label: 'Select a day',
+                            value: undefined,
+                          }}
+                        />
+                        {!!meta.error && meta && (
+                          <Text style={[styles.errorText, {marginTop: 10}]}>
+                            {meta.error}
+                          </Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
 
-                    <Field name="CustomField.Birth.Year">
-                      {({field, meta, form: {setFieldValue}}) => (
-                        <View>
-                          <Text style={styles.inputLabel}>Year</Text>
-                          <NativePicker
-                            selectedValue={field.value}
-                            onValueChange={(itemValue) => {
-                              setFieldValue(field.name, itemValue);
-                            }}
-                            items={years()}
-                            pickerContainer={{...styles.inputContainer, marginBottom: (!!meta.error ? 0 : 10) }}
-                            placeholder={{
-                              label: 'Select a year',
-                              value: undefined,
-                            }}
-                          />
-                          {!!meta.error && (
-                            <Text style={[styles.errorText, {marginTop: 10}]}>{meta.error}</Text>
-                          )}
-                        </View>
-                      )}
-                    </Field>
+                  <Field name="CustomField.Birth.Year">
+                    {({field, meta, form: {setFieldValue}}) => (
+                      <View>
+                        <Text style={styles.inputLabel}>Year</Text>
+                        <NativePicker
+                          selectedValue={field.value}
+                          onValueChange={(itemValue) => {
+                            setFieldValue(field.name, itemValue);
+                          }}
+                          items={years()}
+                          pickerContainer={{
+                            ...styles.inputContainer,
+                            marginBottom: meta.error ? 0 : 10,
+                          }}
+                          placeholder={{
+                            label: 'Select a year',
+                            value: undefined,
+                          }}
+                        />
+                        {!!meta.error && (
+                          <Text style={[styles.errorText, {marginTop: 10}]}>
+                            {meta.error}
+                          </Text>
+                        )}
+                      </View>
+                    )}
+                  </Field>
                 </View>
                 <View>
                   <Button name="Save" onButtonPress={submitForm} />
