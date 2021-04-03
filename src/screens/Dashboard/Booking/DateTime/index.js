@@ -431,7 +431,7 @@ const DateTime = ({navigation}) => {
               data={
                 selectedLocation.block730
                   ? multiuserSlots.filter((slot) => {
-                      return !(moment(slot.startDateTime) < moment(blockTime));
+                      return moment(slot.startDateTime).utcOffset(slot.timezone).format('h:mm a') !== '7:30 am';
                     })
                   : multiuserSlots
               }

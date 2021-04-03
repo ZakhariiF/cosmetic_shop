@@ -67,8 +67,7 @@ const Phone = ({navigation, route}) => {
       <KeyboardAwareScrollView>
         <View style={styles.innerContainer}>
           <Text style={styles.heading}>
-            Tell the user why we need their phone number and how it will be used
-            lorem ipsum dolor
+            Please share your phone number so that we can communicate appointment information.
           </Text>
           <Input
             name="Phone"

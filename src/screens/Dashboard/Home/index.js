@@ -148,7 +148,6 @@ const Home = ({navigation}) => {
   };
 
   const onBrowser = (action) => {
-    console.log('Action:', action);
     if (action) {
       let link = action.linkToMobileSlug;
       if (link === 'styles') {

@@ -34,21 +34,13 @@ const CustomTabbar = ({state, descriptors, navigation}) => {
           const isFocused = state.index === index;
 
           const onPress = () => {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  key: null,
-                  routes: [{name: route.name}],
-                }),
-              );
-            }
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                key: null,
+                routes: [{name: route.name}],
+              }),
+            );
           };
 
           const onLongPress = () => {

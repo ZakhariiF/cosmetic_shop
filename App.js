@@ -63,7 +63,7 @@ const App = () => {
         <DropdownAlert
           inactiveStatusBarStyle="light-content"
           successColor={Colors.yellow}
-          errorColor={Colors.darkGrey}
+          errorColor={'#333333'}
           renderImage={() => <></>}
           ref={(ref) => AlertHelper.setDropDown(ref)}
           onClose={() => AlertHelper.invokeOnClose()}

@@ -29,7 +29,7 @@ const CustomerSchema = Yup.object()
       .max(50, 'Error: last name is Too Long!')
       .required('Error: last name is required'),
     Address: Yup.object().shape({
-      Street1: Yup.string().nullable().required('Error: address1 is required'),
+      Street1: Yup.string().nullable().required('Error: home address1 is required'),
       City: Yup.string().nullable().required('Error: city is required'),
       Zip: Yup.string().nullable().required('Error: zip is required'),
       State: Yup.string().nullable().required('Error: state is required'),
@@ -61,8 +61,8 @@ const CustomerSchema = Yup.object()
           City: Yup.string().nullable().required('Error: city is required'),
           State: Yup.string().nullable().required('Error: state is required'),
         }),
-        Year: Yup.number().required('Error: year is required'),
-        Month: Yup.number().required('Error: month is required'),
+        Year: Yup.number().required('Error: exp year is required'),
+        Month: Yup.number().required('Error: exp month is required'),
       }),
       Birth: Yup.object().shape({
         Year: Yup.number().required('Error: year is required'),
@@ -215,15 +215,15 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
             {({submitForm, errors, values, setFieldValue}) => (
               <View>
                 <View>
-                  <Text style={styles.title}>Home Address</Text>
+                  <Text style={styles.title}>Home Information</Text>
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
 
                   {CustomerField('First Name', 'FirstName')}
                   {CustomerField('Last Name', 'LastName')}
                   {CustomerField('Email', 'Email')}
 
-                  {CustomerField('Address 1', 'Address.Street1')}
-                  {CustomerField('Address 2', 'Address.Street2')}
+                  {CustomerField('Home Address 1', 'Address.Street1')}
+                  {CustomerField('Home Address 2', 'Address.Street2')}
                   {CustomerField('City', 'Address.City')}
                   {CustomerField('Postal Code', 'Address.Zip')}
                   <Field name="Address.State">
@@ -262,7 +262,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                 <View>
                   <Text style={styles.title}>BILLING INFORMATION</Text>
                   <CheckBox
-                    title={'Copy Address from Home Information'}
+                    title={'Billing address same as Home Information'}
                     isChecked={sameAddress}
                     onPressed={() => {
                       if (!sameAddress) {
@@ -277,11 +277,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     }}
                   />
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
-                  {CustomerField('Name on Card', 'CustomField.Card.NameOnCard')}
-                  {CustomerField(
-                    'Credit Card Number',
-                    'CustomField.Card.Number',
-                  )}
+
                   {CustomerField(
                     'Address 1',
                     'CustomField.Card.Address.Street1',
@@ -322,7 +318,15 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                       </View>
                     )}
                   </Field>
+                </View>
 
+                <View>
+                  <Text style={styles.title}>PAYMENT INFORMATION</Text>
+                  {CustomerField('Name on Card', 'CustomField.Card.NameOnCard')}
+                  {CustomerField(
+                    'Credit Card Number',
+                    'CustomField.Card.Number',
+                  )}
                   <Field name="CustomField.Card.Type">
                     {({field, meta, form: {setFieldValue}}) => (
                       <View>
@@ -357,7 +361,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                   <Field name="CustomField.Card.Month">
                     {({field, meta, form: {setFieldValue}}) => (
                       <View>
-                        <Text style={styles.inputLabel}>Month</Text>
+                        <Text style={styles.inputLabel}>Exp Month</Text>
                         <NativePicker
                           selectedValue={field.value}
                           onValueChange={(itemValue) =>
@@ -385,7 +389,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                   <Field name="CustomField.Card.Year">
                     {({field, meta, form: {setFieldValue}}) => (
                       <View>
-                        <Text style={styles.inputLabel}>Year</Text>
+                        <Text style={styles.inputLabel}>Exp Year</Text>
                         <NativePicker
                           selectedValue={field.value}
                           onValueChange={(itemValue) => {

@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  Keyboard,
 } from 'react-native';
 
 const {height} = Dimensions.get('window');
@@ -146,7 +147,10 @@ const BarflyMembership = ({navigation}) => {
             containerStyle={styles.storeSelectButtonContainer}
             titleStyle={styles.storeSelectButtonTitle}
             name="Select"
-            onButtonPress={() => onSelectLocation(item)}
+            onButtonPress={() => {
+              onSelectLocation(item);
+              AlertHelper.showSuccess('You have selected the store successfully');
+            }}
           />
         </View>
         <View style={styles.storeDec}>
@@ -155,7 +159,7 @@ const BarflyMembership = ({navigation}) => {
             <View>
               <Text>{get(item, 'contact.street1')}</Text>
               <Text style={styles.storeAddress}>
-                {get(item, 'contact.city')}, {get(item, 'contact.state')},{' '}
+                {get(item, 'contact.city')} {get(item, 'contact.state')},{' '}
                 {get(item, 'contact.postalCode')}
               </Text>
             </View>
@@ -190,11 +194,11 @@ const BarflyMembership = ({navigation}) => {
       <ScrollView>
         <View style={rootStyle.innerContainer}>
           <Text style={styles.description}>
-            Select your shop below to get started! Prices vary by location.
+            Select your shop below to get started. Prices vary by location.
           </Text>
           <View>
             {customerMembershipLocation && (
-              <Text>{`Selected: ${get(
+              <Text style={{marginTop: 10, fontWeight: 'bold', marginBottom: 5}}>{`Selected: ${get(
                 customerMembershipLocation,
                 'title',
               )}`}</Text>
@@ -202,7 +206,10 @@ const BarflyMembership = ({navigation}) => {
             <SearchBar
               value={search}
               onChangeText={setSearchKey}
-              onSearch={searchFilterFunction}
+              onSearch={() => {
+                Keyboard.dismiss();
+                searchFilterFunction();
+              }}
             />
 
             <Modal visible={showLocationModal}>
@@ -229,7 +236,7 @@ const BarflyMembership = ({navigation}) => {
                       marginBottom: 20,
                     }}>
                     <Text style={[rootStyle.commonHeader, {fontSize: 25, paddingVertical: 10, lineHeight: 25}]}>
-                      Select Preferred Store
+                      Select Preferred Shop
                     </Text>
                     <MaterialCommunityIcons
                       name="close"

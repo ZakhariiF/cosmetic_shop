@@ -4,7 +4,7 @@ import MapView from 'react-native-maps';
 import Indicator from 'components/Indicator';
 import {get} from 'lodash';
 import {findStoresFromPointWithTitle, requestUserLocationLocation} from 'utils';
-import {FlatList, View, StyleSheet, ScrollView, Dimensions} from 'react-native';
+import {FlatList, View, StyleSheet, ScrollView, Dimensions, Keyboard} from 'react-native';
 import {storeCollectionQuery} from 'constant/query';
 import {useQuery} from '@apollo/client';
 import {Colors, Fonts} from 'constant';
@@ -27,8 +27,6 @@ import {
   setCurrentLocation,
   setUseCurrentLocation,
 } from 'screens/Dashboard/thunks';
-import {current} from '@reduxjs/toolkit';
-
 const window = Dimensions.get('window');
 const {width, height} = window;
 
@@ -259,7 +257,11 @@ const FindLocation = ({navigation}) => {
         <SearchBar
           value={searchVal}
           onChangeText={(i) => setSearch(i)}
-          onSearch={() => searchFilterFunction()}
+          onSearch={() => {
+            Keyboard.dismiss();
+            searchFilterFunction();
+          }}
+          onSubmitEditing={searchFilterFunction}
         />
         <CheckBox
           isChecked={storeIdx}

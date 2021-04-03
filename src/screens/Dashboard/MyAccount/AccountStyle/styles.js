@@ -39,13 +39,8 @@ export default StyleSheet.create({
     position: 'relative',
   },
   buttonStyle: {
-    width: '55%',
-    alignSelf: 'center',
-    height: 36.79,
     // backgroundColor: 'transparent',
     marginVertical: 30,
-    // borderWidth: 1,
-    // borderColor: '#A8A8A8',
   },
   buttonTextStyle: {
     fontSize: 13,

@@ -248,7 +248,7 @@ const Contactus = () => {
             </View>
 
             <View style={styles.bottomImg}>
-              <Image source={Images.giftcard} style={styles.bottomIcon} />
+              <Image source={Images.hint} style={styles.bottomIcon} />
             </View>
           </View>
         )}

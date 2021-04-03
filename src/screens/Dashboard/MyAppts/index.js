@@ -100,7 +100,7 @@ const MyAppts = ({navigation}) => {
           nestedScrollEnabled>
           {data.length ? (
             <View>
-              <Text style={styles.upcomingText}>Upcoming</Text>
+              <Text style={styles.upcomingText}>UPCOMING APPOINTMENTS </Text>
               <FlatList
                 // scrollEnabled={false}
                 data={data.sort(
@@ -125,7 +125,7 @@ const MyAppts = ({navigation}) => {
           {pastAppt.length ? (
             <>
               <Text style={styles.upcomingText}>
-                PAST APPOINTMENTS (showing only past 3 months)
+                PAST APPOINTMENTS {"\n"}(showing only past 3 months)
               </Text>
               <FlatList
                 data={pastAppt.sort(

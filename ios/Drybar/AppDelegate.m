@@ -42,6 +42,8 @@ static void InitializeMParticle(UIApplication *application) {
 
   options.environment = MPEnvironmentDevelopment;
   
+  options.logLevel = MPILogLevelVerbose;
+  
   [[MParticle sharedInstance] startWithOptions:options];
 
 }

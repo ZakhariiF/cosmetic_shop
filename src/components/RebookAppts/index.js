@@ -13,7 +13,7 @@ const RebookAppts = ({item, onRebook, locationData}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.upcoming}>REBOOK LAST APPOINTMENT?</Text>
+      <Text style={styles.upcoming}>REBOOK LAST APPOINTMENT</Text>
       <View style={[styles.infoContainer]}>
         <View style={styles.bottomContainer}>
           <Image
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.Evan,
     marginBottom: 10,
     lineHeight: 20,
+    textAlign: 'center',
   },
   infoContainer: {
     height: 200,

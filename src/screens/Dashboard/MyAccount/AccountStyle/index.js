@@ -181,7 +181,6 @@ const AccountStyle = () => {
             }}
             name="Book an appointment"
             containerStyle={styles.buttonStyle}
-            titleStyle={styles.buttonTextStyle}
           />
 
           {/* Paragraph */}
