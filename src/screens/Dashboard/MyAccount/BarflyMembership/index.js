@@ -159,7 +159,7 @@ const BarflyMembership = ({navigation}) => {
             <View>
               <Text>{get(item, 'contact.street1')}</Text>
               <Text style={styles.storeAddress}>
-                {get(item, 'contact.city')} {get(item, 'contact.state')},{' '}
+                {get(item, 'contact.city')},{get(item, 'contact.state')}{' '}
                 {get(item, 'contact.postalCode')}
               </Text>
             </View>

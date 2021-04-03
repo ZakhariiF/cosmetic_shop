@@ -225,7 +225,6 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                   {CustomerField('Home Address 1', 'Address.Street1')}
                   {CustomerField('Home Address 2', 'Address.Street2')}
                   {CustomerField('City', 'Address.City')}
-                  {CustomerField('Postal Code', 'Address.Zip')}
                   <Field name="Address.State">
                     {({field, meta, form: {setFieldValue}}) => (
                       <View>
@@ -256,13 +255,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                       </View>
                     )}
                   </Field>
+                  {CustomerField('Postal Code', 'Address.Zip')}
                   {CustomerField('Phone Number', 'CellPhone')}
                 </View>
 
                 <View>
                   <Text style={styles.title}>BILLING INFORMATION</Text>
                   <CheckBox
-                    title={'Billing address same as Home Information'}
+                    title={'Billing address same as Home address'}
                     isChecked={sameAddress}
                     onPressed={() => {
                       if (!sameAddress) {
@@ -318,6 +318,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                       </View>
                     )}
                   </Field>
+                  {CustomerField('Postal Code', 'Address.Zip')}
                 </View>
 
                 <View>
@@ -386,6 +387,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     )}
                   </Field>
 
+
                   <Field name="CustomField.Card.Year">
                     {({field, meta, form: {setFieldValue}}) => (
                       <View>
@@ -415,10 +417,12 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     )}
                   </Field>
                   {CustomerField('CVV', 'CustomField.Card.SecurityCode')}
+
                 </View>
 
                 <View>
                   <Text style={styles.title}>DATE OF BIRTH</Text>
+                  <Text style={styles.subtitle}>For your free blowout!</Text>
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
                   <Field name="CustomField.Birth.Month">
                     {({field, meta, form: {setFieldValue}}) => (
