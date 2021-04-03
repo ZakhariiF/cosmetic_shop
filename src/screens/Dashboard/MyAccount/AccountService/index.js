@@ -179,7 +179,7 @@ const AccountService = ({navigation}) => {
         />
         <View style={rootStyle.innerContainer}>
           <Text style={[styles.headingText, {marginTop: 25, marginBottom: 25}]}>
-            Select your shop below! Prices vary by location.
+            Select your shop below. Prices vary by location.
           </Text>
           <View>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>

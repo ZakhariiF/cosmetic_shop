@@ -20,7 +20,7 @@ import {AlertHelper} from 'utils/AlertHelper';
 import CheckBox from 'components/Checkbox';
 
 import {parseJSONFormat, parsedJSON2Html} from 'utils/contentful';
-import HTMLView from 'react-native-htmlview';
+
 import HtmlView from 'react-native-htmlview';
 
 const BarflyConfirm = ({navigation, route}) => {
@@ -84,7 +84,6 @@ const BarflyConfirm = ({navigation, route}) => {
     );
 
   const addCreditCard = async () => {
-    console.log('addCreditCard:', card);
     try {
       const data = await API.addCreditCardForCustomer(
         customerLocation.bookerLocationId,

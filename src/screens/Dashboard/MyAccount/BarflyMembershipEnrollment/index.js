@@ -29,7 +29,9 @@ const CustomerSchema = Yup.object()
       .max(50, 'Error: last name is Too Long!')
       .required('Error: last name is required'),
     Address: Yup.object().shape({
-      Street1: Yup.string().nullable().required('Error: home address1 is required'),
+      Street1: Yup.string()
+        .nullable()
+        .required('Error: home address1 is required'),
       City: Yup.string().nullable().required('Error: city is required'),
       Zip: Yup.string().nullable().required('Error: zip is required'),
       State: Yup.string().nullable().required('Error: state is required'),
@@ -60,6 +62,7 @@ const CustomerSchema = Yup.object()
             .required('Error: address1 is required'),
           City: Yup.string().nullable().required('Error: city is required'),
           State: Yup.string().nullable().required('Error: state is required'),
+          Zip: Yup.string().nullable().required('Error: zip is required'),
         }),
         Year: Yup.number().required('Error: exp year is required'),
         Month: Yup.number().required('Error: exp month is required'),
@@ -318,7 +321,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                       </View>
                     )}
                   </Field>
-                  {CustomerField('Postal Code', 'Address.Zip')}
+                  {CustomerField('Postal Code', 'CustomField.Card.Address.Zip')}
                 </View>
 
                 <View>
@@ -387,7 +390,6 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     )}
                   </Field>
 
-
                   <Field name="CustomField.Card.Year">
                     {({field, meta, form: {setFieldValue}}) => (
                       <View>
@@ -417,12 +419,12 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                     )}
                   </Field>
                   {CustomerField('CVV', 'CustomField.Card.SecurityCode')}
-
                 </View>
 
                 <View>
-                  <Text style={styles.title}>DATE OF BIRTH</Text>
+                  <Text style={styles.title}>DATE OF BIRTH </Text>
                   <Text style={styles.subtitle}>For your free blowout!</Text>
+
                   <View style={[rootStyle.seprator, {marginBottom: 10}]} />
                   <Field name="CustomField.Birth.Month">
                     {({field, meta, form: {setFieldValue}}) => (
