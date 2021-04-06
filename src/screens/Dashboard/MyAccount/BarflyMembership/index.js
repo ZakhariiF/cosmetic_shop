@@ -150,7 +150,7 @@ const BarflyMembership = ({navigation}) => {
             onButtonPress={() => {
               onSelectLocation(item);
               AlertHelper.showSuccess(
-                'You have selected the store successfully',
+                'You have selected the shop successfully',
               );
             }}
           />

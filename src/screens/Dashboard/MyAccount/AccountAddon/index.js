@@ -19,7 +19,7 @@ const AccountAddon = ({navigation}) => {
 
   let topImage = get(
     data,
-    'screenProductCollection.items[0].marketingComponentsCollection.items[0]',
+    'screenProductCollection.items[1].marketingComponentsCollection.items[0]',
   );
 
   if (get(topImage, 'image')) {
@@ -27,7 +27,7 @@ const AccountAddon = ({navigation}) => {
   }
   let bottomImage = get(
     data,
-    'screenProductCollection.items[0].marketingComponentsCollection.items[1]',
+    'screenProductCollection.items[1].marketingComponentsCollection.items[1]',
   );
 
   if (get(bottomImage, 'image')) {
@@ -52,13 +52,13 @@ const AccountAddon = ({navigation}) => {
             <Text style={styles.headingText}>
               {get(
                 data,
-                'screenProductCollection.items[0].description.json.content[0].content[0].value',
+                'screenProductCollection.items[1].description.json.content[0].content[0].value',
               )}
             </Text>
             <Text style={styles.descText}>
               {get(
                 data,
-                'screenProductCollection.items[0].description.json.content[0].content[1].value',
+                'screenProductCollection.items[1].description.json.content[0].content[1].value',
               )}
             </Text>
           </View>
@@ -66,7 +66,7 @@ const AccountAddon = ({navigation}) => {
           <View style={styles.listContainer}>
             {get(
               data,
-              'screenProductCollection.items[0].productsCollection.items',
+              'screenProductCollection.items[1].productsCollection.items',
               [],
             ).map((e, i) => {
               return (

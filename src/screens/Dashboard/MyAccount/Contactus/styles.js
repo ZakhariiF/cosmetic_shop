@@ -112,5 +112,6 @@ export default StyleSheet.create({
     fontSize: 14,
     color: Colors.error,
     fontWeight: '400',
+    marginTop: 10,
   },
 });

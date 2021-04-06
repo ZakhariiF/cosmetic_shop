@@ -359,7 +359,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 6VAF54M795;
+						DevelopmentTeam = HF537RA86E;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -815,7 +815,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Drybar/Drybar.entitlements;
 				CURRENT_PROJECT_VERSION = 37;
-				DEVELOPMENT_TEAM = 6VAF54M795;
+				DEVELOPMENT_TEAM = HF537RA86E;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				HEADER_SEARCH_PATHS = "$(inherited)";

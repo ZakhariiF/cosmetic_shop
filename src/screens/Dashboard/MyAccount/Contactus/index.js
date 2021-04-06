@@ -29,15 +29,18 @@ import {call} from 'utils';
 
 const contactUsSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, 'Too Short')
+    .min(2, 'Error: name is Too Short')
     .nullable()
-    .required('Name Field is required'),
-  email: Yup.string().email().nullable().required('Email Field is required'),
+    .required('Error: name is required'),
+  email: Yup.string().email().nullable().required('Error: email is required'),
   phoneNumber: Yup.string()
     .nullable()
-    .required('This field is required')
-    .matches(/\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g, 'Invalid phone number'),
-  message: Yup.string().nullable().required('This Field is required.'),
+    .required('Error: phone number is required')
+    .matches(
+      /\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g,
+      'Error: phone number is invalid',
+    ),
+  message: Yup.string().nullable().required('Error: message is required'),
 });
 
 const CONTACT_US_QUERY = contactUsQuery();
@@ -81,7 +84,12 @@ const Contactus = () => {
           <View style={rootStyle.innerContainer}>
             <Text style={styles.writeMsg}>Send us a message.</Text>
             <Formik
-              initialValues={{}}
+              initialValues={{
+                name: '',
+                email: '',
+                phoneNumber: '',
+                message: '',
+              }}
               enableReinitialize
               onSubmit={onSubmit}
               validationSchema={contactUsSchema}>
@@ -167,7 +175,10 @@ const Contactus = () => {
                 <TouchableOpacity
                   onPress={() =>
                     Linking.openURL(
-                      get(data, 'screenContactCollection.items[0].instagramUrl'),
+                      get(
+                        data,
+                        'screenContactCollection.items[0].instagramUrl',
+                      ),
                     )
                   }
                   accessible
@@ -175,7 +186,7 @@ const Contactus = () => {
                   accessibilityRole="link">
                   <AntDesign name="instagram" size={30} />
                   <Text style={styles.instaName}>
-                  {get(data, 'screenContactCollection.items[0].instagram')}
+                    {get(data, 'screenContactCollection.items[0].instagram')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -252,8 +263,6 @@ const Contactus = () => {
             </View>
           </View>
         )}
-
-
       </KeyboardAwareScrollView>
       {loading && <Indicator />}
     </View>

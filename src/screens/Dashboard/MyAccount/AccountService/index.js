@@ -93,7 +93,7 @@ const AccountService = ({navigation}) => {
 
   let topImage = get(
     data,
-    'screenProductCollection.items[1].marketingComponentsCollection.items[0]',
+    'screenProductCollection.items[0].marketingComponentsCollection.items[0]',
   );
 
   if (get(topImage, 'image')) {
@@ -101,7 +101,7 @@ const AccountService = ({navigation}) => {
   }
   let bottomImage = get(
     data,
-    'screenProductCollection.items[1].marketingComponentsCollection.items[1]',
+    'screenProductCollection.items[0].marketingComponentsCollection.items[1]',
   );
 
   if (get(bottomImage, 'image')) {
@@ -134,7 +134,7 @@ const AccountService = ({navigation}) => {
       setUpdatedData(
         get(
           data,
-          'screenProductCollection.items[1].productsCollection.items',
+          'screenProductCollection.items[0].productsCollection.items',
           [],
         ).map((item) => {
           let idx = bookerServiceNames.indexOf(
@@ -200,13 +200,13 @@ const AccountService = ({navigation}) => {
             <Text style={styles.headingText}>
               {get(
                 data,
-                'screenProductCollection.items[1].description.json.content[0].content[0].value',
+                'screenProductCollection.items[0].description.json.content[0].content[0].value',
               )}
             </Text>
             <Text style={styles.descText}>
               {get(
                 data,
-                'screenProductCollection.items[1].description.json.content[0].content[1].value',
+                'screenProductCollection.items[0].description.json.content[0].content[1].value',
               )}
             </Text>
           </View>
@@ -216,7 +216,7 @@ const AccountService = ({navigation}) => {
               updatedData ||
               get(
                 data,
-                'screenProductCollection.items[1].productsCollection.items',
+                'screenProductCollection.items[0].productsCollection.items',
                 [],
               )
             ).map((e, i) => {

@@ -21,26 +21,31 @@ import config from 'constant/config';
 
 const WufooSchema = Yup.object().shape({
   firstName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('This field is required'),
+    .min(2, 'Error: first name is Too Short!')
+    .max(50, 'Error: first name is Too Long!')
+    .required('Error: first name is required'),
   lastName: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('This field is required'),
-  email: Yup.string().email().required('This field is required'),
-  address1: Yup.string().nullable().required('This field is required'),
-  city: Yup.string().required('This field is required'),
-  state: Yup.string().required('This field is required'),
-  postalCode: Yup.string().required('This field is required'),
-  preferredShop: Yup.string().required('This field is required'),
-  preferredStartTime: Yup.string().required('This field is required'),
-  occasion: Yup.string().required('This field is required'),
-  partySize: Yup.string().required('This field is required'),
+    .min(2, 'Error: last name is Too Short!')
+    .max(50, 'Error: last name is Too Long!')
+    .required('Error: last name is required'),
+  email: Yup.string().email().required('Error: email is required'),
+  address1: Yup.string().nullable().required('Error: address1 is required'),
+  city: Yup.string().required('Error: city is required'),
+  state: Yup.string().required('Error: state is required'),
+  postalCode: Yup.string().required('Error: postal code is required'),
+  preferredShop: Yup.string().required('Error: preferred shop is required'),
+  preferredStartTime: Yup.string().required(
+    'Error: preferred start time is required',
+  ),
+  occasion: Yup.string().required('Error: occasion is required'),
+  partySize: Yup.string().required('Error: party size is required'),
   phoneNumber: Yup.string()
     .nullable()
-    .required('This field is required')
-    .matches(/\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g, 'Invalid phone number'),
+    .required('Error: phone number is required')
+    .matches(
+      /\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g,
+      'Error: phone number is invalid',
+    ),
 });
 
 const EventDetail = ({
@@ -133,7 +138,20 @@ const EventDetail = ({
       </View>
       <View style={styles.formWrapper}>
         <Formik
-          initialValues={{}}
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            address1: '',
+            city: '',
+            state: '',
+            postalCode: '',
+            preferredShop: '',
+            preferredStartTime: '',
+            occasion: '',
+            partySize: '',
+            phoneNumber: '',
+          }}
           onSubmit={onSubmit}
           validationSchema={WufooSchema}>
           {({submitForm, isSubmitting, errors}) => (
@@ -273,63 +291,96 @@ const EventDetail = ({
                   </View>
                 )}
               </Field>
-              <View style={[styles.inputContainer]}>
-                <Text style={styles.inputLabel}>Preferred Shop</Text>
-                <Field name="preferredShop">
-                  {({field, form: {setFieldValue}}) => (
+
+              <Field name="preferredShop">
+                {({field, meta, form: {setFieldValue}}) => (
+                  <View style={[styles.inputContainer]}>
+                    <Text style={styles.inputLabel}>Preferred Shop</Text>
                     <NativePicker
                       selectedValue={field.value}
                       onValueChange={(itemValue) =>
                         setFieldValue('preferredShop', itemValue)
                       }
                       items={preferredShopChoices}
+                      placeholder={{
+                        label: 'Select Preferred Shop',
+                        value: '',
+                      }}
                     />
-                  )}
-                </Field>
-              </View>
+                    {!!meta.error && meta.touched && (
+                      <Text style={styles.errorText}>{meta.error}</Text>
+                    )}
+                  </View>
+                )}
+              </Field>
 
-              <View style={[styles.inputContainer]}>
-                <Text style={styles.inputLabel}>Preferred Start Time</Text>
-                <Field name="preferredStartTime">
-                  {({field, form: {setFieldValue}}) => (
+              <Field name="preferredStartTime">
+                {({field, meta, form: {setFieldValue}}) => (
+                  <View style={[styles.inputContainer]}>
+                    <Text style={styles.inputLabel}>Preferred Start Time</Text>
+
                     <NativePicker
                       selectedValue={field.value}
                       onValueChange={(itemValue) =>
                         setFieldValue('preferredStartTime', itemValue)
                       }
                       items={preferredStartTimeChoices}
+                      placeholder={{
+                        label: 'Select Preferred Start Time',
+                        value: '',
+                      }}
                     />
-                  )}
-                </Field>
-              </View>
-              <View style={[styles.inputContainer]}>
-                <Text style={styles.inputLabel}>Party Size</Text>
-                <Field name="partySize">
-                  {({field, form: {setFieldValue}}) => (
+                    {!!meta.error && meta.touched && (
+                      <Text style={styles.errorText}>{meta.error}</Text>
+                    )}
+                  </View>
+                )}
+              </Field>
+
+              <Field name="partySize">
+                {({field, meta, form: {setFieldValue}}) => (
+                  <View style={[styles.inputContainer]}>
+                    <Text style={styles.inputLabel}>Party Size</Text>
                     <NativePicker
                       selectedValue={field.value}
                       onValueChange={(itemValue) =>
                         setFieldValue('partySize', itemValue)
                       }
                       items={partySizeChoices}
+                      placeholder={{
+                        label: 'Select Part Size',
+                        value: '',
+                      }}
                     />
-                  )}
-                </Field>
-              </View>
-              <View style={[styles.inputContainer]}>
-                <Text style={styles.inputLabel}>Occasion</Text>
-                <Field name="occasion">
-                  {({field, form: {setFieldValue}}) => (
+                    {!!meta.error && meta.touched && (
+                      <Text style={styles.errorText}>{meta.error}</Text>
+                    )}
+                  </View>
+                )}
+              </Field>
+
+              <Field name="occasion">
+                {({field, meta, form: {setFieldValue}}) => (
+                  <View style={[styles.inputContainer]}>
+                    <Text style={styles.inputLabel}>Occasion</Text>
                     <NativePicker
                       selectedValue={field.value}
                       items={occasions}
                       onValueChange={(itemValue) =>
                         setFieldValue('occasion', itemValue)
                       }
+                      placeholder={{
+                        label: 'Select Occasion',
+                        value: '',
+                      }}
                     />
-                  )}
-                </Field>
-              </View>
+                    {!!meta.error && meta.touched && (
+                      <Text style={styles.errorText}>{meta.error}</Text>
+                    )}
+                  </View>
+                )}
+              </Field>
+
               <View style={styles.inputContainer}>
                 <Field name={'notes'}>
                   {({field, meta, form: {setFieldValue}}) => (
@@ -395,6 +446,11 @@ const styles = StyleSheet.create({
     color: Colors.light_gray,
     marginTop: 25,
     fontFamily: Fonts.AvenirNextRegular,
+  },
+  errorText: {
+    color: Colors.error,
+    fontSize: 15,
+    marginTop: 10,
   },
 });
 
