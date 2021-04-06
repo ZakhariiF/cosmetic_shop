@@ -64,13 +64,13 @@ const CustomerSchema = Yup.object()
           State: Yup.string().nullable().required('Error: state is required'),
           Zip: Yup.string().nullable().required('Error: zip is required'),
         }),
-        Year: Yup.number().required('Error: exp year is required'),
-        Month: Yup.number().required('Error: exp month is required'),
+        Year: Yup.number().nullable().required('Error: exp year is required'),
+        Month: Yup.number().nullable().required('Error: exp month is required'),
       }),
       Birth: Yup.object().shape({
-        Year: Yup.number().required('Error: year is required'),
-        Month: Yup.number().required('Error: month is required'),
-        Day: Yup.number().required('Error: day is required'),
+        Year: Yup.number().nullable().required('Error: year is required'),
+        Month: Yup.number().nullable().required('Error: month is required'),
+        Day: Yup.number().nullable().required('Error: day is required'),
       }),
     }),
   })
@@ -139,7 +139,9 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
               meta.error ? {marginBottom: 10} : {},
             ]}
           />
-          {!!meta.error && <Text style={styles.errorText}>{meta.error}</Text>}
+          {!!meta.error && meta.touched && (
+            <Text style={styles.errorText}>{meta.error}</Text>
+          )}
         </View>
       )}
     </Field>
@@ -208,8 +210,25 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
             initialValues={{
               ...customerDetails,
               CustomField: {
-                Card: {},
-                Birth: {},
+                Card: {
+                  NameOnCard: '',
+                  Number: '',
+                  Type: null,
+                  SecurityCode: null,
+                  Address: {
+                    Street1: null,
+                    City: null,
+                    State: null,
+                    Zip: null,
+                  },
+                  Year: null,
+                  Month: null,
+                },
+                Birth: {
+                  Year: null,
+                  Month: null,
+                  Day: null,
+                },
               },
             }}
             enableReinitialize
@@ -243,14 +262,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           }))}
                           pickerContainer={{
                             ...styles.inputContainer,
-                            marginBottom: meta.error ? 0 : 10,
+                            marginBottom: meta.error && meta.touched ? 0 : 10,
                           }}
                           placeholder={{
                             label: 'Select a state',
                             value: undefined,
                           }}
                         />
-                        {!!meta.error && (
+                        {!!meta.error && meta.touched && (
                           <Text style={[styles.errorText, {marginTop: 10}]}>
                             {meta.error}
                           </Text>
@@ -306,14 +325,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           }))}
                           pickerContainer={{
                             ...styles.inputContainer,
-                            marginBottom: meta.error ? 0 : 10,
+                            marginBottom: meta.error && meta.touched ? 0 : 10,
                           }}
                           placeholder={{
                             label: 'Select a state',
                             value: undefined,
                           }}
                         />
-                        {!!meta.error && (
+                        {!!meta.error && meta.touched && (
                           <Text style={[styles.errorText, {marginTop: 10}]}>
                             {meta.error}
                           </Text>
@@ -346,14 +365,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           }))}
                           pickerContainer={{
                             ...styles.inputContainer,
-                            marginBottom: meta.error ? 0 : 10,
+                            marginBottom: meta.error && meta.touched ? 0 : 10,
                           }}
                           placeholder={{
                             label: 'Select a card type',
                             value: undefined,
                           }}
                         />
-                        {!!meta.error && (
+                        {!!meta.error && meta.touched && (
                           <Text style={[styles.errorText, {marginTop: 10}]}>
                             {meta.error}
                           </Text>
@@ -374,14 +393,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           items={months()}
                           pickerContainer={{
                             ...styles.inputContainer,
-                            marginBottom: meta.error ? 0 : 10,
+                            marginBottom: meta.error && meta.touched ? 0 : 10,
                           }}
                           placeholder={{
                             label: 'Select a month',
                             value: undefined,
                           }}
                         />
-                        {!!meta.error && (
+                        {!!meta.error && meta.touched && (
                           <Text style={[styles.errorText, {marginTop: 10}]}>
                             {meta.error}
                           </Text>
@@ -403,14 +422,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           items={cardYears()}
                           pickerContainer={{
                             ...styles.inputContainer,
-                            marginBottom: meta.error ? 0 : 10,
+                            marginBottom: meta.error && meta.touched ? 0 : 10,
                           }}
                           placeholder={{
                             label: 'Select a year',
                             value: undefined,
                           }}
                         />
-                        {!!meta.error && (
+                        {!!meta.error && meta.touched && (
                           <Text style={[styles.errorText, {marginTop: 10}]}>
                             {meta.error}
                           </Text>
@@ -442,10 +461,10 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           }}
                           pickerContainer={{
                             ...styles.inputContainer,
-                            marginBottom: meta.error ? 0 : 10,
+                            marginBottom: meta.error && meta.touched ? 0 : 10,
                           }}
                         />
-                        {!!meta.error && meta && (
+                        {!!meta.error && meta.touched && (
                           <Text style={[styles.errorText, {marginTop: 10}]}>
                             {meta.error}
                           </Text>
@@ -467,14 +486,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           items={days()}
                           pickerContainer={{
                             ...styles.inputContainer,
-                            marginBottom: meta.error ? 0 : 10,
+                            marginBottom: meta.error && meta.touched ? 0 : 10,
                           }}
                           placeholder={{
                             label: 'Select a day',
                             value: undefined,
                           }}
                         />
-                        {!!meta.error && meta && (
+                        {!!meta.error && meta.touched && (
                           <Text style={[styles.errorText, {marginTop: 10}]}>
                             {meta.error}
                           </Text>
@@ -495,14 +514,14 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
                           items={years()}
                           pickerContainer={{
                             ...styles.inputContainer,
-                            marginBottom: meta.error ? 0 : 10,
+                            marginBottom: meta.error && meta.touched ? 0 : 10,
                           }}
                           placeholder={{
                             label: 'Select a year',
                             value: undefined,
                           }}
                         />
-                        {!!meta.error && (
+                        {!!meta.error && meta.touched && (
                           <Text style={[styles.errorText, {marginTop: 10}]}>
                             {meta.error}
                           </Text>

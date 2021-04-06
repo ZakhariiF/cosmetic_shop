@@ -76,5 +76,8 @@ export default {
   welcomescreen_low_1: require('assets/images/NewApp_WelcomeScreens_750x1344_1.jpg'),
   welcomescreen_low_2: require('assets/images/NewApp_WelcomeScreens_750x1344_2.jpg'),
   welcomescreen_low_3: require('assets/images/NewApp_WelcomeScreens_750x1344_3.jpg'),
-  hint: require('assets/images/hint.jpg')
+  hint: require('assets/images/hint.jpg'),
+  visa: require('assets/images/visa.png'),
+  discover: require('assets/images/discover.png'),
+  mastercard: require('assets/images/mastercard.png'),
 };

@@ -49,7 +49,8 @@ static void InitializeMParticle(UIApplication *application) {
 }
 
 static void InitializeBraze(UIApplication *application, NSDictionary *launchOptions) {
-  [Appboy startWithApiKey:@"477e66f0-4e5d-42f3-b493-b94de61db5ac"
+//  [Appboy startWithApiKey:@"477e66f0-4e5d-42f3-b493-b94de61db5ac"
+  [Appboy startWithApiKey:@"a6574374-7f4f-4923-8c9a-426e9a26de47"
               inApplication:application
           withLaunchOptions:launchOptions
           withAppboyOptions:@{ ABKInAppMessageControllerDelegateKey : application }];

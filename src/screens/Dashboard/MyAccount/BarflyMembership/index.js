@@ -149,7 +149,9 @@ const BarflyMembership = ({navigation}) => {
             name="Select"
             onButtonPress={() => {
               onSelectLocation(item);
-              AlertHelper.showSuccess('You have selected the store successfully');
+              AlertHelper.showSuccess(
+                'You have selected the store successfully',
+              );
             }}
           />
         </View>
@@ -210,6 +212,7 @@ const BarflyMembership = ({navigation}) => {
                 Keyboard.dismiss();
                 searchFilterFunction();
               }}
+              onSubmitEditing={() => searchFilterFunction()}
             />
 
             <Modal visible={showLocationModal}>
