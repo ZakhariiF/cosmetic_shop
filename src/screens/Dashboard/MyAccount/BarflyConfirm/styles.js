@@ -82,4 +82,11 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  finePrintHeader: {
+    paddingBottom: 15,
+    fontSize: 20,
+    lineHeight: 45,
+    fontFamily: Fonts.Evan,
+    color: Colors.input_text,
+  },
 });

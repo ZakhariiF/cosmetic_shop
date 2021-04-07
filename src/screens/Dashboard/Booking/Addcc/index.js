@@ -23,21 +23,27 @@ const Addcc = () => {
   const [cardInfo, setCardInfo] = useState('');
   // alert(JSON.stringify(userInfo));
 
-  console.log('Selected Location:', location);
-
   const onAddCard = () => {
     MParticle.logEvent('Save Card', MParticle.EventType.Other, {
       'Source Page': 'Add card',
     });
 
-    const [month, year] = get(cardInfo, 'values.expiry', '').split('/')
+    const [month, year] = get(cardInfo, 'values.expiry', '').split('/');
+    let type = 2;
+    if (get(cardInfo, 'values.type') === 'master-card') {
+      type = 3;
+    } else if (get(cardInfo, 'values.type') === 'american-express') {
+      type = 1;
+    } else if (get(cardInfo, 'values.type') === 'discover') {
+      type = 4;
+    }
+
     const data = {
       SpaID: location.bookerLocationId,
       CustomerID: get(userInfo, 'bookerID', ''),
       CreditCard: {
         Type: {
-          ID: 2,
-          Name: get(cardInfo, 'values.type'),
+          ID: type,
         },
         Number: get(cardInfo, 'values.number'),
         NameOnCard: 'Test Customer',

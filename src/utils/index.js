@@ -74,7 +74,7 @@ export const isEmptyString = (string) => {
   return !/\S/.test(string);
 };
 
-export const openMaps = (name, lat, lng, address=null) => {
+export const openMaps = (name, lat, lng, address = null) => {
   const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
   const latLng = `${lat || 40.7229427},${lng || -111.8588563}`;
   const label = name || 'Drybar Huntington Beach in Pacific City';
@@ -492,7 +492,20 @@ export const convertAppointmentToState = (
     };
   });
 
-  console.log('ConvertAppoitnmentToState:', tempArr);
-
   return tempArr;
+};
+
+export const getCardFirstNumbersByType = (type) => {
+  switch (type) {
+    case 1:
+      return '3700';
+    case 2:
+      return '4000';
+    case 3:
+      return '5000';
+    case 4:
+      return '6011';
+    default:
+      return '0000';
+  }
 };

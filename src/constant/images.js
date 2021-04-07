@@ -79,5 +79,6 @@ export default {
   hint: require('assets/images/hint.jpg'),
   visa: require('assets/images/visa.png'),
   discover: require('assets/images/discover.png'),
+  amex: require('assets/images/amex.png'),
   mastercard: require('assets/images/mastercard.png'),
 };

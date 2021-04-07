@@ -12,7 +12,8 @@ import {getCreditCard} from '../thunks';
 import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
 import EmptyContainer from 'components/EmptyContainer';
-import BookingHeader from "components/BookingHeader";
+import BookingHeader from 'components/BookingHeader';
+import {getCardFirstNumbersByType} from 'utils';
 
 const {width} = Dimensions.get('screen');
 
@@ -21,7 +22,9 @@ const ApptHold = ({navigation, route}) => {
   const userInfo = useSelector((state) => state.auth.userInfo);
   const isLoading = useSelector((state) => state.booking.isCCLoading);
   const customerCards = useSelector((state) => state.booking.customerCards);
-  const selectedLocation = useSelector((state) => state.booking.selectedLocation);
+  const selectedLocation = useSelector(
+    (state) => state.booking.selectedLocation,
+  );
   const [activeScreen, setActiveScreen] = useState(0);
 
   useEffect(() => {
@@ -73,10 +76,9 @@ const ApptHold = ({navigation, route}) => {
                           styles.cardContainer,
                         ]}>
                         <CreditCardDisplay
-                          number={`0000 0000 0000 ${get(
-                            e,
-                            'CreditCard.Number',
-                          )}`}
+                          number={`${getCardFirstNumbersByType(
+                            get(e, 'CreditCard.Type.ID'),
+                          )} 0000 0000 ${get(e, 'CreditCard.Number')}`}
                           name={get(e, 'CreditCard.NameOnCard')}
                           frontImage={Images.cardImageFront}
                           backImage={Images.cardImageBack}

@@ -181,6 +181,7 @@ const BarflyMembership = ({navigation}) => {
       navigation.navigate('BarflyMembershipEnrollment', {
         membership: item,
         thankMessage: get(data, 'barfly.thankYou'),
+        finePrint: get(data, 'barfly.finePrint'),
       });
     } else {
       AlertHelper.showError(

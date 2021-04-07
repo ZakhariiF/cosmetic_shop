@@ -57,7 +57,9 @@ const GuestTab = ({routeName}) => {
       }
     } else {
       if (get(data[index], 'addons')) {
-        return `+ ${data[index].addons.length}`;
+        return `- ${data[index].addons.length} add-on${
+          data[index].addons.length > 1 ? 's' : ''
+        }`;
       }
     }
   };
@@ -93,10 +95,7 @@ const GuestTab = ({routeName}) => {
               onPress={(e) => onSelectTab(e, i)}
               key={i}
               onLayout={(e) => onLayout(e, i)}
-              style={[
-                styles.listContainer,
-                activeTab == i && styles.activeTab,
-              ]}
+              style={[styles.listContainer, activeTab == i && styles.activeTab]}
               accessible
               accessibilityLabel={`${e.userType} ${renderData(i)}`}
               accessibilityRole="tab">

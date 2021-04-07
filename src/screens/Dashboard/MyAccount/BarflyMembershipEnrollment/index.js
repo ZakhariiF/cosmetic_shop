@@ -121,6 +121,7 @@ const BarflyMembershipEnrollment = ({navigation, route}) => {
       card: updatedCard,
       membership: route.params.membership,
       thankMessage: route.params.thankMessage,
+      finePrint: route.params.finePrint,
     });
   };
 

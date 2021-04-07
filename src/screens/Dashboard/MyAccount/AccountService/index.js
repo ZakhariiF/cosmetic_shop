@@ -17,7 +17,8 @@ import {
   TouchableOpacity,
   Modal,
   FlatList,
-} from 'react-native';
+  Dimensions,
+} from "react-native";
 import rootStyle from 'rootStyle';
 import styles from './styles';
 import SearchBar from 'components/SearchBar';
@@ -27,54 +28,46 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {Colors} from 'constant';
 import {useNavigation} from '@react-navigation/native';
 import {getServices} from 'services';
+import { AlertHelper } from "utils/AlertHelper";
+import EvilIcons from 'react-native-vector-icons/EvilIcons';
+const {height} = Dimensions.get('window');
 
 const LocationItem = ({item, onSelect}) => {
-  const navigation = useNavigation();
+  const operatingMessage = get(item, 'settings.operatingMessage', '');
   return (
-    <View style={styles.locationWrapper}>
-      <View style={styles.locationTitleWrapper}>
-        <View style={styles.locationTitle}>
-          <MaterialCommunityIcons
-            name="alert-circle"
-            size={20}
-            style={styles.noticeIcon}
-            color={Colors.header_title}
-            onPress={() => navigation.navigate('ShopDetail', {item})}
-          />
-          <Text style={styles.locationTitleText}>{get(item, 'title')}</Text>
+    <View style={styles.storeItemWrapper}>
+      <View style={styles.storeTitleWrapper}>
+        <View style={{flexDirection: 'row', maxWidth: '50%'}}>
+          <Text style={styles.storeTitle}>{get(item, 'title')}</Text>
         </View>
         <Button
-          name={'Select'}
-          onButtonPress={() => onSelect(item)}
-          containerStyle={{width: '30%'}}
-        />
-      </View>
-      <View style={styles.locationTitleWrapper}>
-        <Text style={{width: '50%'}}>
-          {get(item, 'contact.street1')}
-          {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
-          {get(item, 'contact.postalCode')}
-        </Text>
-        <TouchableOpacity
-          onPress={() => {
-            openMaps(
-              get(item, 'title'),
-              get(item, 'contact.coordinates[0]'),
-              get(item, 'contact.coordinates[1]'),
-              `${get(item, 'contact.street1')} ${get(
-                item,
-                'contact.city',
-              )} ${get(item, 'contact.state')} ${get(
-                item,
-                'contact.postalCode',
-              )}`,
+          containerStyle={styles.storeSelectButtonContainer}
+          titleStyle={styles.storeSelectButtonTitle}
+          name="Select"
+          onButtonPress={() => {
+            onSelect(item);
+            AlertHelper.showSuccess(
+              'You have selected the shop successfully',
             );
           }}
-          accessible
-          accessibilityLabel="Open Map"
-          accessibilityRole="link">
-          <Text>Get Direction</Text>
-        </TouchableOpacity>
+        />
+      </View>
+      <View style={styles.storeDec}>
+        <View style={styles.storeAddressWrapper}>
+          <EvilIcons name="location" size={26} />
+          <View>
+            <Text>{get(item, 'contact.street1')}</Text>
+            <Text style={styles.storeAddress}>
+              {get(item, 'contact.city')}, {get(item, 'contact.state')}{' '}
+              {get(item, 'contact.postalCode')}
+            </Text>
+          </View>
+        </View>
+        {!!operatingMessage && operatingMessage != '' && (
+          <View style={styles.information}>
+            <Text style={styles.inforText}>{operatingMessage}</Text>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -252,24 +245,57 @@ const AccountService = ({navigation}) => {
         </View>
       </ScrollView>
       {loading ? <Indicator /> : null}
-
       <Modal visible={showLocationModal}>
-        <View style={styles.locationModalWrapper}>
-          <Text style={styles.locationModalTitle}>Locations</Text>
-          <ScrollView>
-            <FlatList
-              data={modalData}
-              renderItem={(e) => (
-                <LocationItem
-                  {...e}
-                  onSelect={(item) => {
-                    setShowLocationModal(false);
-                    setSelectedStore(item);
-                  }}
+        <View
+          style={{
+            backgroundColor: Colors.modal_bg,
+            height,
+            justifyContent: 'center',
+            display: 'flex',
+          }}>
+          <View
+            style={{
+              marginHorizontal: 40,
+              backgroundColor: Colors.bg,
+              padding: 10,
+              height: 'auto',
+              maxHeight: height - 80,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 20,
+              }}>
+              <Text style={[rootStyle.commonHeader, {fontSize: 25, paddingVertical: 10, lineHeight: 25}]}>
+                Select Preferred Shop
+              </Text>
+              <MaterialCommunityIcons
+                name="close"
+                size={25}
+                style={{marginBottom: 8}}
+                color={Colors.header_title}
+                onPress={() => setShowLocationModal(false)}
+              />
+            </View>
+            <ScrollView>
+              <View>
+                <FlatList
+                  data={modalData}
+                  renderItem={(e) => (
+                    <LocationItem
+                      {...e}
+                      onSelect={(item) => {
+                        setShowLocationModal(false);
+                        setSelectedStore(item);
+                      }}
+                    />
+                  )}
                 />
-              )}
-            />
-          </ScrollView>
+              </View>
+            </ScrollView>
+          </View>
         </View>
       </Modal>
     </View>

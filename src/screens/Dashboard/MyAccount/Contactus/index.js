@@ -85,10 +85,10 @@ const Contactus = () => {
             <Text style={styles.writeMsg}>Send us a message.</Text>
             <Formik
               initialValues={{
-                name: '',
-                email: '',
-                phoneNumber: '',
-                message: '',
+                name: null,
+                email: null,
+                phoneNumber: null,
+                message: null,
               }}
               enableReinitialize
               onSubmit={onSubmit}

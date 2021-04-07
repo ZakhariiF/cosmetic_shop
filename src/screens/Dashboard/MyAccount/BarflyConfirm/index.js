@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import {get} from 'lodash';
 import {useDispatch, useSelector} from 'react-redux';
-import {ScrollView, View, Text} from 'react-native';
-import {useQuery} from '@apollo/client';
+import { ScrollView, View, Text, StyleSheet } from "react-native";
+
 import Dialog from 'react-native-dialog';
 import moment from 'moment';
 
@@ -21,7 +21,10 @@ import CheckBox from 'components/Checkbox';
 
 import {parseJSONFormat, parsedJSON2Html} from 'utils/contentful';
 
-import HtmlView from 'react-native-htmlview';
+import HTMLView from 'react-native-htmlview';
+import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
+
+import { Colors, Fonts } from "constant";
 
 const BarflyConfirm = ({navigation, route}) => {
   const customerLocation = useSelector((state) => state.account.location);
@@ -33,7 +36,9 @@ const BarflyConfirm = ({navigation, route}) => {
   const [firstChecked, setFirstChecked] = useState(false);
   const [secondChecked, setSecondChecked] = useState(false);
 
-  const {membership, customer, card, thankMessage} = route.params;
+  const {membership, customer, card, thankMessage, finePrint} = route.params;
+
+  console.log('FinePrintDom:', documentToHtmlString(get(finePrint, 'json')));
 
   const price = get(membership, 'MembershipBillableItem.Price.Amount');
 
@@ -229,10 +234,15 @@ const BarflyConfirm = ({navigation, route}) => {
             </View>
           </View>
           <View>
+            <Text style={styles.finePrintHeader}>THE FINE PRINT</Text>
+            <View style={{marginBottom: 20}}>
+              <HTMLView
+                value={documentToHtmlString(get(finePrint, 'json'))}
+                stylesheet={FinePrintStyle}
+                addLineBreaks={false}
+              />
+            </View>
             <Text>{confirmationData}</Text>
-
-            <View style={styles.checkboxContainer} />
-
             <CheckBox
               isChecked={firstChecked}
               title={firstCheckboxData}
@@ -258,7 +268,7 @@ const BarflyConfirm = ({navigation, route}) => {
               {get(thankMessage, 'json.content[0].content[0].value')}
             </Dialog.Title>
             <Dialog.Description>
-              <HtmlView
+              <HTMLView
                 value={parsedJSON2Html(parseJSONFormat(thankMessage))}
               />
             </Dialog.Description>
@@ -275,3 +285,20 @@ const BarflyConfirm = ({navigation, route}) => {
 };
 
 export default BarflyConfirm;
+
+const FinePrintStyle = StyleSheet.create({
+  p: {
+    fontSize: 15,
+    lineHeight: 25,
+    color: Colors.input_text,
+    fontFamily: Fonts.AvenirNextRegular,
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
+  a: {
+    fontSize: 15,
+    lineHeight: 25,
+    color: Colors.link,
+    fontFamily: Fonts.AvenirNextRegular,
+  },
+});

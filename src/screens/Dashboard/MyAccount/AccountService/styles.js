@@ -90,4 +90,56 @@ export default StyleSheet.create({
   locationModalTitle: {
     fontSize: 19,
   },
+  storeTitleWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  storeItemWrapper: {
+    padding: 10,
+    backgroundColor: Colors.bg,
+    borderTopColor: Colors.seprator,
+    borderTopWidth: 1,
+    borderStyle: 'solid',
+    marginBottom: 20,
+  },
+  storeTitle: {
+    fontSize: 15,
+  },
+  storeAddressWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  storeAddress: {
+    fontSize: 13,
+  },
+  storeDec: {
+    flexDirection: 'column',
+  },
+  information: {
+    borderTopWidth: 2,
+    borderTopColor: Colors.seprator,
+    borderStyle: 'solid',
+    backgroundColor: Colors.bg,
+    marginTop: 10,
+    padding: 10,
+  },
+  inforText: {
+    color: Colors.light_gray,
+    marginBottom: 10,
+  },
+  storeDirection: {
+    textDecorationLine: 'underline',
+  },
+  storeSelectButtonContainer: {
+    height: 30,
+    width: 100,
+    display: 'flex',
+    maxWidth: '50%',
+  },
+  storeSelectButtonTitle: {
+    fontSize: 14,
+  },
 });
