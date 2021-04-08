@@ -167,7 +167,7 @@ const ServiceItem = ({
   activeUser,
   onInfo,
 }) => {
-  const PRODUCT_INFO_QUERY = productionInformationByReference(item.Name);
+  const PRODUCT_INFO_QUERY = productionInformationByReference(item.Name.trim());
   const {data, error, loading} = useQuery(PRODUCT_INFO_QUERY);
 
   const isExist = (item) => {

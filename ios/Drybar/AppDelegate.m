@@ -37,8 +37,8 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 
 static void InitializeMParticle(UIApplication *application) {
-  MParticleOptions *options = [MParticleOptions optionsWithKey:@"us1-eefc1854d6fb724391f9a229050a9b73"
-                                                        secret:@"jsgsFr4favRfc1TMgibD-o3isAxros6xnbmE1nuFUPOWmMiQyOlwRGK3qx24bDv1"];
+  MParticleOptions *options = [MParticleOptions optionsWithKey:@"dd175017c5a79d41a0ff9ae26d07d475"
+                                                        secret:@"WPSLFwjHsMZYPHdfJVF9DynK4avgH-3Jdw0z94pAnvyGQabNBrk8yH0H9Tn2j2H4"];
 
   options.environment = MPEnvironmentDevelopment;
   
@@ -50,7 +50,7 @@ static void InitializeMParticle(UIApplication *application) {
 
 static void InitializeBraze(UIApplication *application, NSDictionary *launchOptions) {
 //  [Appboy startWithApiKey:@"477e66f0-4e5d-42f3-b493-b94de61db5ac"
-  [Appboy startWithApiKey:@"a6574374-7f4f-4923-8c9a-426e9a26de47"
+  [Appboy startWithApiKey:@"41f00c7a-d4f1-489a-af22-c0e0b91e9982"
               inApplication:application
           withLaunchOptions:launchOptions
           withAppboyOptions:@{ ABKInAppMessageControllerDelegateKey : application }];

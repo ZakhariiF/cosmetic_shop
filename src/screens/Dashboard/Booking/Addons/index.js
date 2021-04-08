@@ -13,10 +13,11 @@ import rootStyle from 'rootStyle';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   findAddons,
-  getAddons, setActiveGuestTab,
+  getAddons,
+  setActiveGuestTab,
   setExtensionType,
   setmemberCount,
-} from "../thunks";
+} from '../thunks';
 import GuestTab from 'components/GuestTab';
 import BookingTab from 'components/BookingTab';
 import LocationModal from 'components/LocationModal';
@@ -24,7 +25,10 @@ import Extensions from '../Extensions';
 import {get} from 'lodash';
 import Indicator from 'components/Indicator';
 import ServiceInfoModal from 'components/ServiceInfoModal';
-import {productInformationCollection, productionInformationByReference} from 'constant/query';
+import {
+  productInformationCollection,
+  productionInformationByReference,
+} from 'constant/query';
 import {useQuery} from '@apollo/client';
 
 const Addons = ({navigation}) => {
@@ -225,7 +229,9 @@ const AddonItem = ({
   active,
   onInfoPress,
 }) => {
-  const PRODUCT_INFO_QUERY = productionInformationByReference(item.Name);
+  const PRODUCT_INFO_QUERY = productionInformationByReference(
+    item.ServiceName.trim(),
+  );
   const {data, error, loading} = useQuery(PRODUCT_INFO_QUERY);
 
   const information = get(data, 'productCollection.items', []);
@@ -239,7 +245,7 @@ const AddonItem = ({
           }
         }}
         accessible={!!onInfoPress}
-        accessibilityLabel={`View Detail`}
+        accessibilityLabel={'View Detail'}
         accessibilityRole="button"
         hitSlop={{
           top: 10,
