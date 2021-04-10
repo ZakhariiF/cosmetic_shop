@@ -17,7 +17,6 @@ const CustomSwiper = ({images}) => {
 
   return (
     <View
-      style={{marginTop: 15}}
       onLayout={({nativeEvent}) => setModalWidth(nativeEvent.layout.width)}>
       <ScrollView
         decelerationRate={0}

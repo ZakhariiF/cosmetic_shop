@@ -241,7 +241,12 @@ const AddonItem = ({
       <TouchableOpacity
         onPress={() => {
           if (information.length) {
-            onInfoPress(item);
+            if (information.length > 0) {
+              onInfoPress({
+                content: information[0],
+                service: item,
+              });
+            }
           }
         }}
         accessible={!!onInfoPress}

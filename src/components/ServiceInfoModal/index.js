@@ -14,12 +14,13 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import rootStyle from 'rootStyle';
 import {parseJSONFormat, parsedJSON2Html} from 'utils/contentful';
 import HTMLView from 'react-native-htmlview';
+import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
 
 const {height} = Dimensions.get('window');
 
 const ServiceInfoModal = ({visible, onRequestClose, item}) => {
   const {service, content} = item;
-  const description = parsedJSON2Html(parseJSONFormat(content?.description));
+  console.log('Content:', content);
 
   return (
     <Modal
@@ -30,10 +31,9 @@ const ServiceInfoModal = ({visible, onRequestClose, item}) => {
       <View style={styles.container}>
         <View style={styles.mainContainer}>
           <View style={styles.headerContainer}>
-            <View style={{width: '20%'}} />
-            <View style={{flex: 1, alignItems: 'center'}}>
+            <View style={{flex: 1}}>
               <Text style={styles.title} numberOfLines={1}>
-                {get(item, 'Name', '').toUpperCase()}
+                {get(content, 'title', '').toUpperCase()}
               </Text>
             </View>
             <View style={{width: '20%', alignItems: 'flex-end'}}>
@@ -48,16 +48,22 @@ const ServiceInfoModal = ({visible, onRequestClose, item}) => {
           <ScrollView>
             <CustomSwiper images={get(content, 'imagesCollection.items', [])} />
             <Text style={styles.works}>How It works</Text>
-            <Text style={styles.desc}>
-              <HTMLView value={description} />
-            </Text>
+
+            <HTMLView
+              value={documentToHtmlString(get(content, 'description.json'))}
+              addLineBreaks={false}
+              stylesheet={DescriptionStyles}
+            />
+
             <View style={styles.priceContainer}>
               <Text style={rootStyle.commonText}>Price</Text>
-              <Text style={styles.min}>${get(service, 'Price.Amount', 0)}</Text>
+              <Text style={styles.min}>${get(content, 'price', 0)}</Text>
             </View>
             <View style={[styles.priceContainer, {marginTop: 5}]}>
               <Text style={rootStyle.commonText}>Service Time</Text>
-              <Text style={styles.min}>{get(service, 'TotalDuration')} mins</Text>
+              <Text style={styles.min}>
+                {get(content, 'serviceTime') || 5} mins
+              </Text>
             </View>
           </ScrollView>
         </View>
@@ -83,24 +89,23 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    alignSelf: 'flex-end',
     justifyContent: 'space-between',
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+    alignItems: 'flex-start',
   },
   title: {
-    fontSize: 31,
+    fontSize: 28,
     fontFamily: Fonts.DCondensed,
     color: Colors.header_title,
+    textAlign: 'left',
   },
   works: {
     ...rootStyle.commonText,
     fontFamily: Fonts.AvenirNextMedium,
     marginTop: 15,
   },
-  desc: {
-    ...rootStyle.commonText,
-    marginVertical: 5,
-  },
+
   priceContainer: {
     borderTopWidth: 1,
     borderColor: Colors.seprator,
@@ -115,5 +120,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.header_title,
     fontFamily: Fonts.AvenirNextMedium,
+  },
+});
+
+const DescriptionStyles = StyleSheet.create({
+  p: {
+    ...rootStyle.commonText,
+    marginVertical: 5,
   },
 });
