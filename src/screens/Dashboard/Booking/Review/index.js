@@ -112,27 +112,29 @@ const Review = ({navigation, route}) => {
         EndTimeOffset: endTime,
         TreatmentID: get(totalGuests, '[0].services.ID'),
         RoomID: get(totalGuests, '[0].rooms'),
+        IsDurationOverridden: true,
       },
     ];
 
-    // if (addons && addons.length) {
-    //   addons.forEach((e) => {
-    //     let endAddonTime = moment(endTime)
-    //       .add(e.TotalDuration || 10, 'minutes')
-    //       .utcOffset(timezone)
-    //       .format('YYYY-MM-DDTHH:mm:ssZ');
-    //
-    //     items.push({
-    //       EmployeeID: e.employees,
-    //       StartTimeOffset: endTime,
-    //       EndTimeOffset: endAddonTime,
-    //       TreatmentID: e.ID,
-    //       RoomID: e.rooms,
-    //     });
-    //
-    //     endTime = endAddonTime;
-    //   });
-    // }
+    if (addons && addons.length) {
+      addons.forEach((e) => {
+        // let endAddonTime = moment(endTime)
+        //   .add(e.TotalDuration || 10, 'minutes')
+        //   .utcOffset(timezone)
+        //   .format('YYYY-MM-DDTHH:mm:ssZ');
+        //
+        // items.push({
+        //   EmployeeID: e.employees,
+        //   StartTimeOffset: endTime,
+        //   EndTimeOffset: endAddonTime,
+        //   TreatmentID: e.ID,
+        //   RoomID: e.rooms,
+        // });
+        //
+        // endTime = endAddonTime;
+        extraNotes = `${extraNotes} AddOn: ${e.ServiceName}`;
+      });
+    }
 
     if (
       totalGuests[0].extension &&
@@ -148,6 +150,7 @@ const Review = ({navigation, route}) => {
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         TreatmentID: extensionAddon.ID,
         RoomID: get(totalGuests[0].extension, 'rooms'),
+        IsDurationOverridden: true,
       });
     }
 
