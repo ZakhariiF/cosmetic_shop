@@ -64,7 +64,7 @@ const ApptDetails = ({route, navigation}) => {
 
   useEffect(() => {
     const results = get(locationAddons, 'Results', []);
-    if (services.length > 1 && results.length) {
+    if (services.length > 0 && results.length) {
       const tempServiceAddons = [];
       let tempAddonPrice = 0;
       services.forEach((s) => {
@@ -131,8 +131,6 @@ const ApptDetails = ({route, navigation}) => {
   const hasExtension = services
     .map((service) => checkExtension(item, service))
     .filter((e) => !!e);
-
-  const addons = get(item, 'appointment.AddOnItems', []);
 
   return (
     <View style={rootStyle.container}>
@@ -201,20 +199,6 @@ const ApptDetails = ({route, navigation}) => {
               </View>
             ))}
           </View>
-
-          {addons.length ? (
-            <View style={styles.boxContainer}>
-              <Text style={styles.headerText}>Add-Ons</Text>
-              {addons.map((a, i) => (
-                <Text style={styles.titleText}>
-                  {a.Name}{' '}
-                  <Text style={styles.price}>
-                    (${get(a, 'TagPrice.Amount')})
-                  </Text>
-                </Text>
-              ))}
-            </View>
-          ) : null}
 
           {serviceAddons.length > 0 ? (
             <View style={styles.boxContainer}>
@@ -299,12 +283,6 @@ const ApptDetails = ({route, navigation}) => {
                   : 0)}
             </Text>
           </View>
-
-          {past && (
-            <Pressable style={{alignSelf: 'flex-end', marginVertical: 5}}>
-              <Image source={Images.edit} />
-            </Pressable>
-          )}
 
           {past ? (
             <Button

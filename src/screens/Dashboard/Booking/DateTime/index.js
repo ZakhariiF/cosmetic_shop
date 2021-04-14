@@ -430,10 +430,14 @@ const DateTime = ({navigation}) => {
               style={{marginTop: 10, marginBottom: '20%'}}
               data={
                 selectedLocation.block730
-                  ? multiuserSlots.filter((slot) => {
-                      return moment(slot.startDateTime).utcOffset(slot.timezone).format('h:mm a') !== '7:30 am';
+                  ? multiuserSlots.filter((slot) => moment(slot.startDateTime).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD')).filter((slot) => {
+                      return (
+                        moment(slot.startDateTime)
+                          .utcOffset(slot.timezone)
+                          .format('h:mm a') !== '7:30 am'
+                      );
                     })
-                  : multiuserSlots
+                  : multiuserSlots.filter((slot) => moment(slot.startDateTime).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD'))
               }
               renderItem={renderTime}
               keyExtractor={(_, index) => index.toString()}

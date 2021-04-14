@@ -135,34 +135,37 @@ export const createAppointment = (obj, addons, locationId, promoInfo) => async (
         });
       });
 
-      const addonData = await Promise.all(addonRequests);
+      if (addonRequests.length) {
+        const addonData = await Promise.all(addonRequests);
 
-      addonData.forEach((addon) => {
-        const addonItems = get(addon, 'Appointment.AddOnItems', []);
-        addonItems.forEach((a) => {
-          const addonIds = get(appointment, 'AddOnItems', []).map(
-            (i) => i.ItemID,
-          );
-          if (!addonIds.includes(a.ItemID)) {
-            appointment.AddOnItems.push(a);
-          }
+        addonData.forEach((addon) => {
+          const addonItems = get(addon, 'Appointment.AddOnItems', []);
+          addonItems.forEach((a) => {
+            const addonIds = get(appointment, 'AddOnItems', []).map(
+              (i) => i.ItemID,
+            );
+            if (!addonIds.includes(a.ItemID)) {
+              appointment.AddOnItems.push(a);
+            }
+          });
         });
-      });
-    }
-
-    if (appointment.OrderID && promoInfo.ID) {
-      const res2 = await API.applyPromoCodeToMultiple({
-        orderId: appointment.OrderID,
-        specialIds: [promoInfo.ID],
-      });
-
-      if (!res2.IsSuccess) {
-        AlertHelper.showError(get(res2, 'ErrorMessage', 'Server Error'));
-        return dispatch(bookingActions.guestBookingError());
       }
     }
 
     if (data.IsSuccess) {
+      if (appointment.OrderID && promoInfo && promoInfo.ID) {
+        const res2 = await API.applyPromoCodeToOrder({
+          orderId: appointment.OrderID,
+          specialIds: [promoInfo.ID],
+          locationId,
+        });
+
+        if (!res2.IsSuccess) {
+          AlertHelper.showError(get(res2, 'ErrorMessage', 'Server Error'));
+          return dispatch(bookingActions.guestBookingError());
+        }
+      }
+
       if (promoInfo && promoInfo.promoCode) {
         await API.updatePromoCode(promoInfo.promoCode);
       }
@@ -178,10 +181,11 @@ export const createAppointment = (obj, addons, locationId, promoInfo) => async (
       return dispatch(bookingActions.bookingError());
     }
   } catch (error) {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       dispatch(bookingActions.bookingError());
       return dispatch(logoutSuccess());
     } else {
+      console.log('Error:', error);
       AlertHelper.showError(get(error.response, 'data.error', 'Server Error'));
       return dispatch(bookingActions.bookingError());
     }
@@ -202,8 +206,6 @@ export const createGuestAppointment = (obj, locationId, promoInfo, totalGuests) 
         s[`apt_${curApt}`] = cur;
         return s;
       }, {});
-
-      console.log('Appoints Per Index:', aptsPerIndex);
 
       const addonRequests = totalGuests.reduce((s, g, idx) => {
         const addons = get(g, 'addons');
@@ -240,6 +242,9 @@ export const createGuestAppointment = (obj, locationId, promoInfo, totalGuests) 
         }, {});
 
         appointments = appointments.map((a) => {
+          if (!addonItemsPerApptID[a.AppointmentID]) {
+            return a;
+          }
           return {
             ...a,
             AddOnItems: addonItemsPerApptID[a.AppointmentID],
@@ -248,9 +253,10 @@ export const createGuestAppointment = (obj, locationId, promoInfo, totalGuests) 
       }
 
       if (promoInfo && promoInfo.ID) {
-        const res2 = await API.applyPromoCodeToMultiple({
+        const res2 = await API.applyPromoCodeToOrder({
           orderId: data.OrderID,
           specialIds: [promoInfo.ID],
+          locationId,
         });
 
         if (!res2.IsSuccess) {

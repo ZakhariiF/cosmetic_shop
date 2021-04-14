@@ -62,7 +62,7 @@ static void InitializeBraze(UIApplication *application, NSDictionary *launchOpti
     center.delegate = application;
     UNAuthorizationOptions options = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
     if (@available(iOS 12.0, *)) {
-      options = options | UNAuthorizationOptionProvisional;
+      options = options;
     }
     [center requestAuthorizationWithOptions:(options)
                           completionHandler:^(BOOL granted, NSError *_Nullable error) {

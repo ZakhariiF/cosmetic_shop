@@ -190,7 +190,7 @@ const Addons = ({navigation}) => {
                 {...e}
                 totalGuests={totalGuests}
                 onAddon={addonPress}
-                active={(totalGuests[activeTab].addons || []).find(
+                active={(totalGuests[activeTab]?.addons || []).find(
                   (a) => a.ServiceID === e.item.ServiceID,
                 )}
                 onInfoPress={(itemz) => {

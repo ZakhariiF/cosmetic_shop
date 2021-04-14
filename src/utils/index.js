@@ -408,19 +408,6 @@ export const getAddons = (service, appointment, addons) => {
     });
   }
 
-  const notes = get(currentAppointment, 'Notes', '');
-
-  if (notes && notes !== '') {
-    addons.forEach((a, i) => {
-      if (
-        notes.includes(`AddOn: ${a.ServiceName}`) &&
-        !addOnsByService.map((as) => as.ServiceID).includes(a.ServiceID)
-      ) {
-        addOnsByService.push(a);
-      }
-    });
-  }
-
   return addOnsByService;
 };
 

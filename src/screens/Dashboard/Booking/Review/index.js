@@ -103,7 +103,6 @@ const Review = ({navigation, route}) => {
           .utcOffset(timezone)
           .format('YYYY-MM-DDTHH:mm:ssZ');
       }
-      extraNotes = `${extraNotes} AddOn: ${a.ServiceName}.`;
     });
 
     const items = [
@@ -172,7 +171,6 @@ const Review = ({navigation, route}) => {
       },
       ResourceTypeID: 1,
       LocationID: get(selectedLocation, 'bookerLocationId', ''),
-      // LocationID:'1639',
       Notes: extraNotes,
     };
 

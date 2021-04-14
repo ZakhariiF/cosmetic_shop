@@ -123,7 +123,7 @@ export const promoCode = (locationId, code) =>
     })
     .then((response) => response.data);
 
-export const applyPromoCodeToMultiple = ({orderId, specialIds}) =>
+export const applyPromoCodeToOrder = ({orderId, specialIds, locationId}) =>
   client
     .post('/booker/AddSpecialToOrder', {
       method: 'POST',
@@ -133,6 +133,7 @@ export const applyPromoCodeToMultiple = ({orderId, specialIds}) =>
       data: {
         ID: orderId,
         SpecialIDs: specialIds,
+        LocationID: locationId,
       },
     })
     .then((response) => response.data);
