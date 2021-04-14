@@ -1,6 +1,6 @@
 import {client} from 'services';
 
-export const getAppts = (userId, pageSize=10, fromStartDate=null) =>
+export const getAppts = (userId, pageSize = 10, fromStartDate = null) =>
   client
     .post('/booker/GetCustomerAppointments', {
       method: 'GET',
@@ -16,27 +16,29 @@ export const getAppts = (userId, pageSize=10, fromStartDate=null) =>
     })
     .then((response) => response.data);
 
-export const cancelAppt = (ID) =>
+export const cancelAppt = (ID, type = 1) =>
   client
     .post('/booker/CancelAppointment', {
       method: 'PUT',
       urlParams: {},
       data: {
         ID,
+        AppointmentCancellationType: type,
       },
     })
     .then((response) => response.data);
 
-export const cancelItinerary = (ID, LocationID) =>
+export const cancelItinerary = (ID, LocationID, type) =>
   client
     .post('/booker/CancelItinerary', {
       method: 'POST',
       urlParams: {
-        itineraryId: ID
+        itineraryId: ID,
       },
       data: {
         ID,
-        LocationID
+        LocationID,
+        AppointmentCancellationType: type,
       },
     })
     .then((response) => response.data);

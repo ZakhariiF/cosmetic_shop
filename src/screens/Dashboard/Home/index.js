@@ -49,6 +49,7 @@ const Home = ({navigation}) => {
   const {data, error, loading} = useQuery(LOCATION_QUERY);
 
   const [deleteItem, setDeleteItem] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const globalConfig = useSelector((state) => state.home.config);
 
@@ -90,10 +91,17 @@ const Home = ({navigation}) => {
     dispatch(loginSuccess(user));
   };
 
-  const getCustomerDetails = () => dispatch(getCustomerInfo(get(userInfo, 'bookerID')));
+  const getCustomerDetails = () =>
+    dispatch(getCustomerInfo(get(userInfo, 'bookerID')));
 
   const getAppts = () =>
-    dispatch(getAppointments(get(userInfo, 'bookerID'), 5, moment().format('YYYY-MM-DD')));
+    dispatch(
+      getAppointments(
+        get(userInfo, 'bookerID'),
+        5,
+        moment().format('YYYY-MM-DD'),
+      ),
+    );
 
   const getHomeData = async () => {
     try {
@@ -118,32 +126,47 @@ const Home = ({navigation}) => {
   };
 
   const onCancel = (item, location) => {
+    let type = 1;
+    if (
+      moment(get(item, 'appointment.StartDateTimeOffset')).diff(
+        moment(),
+        'hours',
+        true,
+      ) < 2
+    ) {
+      type = 2;
+    }
     setDeleteItem({
       item,
       location,
+      type,
     });
+    setShowConfirm(true);
   };
 
   const handleCancel = () => {
     if (!deleteItem) {
       return;
     }
-    const {item, location} = deleteItem;
+    const {item, location, type} = deleteItem;
     if (item.groupID) {
-      dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then(
+      dispatch(
+        cancelItinerary(item.groupID, location.bookerLocationId, type),
+      ).then((response) => {
+        if (response.type === 'CANCEL_APPT_SUCCESS') {
+          getAppts();
+        }
+      });
+    } else {
+      dispatch(cancelAppointment(item.appointment.ID, type)).then(
         (response) => {
           if (response.type === 'CANCEL_APPT_SUCCESS') {
             getAppts();
           }
         },
       );
-    } else {
-      dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
-        if (response.type === 'CANCEL_APPT_SUCCESS') {
-          getAppts();
-        }
-      });
     }
+    setShowConfirm(false);
     setDeleteItem(null);
   };
 
@@ -181,33 +204,20 @@ const Home = ({navigation}) => {
   return (
     <View style={rootStyle.container}>
       <Authheader isCall />
-      <Dialog.Container visible={!!deleteItem}>
+      <Dialog.Container visible={showConfirm}>
         <Dialog.Title>Cancel Appointment</Dialog.Title>
         <Dialog.Description>
-          Are you sure you want to cancel?
+          {get(deleteItem, 'type', 1) === 2
+            ? "You're canceling within 2 hours of your appointment, so we need to charge our no show fee."
+            : 'Are you sure you want to cancel?'}
         </Dialog.Description>
 
         <Dialog.Button
           color="black"
-          style={
-            {
-              // backgroundColor: Colors.dimGray,
-            }
-          }
           label="No"
-          onPress={() => setDeleteItem(null)}
+          onPress={() => setShowConfirm(false)}
         />
-        <Dialog.Button
-          color="black"
-          style={
-            {
-              // backgroundColor: Colors.dimGray,
-            }
-          }
-          label="Yes"
-          onPress={handleCancel}
-        />
-        {/* <Dialog.Button label="" onPress={handleDelete} /> */}
+        <Dialog.Button color="black" label="Yes" onPress={handleCancel} />
       </Dialog.Container>
       <ScrollView
         refreshControl={
@@ -247,7 +257,7 @@ const Home = ({navigation}) => {
             if (item.marketingStyles) {
               let action = get(
                 item,
-                'marketingStyles.actionsCollection.items[0]'
+                'marketingStyles.actionsCollection.items[0]',
               );
               return (
                 <StyleSwiper

@@ -57,10 +57,10 @@ export const getAppointments = (
   }
 };
 
-export const cancelAppointment = (id) => async (dispatch) => {
+export const cancelAppointment = (id, type) => async (dispatch) => {
   dispatch(homeActions.cancelApptRequest());
   try {
-    const data = await API.cancelAppt(id);
+    const data = await API.cancelAppt(id, type);
     if (data.IsSuccess) {
       return dispatch(homeActions.cancelApptSuccess(data.Appointment));
     } else {
@@ -78,10 +78,10 @@ export const cancelAppointment = (id) => async (dispatch) => {
   }
 };
 
-export const cancelItinerary = (id, locationId) => async (dispatch) => {
+export const cancelItinerary = (id, locationId, type) => async (dispatch) => {
   dispatch(homeActions.cancelApptRequest());
   try {
-    const data = await API.cancelItinerary(id, locationId);
+    const data = await API.cancelItinerary(id, locationId, type);
     if (data.IsSuccess) {
       return dispatch(homeActions.cancelApptSuccess({Group: id}));
     } else {
