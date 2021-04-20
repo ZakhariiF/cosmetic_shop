@@ -46,7 +46,7 @@ const Addcc = () => {
           ID: type,
         },
         Number: get(cardInfo, 'values.number'),
-        NameOnCard: 'Test Customer',
+        NameOnCard: get(cardInfo, 'values.name'),
         ExpirationDateOffset: `20${year}-${month}-01T00:00:00+00:00`,
         SecurityCode: get(cardInfo, 'values.cvc'),
       },
@@ -65,15 +65,18 @@ const Addcc = () => {
           <View style={styles.container}>
             <CreditCardInput
               labels={{
+                name: 'Name On Card',
                 number: 'Card Number',
                 expiry: 'Expiration Date',
                 cvc: 'CVV',
               }}
               placeholders={{
+                name: 'Name On Card',
                 number: '1234 5678 1234 5678',
                 expiry: 'MM/YY',
                 cvc: 'CVV / CVC',
               }}
+              requiresName
               cardScale={1.0}
               labelStyle={styles.cardLabelStyle}
               // expireContainer={{width: '50%'}}
