@@ -61,7 +61,12 @@ const Login = ({navigation}) => {
       dispatch(_onlogin(sessionToken, email, password));
     } catch (e) {
       console.log('Error:', e);
-      Alert.alert('Login Error', e.message);
+      Alert.alert(
+        'Login Error',
+        e.message === 'Authentication failed'
+          ? 'Email address and/or password do not match, please verify and try again.'
+          : e.message,
+      );
     }
 
     setLoading(false);
