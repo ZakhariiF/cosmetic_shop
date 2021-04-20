@@ -136,6 +136,8 @@ const Review = ({navigation, route}) => {
       });
     }
 
+    extraNotes = `${extraNotes} Created with 3.0 iphone app`;
+
     if (
       totalGuests[0].extension &&
       totalGuests[0].extension.name === 'Yes' &&
@@ -224,6 +226,8 @@ const Review = ({navigation, route}) => {
           .utcOffset(timezone)
           .format('YYYY-MM-DDTHH:mm:ssZ');
       }
+
+      extraNotes = `${extraNotes} Created with 3.0 iphone app`;
 
       const guestObj = {
         EmployeeID: totalGuests[i]?.employees,
