@@ -6,10 +6,14 @@ import Header from 'components/Header/Header';
 import Input from 'components/Input';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import MParticle from 'react-native-mparticle';
-import {signIn, EventEmitter} from '@okta/okta-react-native';
+import {
+  EventEmitter,
+  getAuthClient,
+  authenticate,
+} from '@okta/okta-react-native';
 
 import {isValidEmail} from 'utils';
-import {onlogin, _onlogin} from '../thunks';
+import {_onlogin} from '../thunks';
 import {useDispatch, useSelector} from 'react-redux';
 
 import Indicator from 'components/Indicator';
@@ -31,7 +35,7 @@ const Login = ({navigation}) => {
     });
     return () => {
       onError.remove();
-    }
+    };
   }, []);
 
   const onLogin = async () => {
@@ -39,22 +43,28 @@ const Login = ({navigation}) => {
       'Source Page': 'Login',
     });
     setLoading(true);
-    signIn({username: email, password})
-      .then((token) => {
-        console.log('Token:', token);
-        dispatch(_onlogin(token, email, password));
-        setLoading(false);
-      })
-      .catch((e) => {
-        MParticle.logEvent('User fails to Login', MParticle.EventType.Other, {
-          'Source Page': 'Login',
-          'Error Details': JSON.stringify(e),
-          Email: email,
-        });
-        console.log(e);
-        setLoading(false);
-        Alert.alert('Login Error', e.detail.message);
+    try {
+      const transaction = await getAuthClient().signIn({
+        username: email,
+        password,
       });
+
+      const {status, sessionToken} = transaction;
+      if (status === 'PASSWORD_EXPIRED') {
+        throw new Error('Please try on browser. Sorry for that.');
+      } else if (status !== 'SUCCESS') {
+        throw new Error(
+          'Transaction status other than "SUCCESS" has been returned. Check transaction.status and handle accordingly.',
+        );
+      }
+      await authenticate({sessionToken});
+      dispatch(_onlogin(sessionToken, email, password));
+    } catch (e) {
+      console.log('Error:', e);
+      Alert.alert('Login Error', e.message);
+    }
+
+    setLoading(false);
   };
 
   return (

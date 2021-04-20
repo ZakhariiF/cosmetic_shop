@@ -20,7 +20,7 @@ const {height} = Dimensions.get('window');
 
 const ServiceInfoModal = ({visible, onRequestClose, item}) => {
   const {service, content} = item;
-  console.log('Content:', content);
+  console.log('Content:', content, service);
 
   return (
     <Modal
@@ -57,7 +57,9 @@ const ServiceInfoModal = ({visible, onRequestClose, item}) => {
 
             <View style={styles.priceContainer}>
               <Text style={rootStyle.commonText}>Price</Text>
-              <Text style={styles.min}>${get(content, 'price', 0)}</Text>
+              <Text style={styles.min}>
+                ${get(service, 'Price.Amount') || get(content, 'price', 0)}
+              </Text>
             </View>
             <View style={[styles.priceContainer, {marginTop: 5}]}>
               <Text style={rootStyle.commonText}>Service Time</Text>
