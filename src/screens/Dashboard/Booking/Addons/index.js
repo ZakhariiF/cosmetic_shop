@@ -25,10 +25,7 @@ import Extensions from '../Extensions';
 import {get} from 'lodash';
 import Indicator from 'components/Indicator';
 import ServiceInfoModal from 'components/ServiceInfoModal';
-import {
-  productInformationCollection,
-  productionInformationByReference,
-} from 'constant/query';
+import {productionInformationByReference} from 'constant/query';
 import {useQuery} from '@apollo/client';
 
 const Addons = ({navigation}) => {
@@ -53,6 +50,9 @@ const Addons = ({navigation}) => {
 
   useEffect(() => {
     calculateAddon();
+    if (!totalGuests.find((s) => s.services.Name !== 'Dry Styling')) {
+      dispatch(setExtensionType(true));
+    }
   }, [totalGuests]);
 
   const getData = useCallback(() => {
@@ -182,25 +182,31 @@ const Addons = ({navigation}) => {
               <GuestTab routeName="addons" />
             </View>
           ) : null}
-          <FlatList
-            style={{marginTop: 20, marginBottom: '20%'}}
-            data={data}
-            renderItem={(e) => (
-              <AddonItem
-                {...e}
-                totalGuests={totalGuests}
-                onAddon={addonPress}
-                active={(totalGuests[activeTab]?.addons || []).find(
-                  (a) => a.ServiceID === e.item.ServiceID,
-                )}
-                onInfoPress={(itemz) => {
-                  setVisible(true);
-                  setinfoItem(itemz);
-                }}
-              />
-            )}
-            keyExtractor={(_, index) => index.toString()}
-          />
+          {get(totalGuests[activeTab], 'services.Name') === 'Dry Styling' ? (
+            <Text style={styles.doesnotOfferText}>
+              Dry Styling does not offer any add-ons.
+            </Text>
+          ) : (
+            <FlatList
+              style={{marginTop: 20, marginBottom: '20%'}}
+              data={data}
+              renderItem={(e) => (
+                <AddonItem
+                  {...e}
+                  totalGuests={totalGuests}
+                  onAddon={addonPress}
+                  active={(totalGuests[activeTab]?.addons || []).find(
+                    (a) => a.ServiceID === e.item.ServiceID,
+                  )}
+                  onInfoPress={(itemz) => {
+                    setVisible(true);
+                    setinfoItem(itemz);
+                  }}
+                />
+              )}
+              keyExtractor={(_, index) => index.toString()}
+            />
+          )}
         </View>
       )}
 
@@ -351,5 +357,11 @@ const styles = StyleSheet.create({
   skip: {
     ...rootStyle.commonText,
     fontSize: 18,
+  },
+  doesnotOfferText: {
+    ...rootStyle.commonText,
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 30,
   },
 });
