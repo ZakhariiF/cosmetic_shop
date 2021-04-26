@@ -82,7 +82,9 @@ const BookingForm = ({navigation}) => {
     fields.forEach((field) => {
       if (field['Title'] === 'Preferred Shop') {
         field['Choices'].forEach((e) => {
-          locArr.push({label: e.Label, value: e.Label});
+          if (e.Label !== "") {
+            locArr.push({label: e.Label, value: e.Label});
+          }
         });
       } else if (field['Title'] === 'Time') {
         field['Choices'].forEach((e) => {
@@ -94,7 +96,9 @@ const BookingForm = ({navigation}) => {
         });
       } else if (field['Title'] === 'Occasion') {
         field['Choices'].forEach((e) => {
-          occaArr.push({label: e.Label, value: e.Label});
+          if (e.Label !== "") {
+            occaArr.push({label: e.Label, value: e.Label});
+          }
         });
       }
     });
@@ -227,7 +231,10 @@ const BookingForm = ({navigation}) => {
           <Text style={styles.labelName}>Preferred Shop</Text>
           <NativePicker
             selectedValue={selectedLoc}
-            placeholder={'Preferred Shop'}
+            placeholder={{
+              label: 'Select Preferred Shop',
+              value: '',
+            }}
             items={locArr}
             onValueChange={(i) => setState((s) => ({...s, selectedLoc: i}))}
           />
@@ -235,7 +242,10 @@ const BookingForm = ({navigation}) => {
           <Text style={styles.labelName}>Preferred Time</Text>
           <NativePicker
             selectedValue={selectedTime}
-            placeholder={'Preferred Time'}
+            placeholder={{
+              label: 'Select Preferred Time',
+              value: '',
+            }}
             items={preferedTime}
             onValueChange={(i) => setState((s) => ({...s, selectedTime: i}))}
           />
@@ -243,7 +253,10 @@ const BookingForm = ({navigation}) => {
           <Text style={styles.labelName}>Party Size</Text>
           <NativePicker
             selectedValue={partySize}
-            placeholder={'Party Size'}
+            placeholder={{
+              label: 'Select Party Size',
+              value: '',
+            }}
             items={partySizeArr}
             onValueChange={(i) => setState((s) => ({...s, partySize: i}))}
           />
@@ -251,7 +264,10 @@ const BookingForm = ({navigation}) => {
           <Text style={styles.labelName}>OCCASION</Text>
           <NativePicker
             selectedValue={occasion}
-            placeholder={'Occasion'}
+            placeholder={{
+              label: 'Select Occasion',
+              value: '',
+            }}
             items={occasionArr}
             onValueChange={(i) => setState((s) => ({...s, occasion: i}))}
           />
