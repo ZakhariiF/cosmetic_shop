@@ -62,7 +62,9 @@ const Events = () => {
     fields.forEach((field) => {
       if (field.Title === 'Preferred Shop') {
         field.Choices.forEach((e) => {
-          locArr.push({label: e.Label, value: e.Label});
+          if (e.Label !== "") {
+            locArr.push({label: e.Label, value: e.Label});
+          }
         });
       } else if (field.Title === 'Time') {
         field.Choices.forEach((e) => {
@@ -74,7 +76,9 @@ const Events = () => {
         });
       } else if (field.Title === 'Occasion') {
         field.Choices.forEach((e) => {
-          occaArr.push({label: e.Label, value: e.Label});
+          if (e.Label !== "") {
+            occaArr.push({label: e.Label, value: e.Label});
+          }
         });
       }
     });
