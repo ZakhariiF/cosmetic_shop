@@ -51,7 +51,9 @@ const Login = ({navigation}) => {
 
       const {status, sessionToken} = transaction;
       if (status === 'PASSWORD_EXPIRED') {
-        throw new Error('Please try on browser. Sorry for that.');
+        throw new Error(
+          'Temporary passwords are only available to be used on www.drybarshops.com.',
+        );
       } else if (status !== 'SUCCESS') {
         throw new Error(
           'Transaction status other than "SUCCESS" has been returned. Check transaction.status and handle accordingly.',
