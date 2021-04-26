@@ -100,6 +100,17 @@ const ApptDetails = ({route, navigation}) => {
     });
   };
 
+  let deleteType = 1;
+  if (
+    moment(get(item, 'appointment.StartDateTimeOffset')).diff(
+      moment(),
+      'hours',
+      true,
+    ) < 2
+  ) {
+    deleteType = 2;
+  }
+
   const onCancel = () => {
     setVisible(true);
   };
@@ -107,7 +118,16 @@ const ApptDetails = ({route, navigation}) => {
   const handleCancel = () => {
     setVisible(false);
     if (item.groupID) {
-      dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then(
+      dispatch(
+        cancelItinerary(item.groupID, location.bookerLocationId, deleteType),
+      ).then((response) => {
+        if (response.type === 'CANCEL_APPT_SUCCESS') {
+          navigation.goBack();
+          getAppts();
+        }
+      });
+    } else {
+      dispatch(cancelAppointment(item.appointment.ID, deleteType)).then(
         (response) => {
           if (response.type === 'CANCEL_APPT_SUCCESS') {
             navigation.goBack();
@@ -115,13 +135,6 @@ const ApptDetails = ({route, navigation}) => {
           }
         },
       );
-    } else {
-      dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
-        if (response.type === 'CANCEL_APPT_SUCCESS') {
-          navigation.goBack();
-          getAppts();
-        }
-      });
     }
   };
 
@@ -140,7 +153,9 @@ const ApptDetails = ({route, navigation}) => {
           <Dialog.Container visible={visible}>
             <Dialog.Title>Cancel Appointment</Dialog.Title>
             <Dialog.Description>
-              Are you sure you want to cancel?
+              {deleteType === 2
+                ? "You're canceling within 2 hours of your appointment, so we need to charge our no show fee."
+                : 'Are you sure you want to cancel?'}
             </Dialog.Description>
 
             <Dialog.Button
@@ -173,10 +188,7 @@ const ApptDetails = ({route, navigation}) => {
             style={styles.locContainer}>
             <View style={styles.flexContainer}>
               <Text style={styles.headerText}>Location</Text>
-              {!past && (
-                <Image source={Images.loc} />
-
-              )}
+              {!past && <Image source={Images.loc} />}
             </View>
             <Text style={styles.titleText}>{get(location, 'title')}</Text>
           </TouchableOpacity>

@@ -5,6 +5,7 @@ import rootStyle from 'rootStyle';
 import AppointmentItem from './AppointmentItem';
 import styles from './styles';
 import {useDispatch, useSelector} from 'react-redux';
+import moment from 'moment';
 import {useQuery} from '@apollo/client';
 import Indicator from 'components/Indicator';
 import {cancelAppointment, getAppointments, cancelItinerary} from '../thunks';
@@ -30,6 +31,7 @@ const MyAppts = ({navigation}) => {
   const {data: locationData, error, loading} = useQuery(LOCATION_QUERY);
 
   const [cancelItem, setCancelItem] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const customerId = get(userInfo, 'bookerID');
 
@@ -61,31 +63,47 @@ const MyAppts = ({navigation}) => {
   };
 
   const onCancel = (item, location) => {
+    let type = 1;
+
+    if (
+      moment(get(item, 'appointment.StartDateTimeOffset')).diff(
+        moment(),
+        'hours',
+        true,
+      ) < 2
+    ) {
+      type = 2;
+    }
     setCancelItem({
       item,
       location,
+      type,
     });
+    setShowConfirm(true);
   };
 
   const handleCancel = () => {
-    const {item, location} = cancelItem;
+    const {item, location, type} = cancelItem;
     if (item) {
       if (!item.groupID) {
-        dispatch(cancelAppointment(item.appointment.ID)).then((response) => {
-          if (response.type === 'CANCEL_APPT_SUCCESS') {
-            getAppts();
-          }
-        });
-      } else {
-        dispatch(cancelItinerary(item.groupID, location.bookerLocationId)).then(
+        dispatch(cancelAppointment(item.appointment.ID, type)).then(
           (response) => {
             if (response.type === 'CANCEL_APPT_SUCCESS') {
               getAppts();
             }
           },
         );
+      } else {
+        dispatch(
+          cancelItinerary(item.groupID, location.bookerLocationId, type),
+        ).then((response) => {
+          if (response.type === 'CANCEL_APPT_SUCCESS') {
+            getAppts();
+          }
+        });
       }
     }
+    setShowConfirm(false);
     setCancelItem(null);
   };
 
@@ -125,7 +143,7 @@ const MyAppts = ({navigation}) => {
           {pastAppt.length ? (
             <>
               <Text style={styles.upcomingText}>
-                PAST APPOINTMENTS {"\n"}(showing only past 3 months)
+                PAST APPOINTMENTS {'\n'}(showing only past 3 months)
               </Text>
               <FlatList
                 data={pastAppt.sort(
@@ -157,36 +175,22 @@ const MyAppts = ({navigation}) => {
                 name={'Book an Appointment'}
               />
             </View>
-           ) : null}
+          ) : null}
 
-          <Dialog.Container visible={cancelItem}>
+          <Dialog.Container visible={showConfirm}>
             <Dialog.Title>Cancel Appointment</Dialog.Title>
             <Dialog.Description>
-              Are you sure you want to cancel?
+              {get(cancelItem, 'type', 1) === 2
+                ? "You're canceling within 2 hours of your appointment, so we need to charge our no show fee."
+                : 'Are you sure you want to cancel?'}
             </Dialog.Description>
 
             <Dialog.Button
               color="black"
-              style={
-                {
-                  // backgroundColor: Colors.dimGray,
-                }
-              }
               label="No"
-              onPress={() => setCancelItem(null)}
+              onPress={() => setShowConfirm(false)}
             />
-            <Dialog.Button
-              color="black"
-              style={
-                {
-                  // backgroundColor: Colors.dimGray,
-                }
-              }
-              label="Yes"
-              onPress={handleCancel}
-            />
-
-            {/* <Dialog.Button label="" onPress={handleDelete} /> */}
+            <Dialog.Button color="black" label="Yes" onPress={handleCancel} />
           </Dialog.Container>
         </ScrollView>
       </View>
