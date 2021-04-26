@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Formik, Field} from 'formik';
 import * as Yup from 'yup';
 import {useQuery} from '@apollo/client';
@@ -26,6 +26,8 @@ import {submitContact} from 'services/Wufoo';
 import {contactUsQuery} from 'constant/query';
 import Indicator from 'components/Indicator';
 import {call} from 'utils';
+import {getFieldValues} from 'services';
+import NativePicker from 'components/NativePicker';
 
 const contactUsSchema = Yup.object().shape({
   name: Yup.string()
@@ -40,6 +42,7 @@ const contactUsSchema = Yup.object().shape({
       /\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g,
       'Error: phone number is invalid',
     ),
+  preferredShop: Yup.string().required('Error: preferred shop is required'),
   message: Yup.string().nullable().required('Error: message is required'),
 });
 
@@ -49,6 +52,58 @@ const Contactus = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const {data, error, loading} = useQuery(CONTACT_US_QUERY);
+
+  const [preferredShopChoices, setPreferredShopChoices] = useState([]);
+  // const [preferredDateChoices, setPreferredDateChoices] = useState([]);
+  // const [preferredStartTimeChoices, setPreferredStartTimeChoices] = useState(
+  //   [],
+  // );
+  // const [partySizeChoices, setPpartySizeChoices] = useState([]);
+  // const [occasions, setOccasions] = useState([]);
+
+  const getAllFields = async () => {
+    const data = await getFieldValues();
+    const fields = data?.Fields || [];
+
+    let locArr = [];
+    // occaArr = [],
+    // timeArr = [],
+    // sizeArr = [];
+
+    fields.forEach((field) => {
+      if (field.Title === 'Preferred Shop') {
+        field.Choices.forEach((e) => {
+          if (e.Label !== '') {
+            locArr.push({label: e.Label, value: e.Label});
+          }
+        });
+      }
+      // else if (field.Title === 'Time') {
+      //   field.Choices.forEach((e) => {
+      //     timeArr.push({label: e.Label, value: e.Label});
+      //   });
+      // } else if (field.Title === 'Party Size') {
+      //   field.Choices.forEach((e) => {
+      //     sizeArr.push({label: e.Label, value: e.Label});
+      //   });
+      // } else if (field.Title === 'Occasion') {
+      //   field.Choices.forEach((e) => {
+      //     if (e.Label !== '') {
+      //       occaArr.push({label: e.Label, value: e.Label});
+      //     }
+      //   });
+      // }
+    });
+
+    setPreferredShopChoices(locArr);
+    // setPreferredStartTimeChoices(timeArr);
+    // setPpartySizeChoices(sizeArr);
+    // setOccasions(occaArr);
+  };
+
+  useEffect(() => {
+    getAllFields();
+  }, []);
 
   const onSubmit = async (values) => {
     try {
@@ -134,6 +189,27 @@ const Contactus = () => {
                             name={'Phone Number'}
                             inputName={'phoneNumber'}
                             onChangeText={(e) => setFieldValue(field.name, e)}
+                          />
+                          {!!meta.error && meta.touched && (
+                            <Text style={styles.errorText}>{meta.error}</Text>
+                          )}
+                        </View>
+                      )}
+                    </Field>
+                    <Field name="preferredShop">
+                      {({field, meta, form: {setFieldValue}}) => (
+                        <View>
+                          <Text style={styles.label}>Preferred Shop</Text>
+                          <NativePicker
+                            selectedValue={field.value}
+                            onValueChange={(itemValue) =>
+                              setFieldValue('preferredShop', itemValue)
+                            }
+                            items={preferredShopChoices}
+                            placeholder={{
+                              label: 'Select Preferred Shop',
+                              value: '',
+                            }}
                           />
                           {!!meta.error && meta.touched && (
                             <Text style={styles.errorText}>{meta.error}</Text>

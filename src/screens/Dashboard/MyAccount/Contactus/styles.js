@@ -114,4 +114,10 @@ export default StyleSheet.create({
     fontWeight: '400',
     marginTop: 10,
   },
+  label: {
+    fontSize: 15,
+    color: Colors.light_gray,
+    marginTop: 25,
+    fontFamily: Fonts.AvenirNextRegular,
+  },
 });

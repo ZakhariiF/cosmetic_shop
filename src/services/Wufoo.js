@@ -7,6 +7,7 @@ export const submitContact = (formData) => {
   postData.append('Field3', formData.email);
   postData.append('Field4', formData.phoneNumber);
   postData.append('Field5', formData.message);
+  postData.append('Field7', formData.preferredShop);
   return fetch(
     `https://${appConfig.wufoo.subDomain}.wufoo.com/api/v3/forms/${appConfig.wufoo.contactFormId}/entries.json`,
     {
@@ -19,5 +20,6 @@ export const submitContact = (formData) => {
     },
   )
     .then((response) => response.json())
-    .then((data) => data);
+    .then((data) => data)
+    .catch((error) => console.log('Contact US form Error:', error));
 };
