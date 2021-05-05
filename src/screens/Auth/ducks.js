@@ -60,6 +60,7 @@ export const types = {
 
   // LOGOUT
 
+  HIDE_REACTIVATION_MODAL: 'HIDE_REACTIVATION_MODAL',
   LOGOUT_REQUEST: 'LOGOUT_REQUEST',
   LOGOUT_SUCCESS: 'LOGOUT_SUCCESS',
   LOGOUT_ERROR: 'LOGOUT_ERROR',
@@ -79,6 +80,7 @@ export const authIntialState = {
   favItem: '',
   isResend: false,
   loggedInCount: 0,
+  isShowReactivationModal: false,
 };
 
 // Reducer
@@ -221,6 +223,7 @@ const AuthReducer = (state = authIntialState, action) => {
       return {
         ...state,
         forgotLoading: false,
+        isShowReactivationModal: action.payload,
       };
 
     // SET_FAV_ITEM
@@ -229,6 +232,12 @@ const AuthReducer = (state = authIntialState, action) => {
       return {
         ...state,
         favItem: action.payload,
+      };
+
+    case types.HIDE_REACTIVATION_MODAL:
+      return {
+        ...state,
+        isShowReactivationModal: false,
       };
 
     // LOGOUT
@@ -386,8 +395,9 @@ export const authActions = {
     payload,
   }),
 
-  recoverPasswordError: () => ({
+  recoverPasswordError: (isShowReactivationModal) => ({
     type: types.RECOVER_PASSWORD_ERROR,
+    payload: isShowReactivationModal,
   }),
 
   //---- CHANGE PASSWORD ------
@@ -429,6 +439,10 @@ export const authActions = {
   // LOGOUT
   logoutRequest: () => ({
     type: types.LOGOUT_REQUEST,
+  }),
+
+  hideReactivationModal: () => ({
+    type: types.HIDE_REACTIVATION_MODAL,
   }),
 
   logoutSuccess: () => ({

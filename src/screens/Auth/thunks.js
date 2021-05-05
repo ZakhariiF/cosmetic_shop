@@ -160,24 +160,28 @@ export const forgotpassword = (email) => async (dispatch) => {
     }
   } catch (error) {
     let errorMessage = get(error, 'response.data.errorCauses[0].errorSummary');
-
     if (get(error, 'response.data.status') === 404) {
       // does not exist
       errorMessage =
         'We have received your password reset request. if your email matches our records we will send you a password reset link in just a second.';
     } else if (get(error, 'response.data.status') === 'PROVISIONED') {
       // not activated
-      errorMessage =
-        'Your account needs to be activated before resetting the password, please click here to get an activation email.';
+      errorMessage = null;
     } else {
       errorMessage =
         'Your account has been locked, please email customer service at buttercup@thedrybar.com';
     }
 
-    AlertHelper.showError(errorMessage || 'Server Error');
-    return dispatch(authActions.recoverPasswordError());
+    if (errorMessage) {
+      AlertHelper.showError(errorMessage);
+    }
+    return dispatch(authActions.recoverPasswordError(!errorMessage));
   }
 };
+
+export const hideReactivationModal = () => (dispatch) => {
+  return dispatch(authActions.hideReactivationModal())
+}
 
 export const logoutSuccess = () => async (dispatch) => {
   return dispatch(authActions.logoutSuccess());

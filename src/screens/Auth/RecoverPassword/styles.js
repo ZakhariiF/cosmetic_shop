@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {Colors, Fonts} from 'constant';
+import rootStyle from "rootStyle";
 
 export default StyleSheet.create({
   container: {
@@ -26,5 +27,12 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontWeight: '500',
     fontFamily: Fonts.AvenirNextRegular,
+  },
+  resendActivationModalText: {
+    ...rootStyle.commonText,
+  },
+  resendActivationModalTextLink: {
+    ...rootStyle.commonText,
+    color: Colors.link,
   },
 });
