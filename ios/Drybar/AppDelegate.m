@@ -40,7 +40,7 @@ static void InitializeMParticle(UIApplication *application) {
   MParticleOptions *options = [MParticleOptions optionsWithKey:@"dd175017c5a79d41a0ff9ae26d07d475"
                                                         secret:@"WPSLFwjHsMZYPHdfJVF9DynK4avgH-3Jdw0z94pAnvyGQabNBrk8yH0H9Tn2j2H4"];
 
-  options.environment = MPEnvironmentDevelopment;
+  options.environment = MPEnvironmentProduction;
   
   options.logLevel = MPILogLevelVerbose;
   

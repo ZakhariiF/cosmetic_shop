@@ -208,7 +208,7 @@ const Home = ({navigation}) => {
         <Dialog.Title>Cancel Appointment</Dialog.Title>
         <Dialog.Description>
           {get(deleteItem, 'type', 1) === 2
-            ? "You're canceling within 2 hours of your appointment, so we need to charge our no show fee."
+            ? 'You are canceling within 2 hours of your appointment, so we need to charge our no show fee, sorry.'
             : 'Are you sure you want to cancel?'}
         </Dialog.Description>
 
