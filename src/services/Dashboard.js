@@ -23,7 +23,9 @@ export const cancelAppt = (ID, type = 1) =>
       urlParams: {},
       data: {
         ID,
-        AppointmentCancellationType: type,
+        AppointmentCancellationType: {
+          ID: type,
+        },
       },
     })
     .then((response) => response.data);
