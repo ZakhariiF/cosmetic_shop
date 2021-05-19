@@ -48,12 +48,11 @@ const Notes = ({navigation, route}) => {
             style={styles.input}
             multiline
             onChangeText={(text) => setNotes(text)}
-            blurOnSubmit={true}
           />
 
           <Button
             name="Next"
-            containerStyle={{marginTop: 30}}
+            containerStyle={{marginTop: 30, marginBottom: '20%'}}
             onButtonPress={onNext}
           />
         </ScrollView>
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   input: {
-    height: '35%',
+    height: 150,
     borderWidth: 1,
     borderRadius: 4,
     borderColor: Colors.seprator,

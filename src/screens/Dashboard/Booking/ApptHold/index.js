@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, ScrollView, Dimensions} from 'react-native';
-import Header from 'components/Header/Header';
 import {Colors, Fonts, Images} from 'constant';
 import rootStyle from 'rootStyle';
 import CreditCardDisplay from 'react-native-credit-card-display';
