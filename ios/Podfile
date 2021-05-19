@@ -25,6 +25,8 @@ target 'Drybar' do
   pod 'OktaSdkBridgeReactNative', :path => '../node_modules/@okta/okta-react-native'
   pod 'react-native-add-calendar-event', :path => '../node_modules/react-native-add-calendar-event'
 
+  pod 'react-native-tracking-transparency', :path => '../node_modules/react-native-tracking-transparency'
+
   target 'DrybarTests' do
     inherit! :complete
     # Pods for testing

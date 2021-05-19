@@ -154,7 +154,7 @@ const ApptDetails = ({route, navigation}) => {
             <Dialog.Title>Cancel Appointment</Dialog.Title>
             <Dialog.Description>
               {deleteType === 2
-                ? 'You are canceling within 2 hours of your appointment, so we need to charge our no show fee, sorry.'
+                ? "Oh no Buttercup, it looks like you're canceling within 2 hours of your appointment. If you continue, you'll be charged a late cancelation fee. (Sorry!)"
                 : 'Are you sure you want to cancel?'}
             </Dialog.Description>
 

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, TextInput} from 'react-native';
+import {StyleSheet, View, Text, TextInput, ScrollView} from 'react-native';
 import Button from 'components/Button';
 
 import {Colors, Fonts} from 'constant';
@@ -11,42 +11,52 @@ import MParticle from 'react-native-mparticle';
 import BookingHeader from 'components/BookingHeader';
 
 const Notes = ({navigation, route}) => {
-  const [notes, setNotes] = useState();
+  const [notes, setNotes] = useState(null);
+
+  const onNext = () => {
+    MParticle.logEvent('Add Requests', MParticle.EventType.Other, {
+      'Source Page': 'Notes',
+      Request: notes || '',
+    });
+    navigation.navigate('ApptHold', {
+      Notes: notes,
+    });
+  };
+
   return (
     <View style={rootStyle.container}>
       <BookingTab />
       <View style={rootStyle.sizeBox} />
-      <BookingHeader title="HAVE ANY REQUESTS?" safeBackColor={Colors.bg} />
+      <BookingHeader
+        title="HAVE ANY REQUESTS?"
+        safeBackColor={Colors.bg}
+        isNext
+        onNext={onNext}
+      />
       <View style={rootStyle.innerContainer}>
-        <Text style={styles.heading}>
-          Is it your first time? Anything special we should know about? Would
-          you like to request a favorite stylist? While we can’t guarantee it,
-          we’ll do our very best to make it happen!
-        </Text>
+        <ScrollView>
+          <Text style={styles.heading}>
+            Is it your first time? Anything special we should know about? Would
+            you like to request a favorite stylist? While we can’t guarantee it,
+            we’ll do our very best to make it happen!
+          </Text>
 
-        <View style={styles.seprator} />
+          <View style={styles.seprator} />
 
-        <TextInput
-          placeholder="Your request here..."
-          style={styles.input}
-          multiline
-          onChangeText={(text) => setNotes(text)}
-          blurOnSubmit={true}
-        />
+          <TextInput
+            placeholder="Your request here..."
+            style={styles.input}
+            multiline
+            onChangeText={(text) => setNotes(text)}
+            blurOnSubmit={true}
+          />
 
-        <Button
-          name="Next"
-          containerStyle={{marginTop: 30}}
-          onButtonPress={() => {
-            MParticle.logEvent('Add Requests', MParticle.EventType.Other, {
-              'Source Page': 'Notes',
-              Request: notes,
-            });
-            navigation.navigate('ApptHold', {
-              Notes: notes,
-            });
-          }}
-        />
+          <Button
+            name="Next"
+            containerStyle={{marginTop: 30}}
+            onButtonPress={onNext}
+          />
+        </ScrollView>
       </View>
       <LocationModal />
     </View>

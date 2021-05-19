@@ -15,6 +15,7 @@
 #import "AppboyReactUtils.h"
 
 #import <UserNotifications/UNUserNotificationCenter.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -114,6 +115,15 @@ static void InitializeBraze(UIApplication *application, NSDictionary *launchOpti
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  
+  if (@available(iOS 14, *)) {
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+            // resolve([TrackingTransparency convertTrackingStatusToString:status]);
+        }];
+    } else {
+        // resolve(@"unavailable");
+    }
+  
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;

@@ -5,10 +5,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
+  Image
 } from 'react-native';
-import Header from 'components/Header/Header';
 import PromoInput from 'components/PromoInput';
+import Input from 'components/Input';
 import {Colors, Fonts, Images} from 'constant';
 import rootStyle from 'rootStyle';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -33,6 +33,9 @@ import {
 // import {cancelItinerary, cancelAppt} from 'services';
 import MParticle from 'react-native-mparticle';
 import BookingHeader from 'components/BookingHeader';
+import Dialog from 'react-native-dialog';
+import {updateUserInfo} from 'screens/Auth/thunks';
+import {types} from 'screens/Auth/ducks';
 
 const Review = ({navigation, route}) => {
   const [isChecked, setChecked] = useState(false);
@@ -50,6 +53,10 @@ const Review = ({navigation, route}) => {
   const [estimateTotal, setTotal] = useState(0);
   const [isAddon, setisAddOn] = useState(false);
   const [showCancel, setShowCancel] = useState(false);
+
+  const [showUserPhoneInputDialog, setShowUserPhoneInputDialog] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isUpdatedPhoneNumber, setIsUpdatedPhoneNumber] = useState(false);
 
   useEffect(() => {
     calculateTotal();
@@ -85,6 +92,10 @@ const Review = ({navigation, route}) => {
   };
 
   const bookAppt = () => {
+    if (!get(userInfo, 'primaryPhone')) {
+      return setShowUserPhoneInputDialog(true);
+    }
+
     const startTime = get(totalGuests, '[0].date.time.startDateTime', '');
     const timezone = get(totalGuests, '[0].date.time.timezone', '');
     let endTime = moment(startTime)
@@ -251,6 +262,9 @@ const Review = ({navigation, route}) => {
   };
 
   const bookApptGuest = () => {
+    if (!get(userInfo, 'primaryPhone')) {
+      return setShowUserPhoneInputDialog(true);
+    }
     let obj = {
       LocationID: get(selectedLocation, 'bookerLocationId', ''),
       GroupName: `${get(userInfo, 'firstname', '')}'s friends`,
@@ -273,6 +287,30 @@ const Review = ({navigation, route}) => {
       }
     });
   };
+
+  const onAddUserPhone = () => {
+    if (!phoneNumber) {
+      return;
+    }
+
+    dispatch(updateUserInfo({primaryPhone: phoneNumber})).then((response) => {
+      if (response.type === types.UPDATE_LOGIN_DETAILS_SUCCESS) {
+        setShowUserPhoneInputDialog(false);
+        setIsUpdatedPhoneNumber(true);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (isUpdatedPhoneNumber && get(userInfo, 'primaryPhone')) {
+      setIsUpdatedPhoneNumber(false);
+      if (totalGuests.length === 1) {
+        bookAppt();
+      } else {
+        bookApptGuest();
+      }
+    }
+  }, [userInfo, isUpdatedPhoneNumber]);
 
   const editAppt = async () => {
     if (!fromEdit.group) {
@@ -472,7 +510,18 @@ const Review = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
           ) : null}
+          <Dialog.Container visible={showUserPhoneInputDialog}>
+            <Dialog.Title>User Phone Number</Dialog.Title>
+            <View style={{paddingHorizontal: 15}}>
+              <Input
+                value={phoneNumber}
+                onChangeText={(p) => setPhoneNumber(p)}
+                containerStyle={{marginBottom: 30, marginTop: -20}}
+              />
+              <Button onButtonPress={onAddUserPhone} name={'Submit'} />
+            </View>
 
+          </Dialog.Container>
           <View style={styles.boxContainer}>
             <Text style={styles.headerText}>Date & Time</Text>
 

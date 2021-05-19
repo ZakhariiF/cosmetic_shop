@@ -4,7 +4,12 @@ import {AuthNavigator, TabStack} from './routes';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Platform} from 'react-native';
 import {navigationRef} from './RootNavigation';
-import {createConfig, getAccessToken, getUserFromIdToken, refreshTokens} from '@okta/okta-react-native';
+import {
+  createConfig,
+  getAccessToken,
+  getUserFromIdToken,
+  refreshTokens,
+} from '@okta/okta-react-native';
 import configFile from 'constant/config';
 import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
