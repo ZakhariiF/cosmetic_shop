@@ -21,18 +21,16 @@ const AccountInfo = ({navigation}) => {
   const [lastName, setlastName] = useState(
     get(userInfo, 'lastname', ''),
   );
-  const [email, setEmail] = useState(get(userInfo, 'preferred_username', ''));
+  const email = get(userInfo, 'preferred_username', '');
   const [phoneNumber, setphoneNumber] = useState(
     get(userInfo, 'primaryPhone', ''),
   );
-
-  console.log('UserInfo:', userInfo);
-
   const onUpdate = () => {
     const obj = {
       firstName,
       lastName,
       primaryPhone: phoneNumber,
+      email,
     };
 
     dispatch(updateUserInfo(obj)).then((response) => {

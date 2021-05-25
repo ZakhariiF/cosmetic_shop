@@ -38,7 +38,7 @@ const membershipSchema = Yup.object().shape({
   phoneNumber: Yup.string()
     .nullable()
     .required('This field is required')
-    .matches(/\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g, 'Invalid phone number'),
+    .matches(/^\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g, 'Invalid phone number'),
 });
 
 const BarflyFormModal = ({visible, onRequestClose, membershipAction}) => {

@@ -43,7 +43,7 @@ const WufooSchema = Yup.object().shape({
     .nullable()
     .required('Error: phone number is required')
     .matches(
-      /\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g,
+      /^\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g,
       'Error: phone number is invalid',
     ),
 });

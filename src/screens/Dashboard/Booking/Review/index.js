@@ -5,18 +5,24 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image
+  Image,
 } from 'react-native';
 import PromoInput from 'components/PromoInput';
 import Input from 'components/Input';
 import {Colors, Fonts, Images} from 'constant';
 import rootStyle from 'rootStyle';
 import Entypo from 'react-native-vector-icons/Entypo';
-import CheckBox from 'components/Checkbox';
-import Button from 'components/Button';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {get} from 'lodash';
 import moment from 'moment';
+import {Field, Formik} from 'formik';
+import * as Yup from 'yup';
+import MParticle from 'react-native-mparticle';
+
+import Dialog from 'react-native-dialog';
+
+import BookingHeader from 'components/BookingHeader';
 import BookingTab from 'components/BookingTab';
 import {
   applyPromoCode,
@@ -30,12 +36,23 @@ import {
   cancelAppointment,
   cancelItinerary,
 } from 'screens/Dashboard/thunks';
-// import {cancelItinerary, cancelAppt} from 'services';
-import MParticle from 'react-native-mparticle';
-import BookingHeader from 'components/BookingHeader';
-import Dialog from 'react-native-dialog';
+
 import {updateUserInfo} from 'screens/Auth/thunks';
 import {types} from 'screens/Auth/ducks';
+import * as API from 'services';
+
+import CheckBox from 'components/Checkbox';
+import Button from 'components/Button';
+
+const userPhoneNumberSchema = Yup.object().shape({
+  phoneNumber: Yup.string()
+    .nullable()
+    .required('Error: phone number is required')
+    .matches(
+      /^\(?\d{3}\)?-? *\d{3}-? *-?\d{4}$/g,
+      'Error: invalid phone number',
+    ),
+});
 
 const Review = ({navigation, route}) => {
   const [isChecked, setChecked] = useState(false);
@@ -54,17 +71,26 @@ const Review = ({navigation, route}) => {
   const [isAddon, setisAddOn] = useState(false);
   const [showCancel, setShowCancel] = useState(false);
 
-  const [showUserPhoneInputDialog, setShowUserPhoneInputDialog] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [showUserPhoneInputDialog, setShowUserPhoneInputDialog] = useState(
+    false,
+  );
   const [isUpdatedPhoneNumber, setIsUpdatedPhoneNumber] = useState(false);
+
+  const [customerDetails, setCustomerDetails] = useState(null);
 
   useEffect(() => {
     calculateTotal();
     checkAddonData();
-    if (totalGuests.length > 1) {
-      guestList();
-    }
   }, []);
+
+  useEffect(() => {
+    const customerId = get(userInfo, 'bookerID');
+    if (!customerDetails && customerId) {
+      API.getCustomerDetails(customerId).then(({Customer}) => {
+        setCustomerDetails(Customer.Customer);
+      });
+    }
+  }, [customerDetails, userInfo]);
 
   const checkAddonData = () => {
     let isAddon = totalGuests.some((e) => e.addons && e.addons.length);
@@ -92,8 +118,14 @@ const Review = ({navigation, route}) => {
   };
 
   const bookAppt = () => {
-    if (!get(userInfo, 'primaryPhone')) {
-      return setShowUserPhoneInputDialog(true);
+    if (
+      (!get(customerDetails, 'HomePhone') ||
+        get(customerDetails, 'HomePhone', '') === '') &&
+      (!get(customerDetails, 'WorkPhone') ||
+        get(customerDetails, 'WorkPhone', '') === '')
+    ) {
+      setShowUserPhoneInputDialog(true);
+      return;
     }
 
     const startTime = get(totalGuests, '[0].date.time.startDateTime', '');
@@ -178,7 +210,7 @@ const Review = ({navigation, route}) => {
         FirstName: get(userInfo, 'firstname', ''),
         LastName: get(userInfo, 'lastname', ''),
         Email: get(userInfo, 'preferred_username', ''),
-        HomePhone: get(userInfo, 'primaryPhone', ''),
+        HomePhone: get(customerDetails, 'HomePhone', ''),
         ID: get(userInfo, 'bookerID', ''),
         SendEmail: true,
       },
@@ -251,7 +283,7 @@ const Review = ({navigation, route}) => {
           FirstName: get(userInfo, 'firstname', ''),
           LastName: get(userInfo, 'lastname', ''),
           Email: get(userInfo, 'preferred_username', ''),
-          HomePhone: get(userInfo, 'primaryPhone', ''),
+          HomePhone: get(customerDetails, 'HomePhone', ''),
           ID: get(userInfo, 'bookerID', ''),
         },
         AppointmentNotes: extraNotes,
@@ -262,8 +294,14 @@ const Review = ({navigation, route}) => {
   };
 
   const bookApptGuest = () => {
-    if (!get(userInfo, 'primaryPhone')) {
-      return setShowUserPhoneInputDialog(true);
+    if (
+      (!get(customerDetails, 'HomePhone') ||
+        get(customerDetails, 'HomePhone', '') === '') &&
+      (!get(customerDetails, 'WorkPhone') ||
+        get(customerDetails, 'WorkPhone', '') === '')
+    ) {
+      setShowUserPhoneInputDialog(true);
+      return;
     }
     let obj = {
       LocationID: get(selectedLocation, 'bookerLocationId', ''),
@@ -288,13 +326,20 @@ const Review = ({navigation, route}) => {
     });
   };
 
-  const onAddUserPhone = () => {
-    if (!phoneNumber) {
-      return;
-    }
-
-    dispatch(updateUserInfo({primaryPhone: phoneNumber})).then((response) => {
+  const onAddUserPhone = (values) => {
+    console.log('customerDetails:', customerDetails);
+    let obj = {
+      primaryPhone: values.phoneNumber,
+      firstName: get(userInfo, 'firstname', ''),
+      lastName: get(userInfo, 'lastname', ''),
+      email: get(userInfo, 'preferred_username', ''),
+    };
+    dispatch(updateUserInfo(obj)).then((response) => {
       if (response.type === types.UPDATE_LOGIN_DETAILS_SUCCESS) {
+        setCustomerDetails({
+          ...customerDetails,
+          HomePhone: values.phoneNumber,
+        });
         setShowUserPhoneInputDialog(false);
         setIsUpdatedPhoneNumber(true);
       }
@@ -302,15 +347,18 @@ const Review = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    if (isUpdatedPhoneNumber && get(userInfo, 'primaryPhone')) {
+    if (isUpdatedPhoneNumber && get(customerDetails, 'HomePhone')) {
+      setTimeout(() => {
+        if (totalGuests.length === 1) {
+          bookAppt();
+        } else {
+          bookApptGuest();
+        }
+      }, 1000);
+
       setIsUpdatedPhoneNumber(false);
-      if (totalGuests.length === 1) {
-        bookAppt();
-      } else {
-        bookApptGuest();
-      }
     }
-  }, [userInfo, isUpdatedPhoneNumber]);
+  }, [customerDetails, isUpdatedPhoneNumber]);
 
   const editAppt = async () => {
     if (!fromEdit.group) {
@@ -470,7 +518,7 @@ const Review = ({navigation, route}) => {
                           styles.titleText,
                           {width: totalGuests.length > 1 ? '70%' : '85%'},
                         ]}>
-                        Yes {' '}
+                        Yes{' '}
                         <Text style={styles.price}>
                           (${get(extensionAddon, 'Price.Amount', '')})
                         </Text>
@@ -511,16 +559,45 @@ const Review = ({navigation, route}) => {
             </View>
           ) : null}
           <Dialog.Container visible={showUserPhoneInputDialog}>
-            <Dialog.Title>User Phone Number</Dialog.Title>
+            <Dialog.Title>Please update your phone number</Dialog.Title>
             <View style={{paddingHorizontal: 15}}>
-              <Input
-                value={phoneNumber}
-                onChangeText={(p) => setPhoneNumber(p)}
-                containerStyle={{marginBottom: 30, marginTop: -20}}
-              />
-              <Button onButtonPress={onAddUserPhone} name={'Submit'} />
+              <Text>
+                Uh oh! Looks like you haven't added a phone number to your
+                profile. Please update your phone number here! The shop may need
+                to contact you regarding your appointments or account.
+              </Text>
+              <Formik
+                initialValues={{
+                  phoneNumber: '',
+                }}
+                enableReinitialize
+                onSubmit={onAddUserPhone}
+                validationSchema={userPhoneNumberSchema}>
+                {({submitForm, isSubmitting}) => (
+                  <View>
+                    <Field name={'phoneNumber'}>
+                      {({field, meta, form: {setFieldValue}}) => (
+                        <View style={{marginBottom: 30, marginTop: -20}}>
+                          <Input
+                            id={'phoneNumber'}
+                            inputName={'phoneNumber'}
+                            onChangeText={(e) => setFieldValue(field.name, e)}
+                          />
+                          {!!meta.error && meta.touched && (
+                            <Text style={styles.errorText}>{meta.error}</Text>
+                          )}
+                        </View>
+                      )}
+                    </Field>
+                    <Button
+                      onButtonPress={submitForm}
+                      name={'Submit'}
+                      disabled={isSubmitting}
+                    />
+                  </View>
+                )}
+              </Formik>
             </View>
-
           </Dialog.Container>
           <View style={styles.boxContainer}>
             <Text style={styles.headerText}>Date & Time</Text>
@@ -652,7 +729,7 @@ const Review = ({navigation, route}) => {
           />
 
           <Button
-            disabled={!isChecked}
+            disabled={!isChecked || !customerDetails}
             name={
               fromEdit ? 'Update this Appointment' : 'Book this Appointment'
             }
@@ -688,6 +765,10 @@ const Review = ({navigation, route}) => {
 export default Review;
 
 const styles = StyleSheet.create({
+  errorText: {
+    color: Colors.error,
+    fontSize: 15,
+  },
   locContainer: {
     minHeight: 90,
     backgroundColor: Colors.white,

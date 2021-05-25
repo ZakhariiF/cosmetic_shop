@@ -58,14 +58,15 @@ export const loginSuccess = (user) => async (dispatch) => {
 };
 
 export const updateUserInfo = (obj) => async (dispatch) => {
+
   dispatch(authActions.updateUserRequest());
 
   try {
     const data = await API.updateUser(obj);
-    console.log('update  data data>>>', data);
-    if (data) {
+    const userInfo = get(data, 'profile');
+
+    if (userInfo) {
       AlertHelper.showSuccess('User Updated Successfully');
-      const userInfo = get(data, 'profile');
       return dispatch(
         authActions.updateUserSuccess({
           ...userInfo,
