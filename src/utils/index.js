@@ -244,6 +244,7 @@ export const findStoresFromPointWithTitle = (
 
   if (geolocatedPoints && geolocatedPoints.length) {
     storesByAddress = locationData.filter((location) => {
+      if (!location.settings.visible) return false;
       if (!location.contact || storesSlugsByTitle.includes(location.slug)) {
         return false;
       }
