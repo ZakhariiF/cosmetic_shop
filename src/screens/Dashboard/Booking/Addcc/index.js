@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     color: Colors.header_title,
     borderBottomColor: Colors.input_color,
     borderBottomWidth: 1,
+    height: 50,
   },
   bottomContainer: {
     marginTop: 30,
