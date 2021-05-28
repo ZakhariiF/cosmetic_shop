@@ -58,7 +58,6 @@ export const loginSuccess = (user) => async (dispatch) => {
 };
 
 export const updateUserInfo = (obj) => async (dispatch) => {
-
   dispatch(authActions.updateUserRequest());
 
   try {
@@ -73,6 +72,7 @@ export const updateUserInfo = (obj) => async (dispatch) => {
           firstname: userInfo.firstName,
           lastname: userInfo.lastName,
           preferred_username: userInfo.email,
+          bookerID: userInfo.bookerId,
         }),
       );
     } else {

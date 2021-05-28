@@ -32,7 +32,7 @@ const Input = ({
   if (isEdit) {
     return (
       <>
-        <Text style={[styles.name, labelStyle]}>{name}</Text>
+        {name && <Text style={[styles.name, labelStyle]}>{name}</Text>}
         <View style={styles.inputContainer}>
           <TextInput
             ref={input}
@@ -102,7 +102,7 @@ const Input = ({
   }
   return (
     <>
-      <Text style={[styles.name, labelStyle]}>{name}</Text>
+      {name && <Text style={[styles.name, labelStyle]}>{name}</Text>}
       <TextInput
         value={value}
         multiline={multiline}

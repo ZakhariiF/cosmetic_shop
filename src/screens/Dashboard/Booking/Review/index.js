@@ -559,9 +559,11 @@ const Review = ({navigation, route}) => {
             </View>
           ) : null}
           <Dialog.Container visible={showUserPhoneInputDialog}>
-            <Dialog.Title>Please update your phone number</Dialog.Title>
+            <Dialog.Title style={rootStyle.title}>
+              {'Please update your phone number'.toUpperCase()}
+            </Dialog.Title>
             <View style={{paddingHorizontal: 15}}>
-              <Text>
+              <Text style={rootStyle.commonText}>
                 Uh oh! Looks like you haven't added a phone number to your
                 profile. Please update your phone number here! The shop may need
                 to contact you regarding your appointments or account.
@@ -577,7 +579,7 @@ const Review = ({navigation, route}) => {
                   <View>
                     <Field name={'phoneNumber'}>
                       {({field, meta, form: {setFieldValue}}) => (
-                        <View style={{marginBottom: 30, marginTop: -20}}>
+                        <View style={{marginBottom: 0, marginTop: 0}}>
                           <Input
                             id={'phoneNumber'}
                             inputName={'phoneNumber'}
@@ -591,8 +593,10 @@ const Review = ({navigation, route}) => {
                     </Field>
                     <Button
                       onButtonPress={submitForm}
-                      name={'Submit'}
+                      name={'Update'}
                       disabled={isSubmitting}
+                      isWhite
+                      containerStyle={styles.updatePhoneButton}
                     />
                   </View>
                 )}
@@ -844,5 +848,12 @@ const styles = StyleSheet.create({
   },
   basisContainer: {
     flexBasis: '30%',
+  },
+  updatePhoneButton: {
+    padding: 8,
+    shadowOpacity: 0,
+    marginLeft: 'auto',
+    width: 'auto',
+    marginVertical: 0,
   },
 });
