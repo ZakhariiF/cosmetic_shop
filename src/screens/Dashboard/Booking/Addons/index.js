@@ -56,9 +56,6 @@ const Addons = ({navigation}) => {
   }, [totalGuests]);
 
   const getData = useCallback(() => {
-    // let serviceId = get(totalGuests[activeTab], 'services.ID');
-    // dispatch(getAddons(serviceId));
-
     const locationId = get(selectedLocation, 'bookerLocationId');
     if (locationId) {
       dispatch(findAddons(locationId));
@@ -157,7 +154,7 @@ const Addons = ({navigation}) => {
       />
 
       {isExtension ? (
-        <Extensions navigation={navigation} onSkip={onNext} />
+        <Extensions navigation={navigation} onNext={onNext} />
       ) : (
         <View style={rootStyle.innerContainer}>
           <TouchableOpacity

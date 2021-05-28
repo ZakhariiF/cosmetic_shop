@@ -17,7 +17,7 @@ import {setmemberCount, getServices} from '../thunks';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 
-const Extensions = ({onSkip}) => {
+const Extensions = ({onNext}) => {
   const [isChecked, setChecked] = useState(false);
   const dispatch = useDispatch();
   const totalGuests = useSelector((state) => state.booking.totalGuests);
@@ -82,9 +82,20 @@ const Extensions = ({onSkip}) => {
     dispatch(setmemberCount(tempArr));
 
     if (!tempArr.find((i) => !i.extension)) {
-      onSkip();
+      onNext();
     }
   };
+
+  const noExtensions = () => {
+    let tempArr = [...totalGuests].map((item) => {
+      item.extension = null;
+      return item;
+    });
+
+    dispatch(setmemberCount(tempArr));
+
+    onNext();
+  }
 
   return (
     <View style={rootStyle.innerContainer}>
@@ -96,7 +107,8 @@ const Extensions = ({onSkip}) => {
         />
         <Text style={styles.noticeText}>
           Learn about our extension policy{' '}
-          <TouchableOpacity
+          <Text
+            style={{textDecorationLine: 'underline', fontWeight: 'bold'}}
             accessible
             accessibilityLabel="Extension Policy"
             accessibilityRole="link"
@@ -104,9 +116,7 @@ const Extensions = ({onSkip}) => {
               navigation.navigate('Account', {
                 screen: 'ExtensionPolicy',
               })
-            }>
-            <Text style={{textDecorationLine: 'underline'}}>here.</Text>
-          </TouchableOpacity>
+            }>here.</Text>
         </Text>
       </View>
 
@@ -118,7 +128,7 @@ const Extensions = ({onSkip}) => {
 
           <TouchableOpacity
             style={styles.skipContainer}
-            onPress={onSkip}
+            onPress={noExtensions}
             accessible
             accessibilityLabel="No extensions in our party"
             accessibilityRole="button">
@@ -130,7 +140,7 @@ const Extensions = ({onSkip}) => {
       ) : null}
 
       <FlatList
-        contentContainerStyle={styles.container}
+        style={{marginBottom: '20%', marginTop: 20}}
         data={data}
         renderItem={renderExtension}
         keyExtractor={(_, index) => index.toString()}
@@ -150,11 +160,6 @@ const Extensions = ({onSkip}) => {
 export default Extensions;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    marginBottom: '10%',
-  },
   listContainer: {
     height: 60,
     width: '100%',
@@ -163,6 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...rootStyle.shadow,
     marginVertical: 8,
+    flexDirection: 'row'
   },
   itemName: {
     ...rootStyle.commonText,
@@ -199,6 +205,7 @@ const styles = StyleSheet.create({
   noticeContainer: {
     flexDirection: 'row',
     alignSelf: 'center',
+    alignItems: 'center'
   },
   noticeText: {
     ...rootStyle.commonText,
