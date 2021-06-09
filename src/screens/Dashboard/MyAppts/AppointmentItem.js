@@ -12,7 +12,7 @@ const AppointmentItem = ({
   onCancel,
   locationData,
 }) => {
-  const locationId = get(item.appointment, 'Room.LocationID', 0);
+  const locationId = get(item, 'appointment.Room.LocationID', 0);
 
   const location = get(locationData, 'storeCollection.items', []).find(
     (l) => l.bookerLocationId === locationId,
@@ -24,6 +24,15 @@ const AppointmentItem = ({
   const startTime = moment(
     get(item, 'appointment.StartDateTimeOffset'),
   ).utcOffset(timezone);
+
+  const services = (
+    get(item, 'appointment.AppointmentTreatments', []) || []
+  ).filter((service) => service.TreatmentName !== 'Extensions');
+
+  const isDifferentTime = services.find(
+    (s) =>
+      s.StartDateTimeOffset !== get(item, 'appointment.StartDateTimeOffset'),
+  );
 
   return (
     <View style={styles.container}>
@@ -76,20 +85,21 @@ const AppointmentItem = ({
 
         <View style={{marginTop: past ? 12 : 0}}>
           <Text style={styles.locationText}>
-            {get(item, 'appointment.AppointmentTreatments', []).length > 1
-              ? 'Services'
-              : 'Service'}
+            {services.length > 1 ? 'Services' : 'Service'}
           </Text>
           <View style={styles.bottomContainer}>
             <View style={{maxWidth: '75%'}}>
-              {get(item, 'appointment.AppointmentTreatments', [])
-                .filter((service) => service.TreatmentName !== 'Extensions')
-                .map((service) => (
-                  <Text style={styles.details}>
-                    {get(service, 'TreatmentName', '')} ($
-                    {get(service, 'Treatment.Price.Amount')})
-                  </Text>
-                ))}
+              {services.map((service) => (
+                <Text style={styles.details}>
+                  {get(service, 'TreatmentName', '')} ($
+                  {get(service, 'Treatment.Price.Amount')})
+                  {isDifferentTime
+                    ? moment(service.StartDateTimeOffset)
+                        .utcOffset(timezone)
+                        .format('hh:mm a')
+                    : null}
+                </Text>
+              ))}
             </View>
             <Text
               onPress={() =>

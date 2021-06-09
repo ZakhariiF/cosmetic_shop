@@ -6,8 +6,10 @@ import {get} from 'lodash';
 import moment from 'moment';
 
 const ConfirmationList = ({item, index, data}) => {
-  const timezone = get(item, 'date.time.timezone', 0)
-  const startTime = moment(get(item, 'date.time.startDateTime', '')).utcOffset(timezone)
+  const timezone = get(item, 'date.time.timezone', 0);
+  const startTime = moment(get(item, 'date.time.startDateTime', '')).utcOffset(
+    timezone,
+  );
   return (
     <View style={styles.container}>
       {data.length > 1 ? (
